@@ -1,0 +1,17 @@
+your-domain.example {
+	# Serve uploaded media directly from the shared volume, bypassing Next.js —
+	# see docs/09_DEVELOPMENT_GUIDELINES.md ("reverse proxy ... serving
+	# /uploads directly").
+	handle_path /uploads/* {
+		root * /srv/uploads
+		file_server
+	}
+
+	handle {
+		# reverse_proxy sets X-Forwarded-For automatically — the app relies on
+		# this for per-IP rate limiting (lib/request.ts, lib/rate-limit.ts) on
+		# the contact form and admin login. If you swap Caddy for something
+		# else, make sure whatever's in front still sets this header.
+		reverse_proxy app:3000
+	}
+}

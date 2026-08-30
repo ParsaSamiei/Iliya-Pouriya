@@ -1,0 +1,129 @@
+{
+  "site": {
+    "name": "Iliya & Pouriya",
+    "tagline": "Robotics & embedded systems, built from first principles."
+  },
+  "nav": {
+    "home": "Home",
+    "projects": "Projects",
+    "team": "Team",
+    "blog": "Blog",
+    "about": "About",
+    "contact": "Contact",
+    "resume": "Resume",
+    "toggleTheme": "Toggle theme",
+    "toggleLanguage": "فارسی"
+  },
+  "home": {
+    "heroEyebrow": "Robotics & Embedded Systems",
+    "heroTitle": "We build the machines other engineers wish they'd thought of.",
+    "heroSubtitle": "Two engineers, one lab. Firmware, control loops, and hardware that has to work the first time.",
+    "ctaViewProjects": "View projects",
+    "ctaContact": "Get in touch",
+    "heroStatus": "SYS.STATUS",
+    "heroStatusOnline": "ONLINE",
+    "heroReadout": "FW v2.4 · CTRL-LOOP ACTIVE · EMBEDDED STACK",
+    "statProjects": "Projects",
+    "statEngineers": "Engineers",
+    "capabilitiesEyebrow": "Core systems",
+    "capabilitiesTitle": "What we engineer",
+    "capabilitiesSubtitle": "From bare-metal firmware to closed-loop control — we design systems that ship and stay running.",
+    "capabilityEmbedded": "Embedded systems",
+    "capabilityEmbeddedDesc": "Bare-metal and RTOS firmware on MCUs and SoCs — timing-critical, resource-constrained, production-ready.",
+    "capabilityRobotics": "Robotics & controls",
+    "capabilityRoboticsDesc": "Kinematics, sensor fusion, and real-time control loops for mobile and manipulator platforms.",
+    "capabilityFirmware": "Firmware architecture",
+    "capabilityFirmwareDesc": "Modular drivers, protocol stacks, and OTA-ready codebases built for long maintenance cycles.",
+    "capabilityHardware": "Hardware integration",
+    "capabilityHardwareDesc": "Schematic-to-PCB bring-up, signal integrity, and tight software–hardware co-design.",
+    "projectsEyebrow": "Portfolio",
+    "featuredProjects": "Featured projects",
+    "featuredProjectsSubtitle": "Selected builds from the lab — hardware, firmware, and control systems in the field.",
+    "viewAllProjects": "View all projects",
+    "teamEyebrow": "Team",
+    "meetTheTeam": "Meet the team",
+    "meetTheTeamSubtitle": "Two engineers, distinct expertise — one shared practice in robotics and embedded systems.",
+    "blogEyebrow": "Blog",
+    "latestPosts": "Latest from the blog",
+    "latestPostsSubtitle": "Notes from the bench — build logs, design decisions, and lessons learned.",
+    "viewAllPosts": "View all posts",
+    "contactEyebrow": "Collaborate",
+    "contactTitle": "Have a project in mind?",
+    "contactSubtitle": "Whether it's a prototype, a production firmware stack, or a robotics platform — tell us what you're building."
+  },
+  "projects": {
+    "title": "Projects",
+    "subtitle": "[Placeholder] A working record of what we've built.",
+    "viewProject": "View project",
+    "stack": "Stack",
+    "role": "Role",
+    "year": "Year",
+    "contributors": "Contributors",
+    "viewModel": "View 3D model",
+    "gallery": "Gallery",
+    "empty": "No projects yet — check back soon."
+  },
+  "team": {
+    "title": "Team",
+    "experience": "Experience",
+    "skills": "Skills",
+    "viewResume": "Download resume",
+    "viewProfile": "View profile"
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "[Placeholder] Notes from the bench.",
+    "readMore": "Read more",
+    "empty": "No posts yet — check back soon.",
+    "publishedOn": "Published {date}"
+  },
+  "about": {
+    "title": "About"
+  },
+  "contact": {
+    "title": "Contact",
+    "subtitle": "[Placeholder] Have a project in mind? Send a message.",
+    "name": "Name",
+    "email": "Email",
+    "message": "Message",
+    "submit": "Send message",
+    "success": "Message sent — we'll get back to you soon.",
+    "error": "Something went wrong. Please try again."
+  },
+  "footer": {
+    "rights": "All rights reserved.",
+    "builtWith": "Built by Iliya & Pouriya."
+  },
+  "admin": {
+    "login": {
+      "title": "Admin sign in",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign in",
+      "error": "Invalid email or password."
+    },
+    "nav": {
+      "dashboard": "Dashboard",
+      "projects": "Projects",
+      "team": "Team",
+      "blog": "Blog",
+      "messages": "Messages",
+      "settings": "Settings",
+      "signOut": "Sign out"
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "welcome": "Welcome back."
+    }
+  },
+  "common": {
+    "loading": "Loading…",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "back": "Back",
+    "placeholderNotice": "This is placeholder content — replace it from the admin panel."
+  }
+}

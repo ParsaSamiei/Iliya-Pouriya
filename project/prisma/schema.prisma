@@ -1,0 +1,201 @@
+// Prisma schema — see docs/05_DATABASE.md (source of truth for every model
+// and the reasoning behind the bilingual _en/_fa pattern below).
+//
+// Prisma 7 architecture note: the connection URL no longer lives here — the
+// CLI (migrate/studio) reads it from prisma.config.ts, and the runtime
+// PrismaClient requires an explicit driver adapter (lib/db.ts uses
+// @prisma/adapter-pg). See https://pris.ly/d/config-datasource.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum SkillCategory {
+  hardware
+  software
+  other
+}
+
+/// Login for the two site owners. Auth.js credentials provider reads from
+/// this table — no other identity provider (see docs/07_ADMIN_PANEL.md).
+model Admin {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("admins")
+}
+
+/// The two profile owners. This table will only ever hold two rows —
+/// project/post "contributors" always resolve to one or both of these people,
+/// never an arbitrary third party (see docs/01_PRODUCT.md).
+model Person {
+  id             String   @id @default(uuid())
+  slug           String   @unique
+  nameEn         String   @map("name_en")
+  nameFa         String   @map("name_fa")
+  title          String
+  photoUrl       String?  @map("photo_url")
+  bioEn          String?  @map("bio_en")
+  bioFa          String?  @map("bio_fa")
+  resumeUrlEn    String?  @map("resume_url_en")
+  resumeUrlFa    String?  @map("resume_url_fa")
+  /// { github, linkedin, email, ... }
+  socialLinks    Json?    @map("social_links")
+  sortOrder      Int      @default(0) @map("sort_order")
+
+  experience     Experience[]
+  skills         Skill[]
+  projects       ProjectContributor[]
+  posts          BlogPostAuthor[]
+
+  @@map("people")
+}
+
+/// Per-person work timeline.
+model Experience {
+  id             String    @id @default(uuid())
+  personId       String    @map("person_id")
+  person         Person    @relation(fields: [personId], references: [id], onDelete: Cascade)
+  roleEn         String    @map("role_en")
+  roleFa         String    @map("role_fa")
+  organization   String
+  startDate      DateTime  @map("start_date")
+  endDate        DateTime? @map("end_date") // null = present
+  descriptionEn  String?   @map("description_en")
+  descriptionFa  String?   @map("description_fa")
+  sortOrder      Int       @default(0) @map("sort_order")
+
+  @@index([personId])
+  @@map("experience")
+}
+
+/// Per-person skills/tools.
+model Skill {
+  id        String        @id @default(uuid())
+  personId  String        @map("person_id")
+  person    Person        @relation(fields: [personId], references: [id], onDelete: Cascade)
+  name      String
+  category  SkillCategory
+  sortOrder Int           @default(0) @map("sort_order")
+
+  @@index([personId])
+  @@map("skills")
+}
+
+/// Shared portfolio pieces.
+model Project {
+  id             String    @id @default(uuid())
+  slug           String    @unique
+  titleEn        String    @map("title_en")
+  titleFa        String    @map("title_fa")
+  summaryEn      String?   @map("summary_en")
+  summaryFa      String?   @map("summary_fa")
+  /// Markdown text from the admin panel's editor (components/admin/markdown-editor.tsx),
+  /// rendered on the public site via components/site/markdown-content.tsx.
+  contentEn      String?   @map("content_en")
+  contentFa      String?   @map("content_fa")
+  coverImageUrl  String?   @map("cover_image_url")
+  /// jsonb array of media URLs
+  gallery        Json?
+  /// jsonb array of strings
+  tags           Json?
+  /// { github, demo, publication, ... }
+  externalLinks  Json?     @map("external_links")
+  isFeatured     Boolean   @default(false) @map("is_featured")
+  publishedAt    DateTime? @map("published_at") // null = draft
+  sortOrder      Int       @default(0) @map("sort_order")
+
+  models         ProjectModel[]
+  contributors   ProjectContributor[]
+
+  @@index([publishedAt])
+  @@map("projects")
+}
+
+/// 3D/STL models attached to a project.
+model ProjectModel {
+  id            String  @id @default(uuid())
+  projectId     String  @map("project_id")
+  project       Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  nameEn        String  @map("name_en")
+  nameFa        String  @map("name_fa")
+  fileUrl       String  @map("file_url")
+  fileSizeBytes Int     @map("file_size_bytes")
+  sortOrder     Int     @default(0) @map("sort_order")
+
+  @@index([projectId])
+  @@map("project_models")
+}
+
+/// Many-to-many between projects and people.
+model ProjectContributor {
+  projectId String  @map("project_id")
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  personId  String  @map("person_id")
+  person    Person  @relation(fields: [personId], references: [id], onDelete: Cascade)
+
+  @@id([projectId, personId])
+  @@map("project_contributors")
+}
+
+model BlogPost {
+  id          String    @id @default(uuid())
+  slug        String    @unique
+  titleEn     String    @map("title_en")
+  titleFa     String    @map("title_fa")
+  excerptEn   String?   @map("excerpt_en")
+  excerptFa   String?   @map("excerpt_fa")
+  /// Markdown text — see the same field on Project above.
+  contentEn   String?   @map("content_en")
+  contentFa   String?   @map("content_fa")
+  coverImageUrl String? @map("cover_image_url")
+  publishedAt DateTime? @map("published_at") // null = draft
+  /// jsonb array
+  tags        Json?
+
+  authors     BlogPostAuthor[]
+
+  @@index([publishedAt])
+  @@map("blog_posts")
+}
+
+/// Many-to-many, same pattern as project_contributors.
+model BlogPostAuthor {
+  postId   String   @map("post_id")
+  post     BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  personId String   @map("person_id")
+  person   Person   @relation(fields: [personId], references: [id], onDelete: Cascade)
+
+  @@id([postId, personId])
+  @@map("blog_post_authors")
+}
+
+model ContactMessage {
+  id        String    @id @default(uuid())
+  name      String
+  email     String
+  message   String
+  /// which person it's addressed to, or null for "both"
+  recipient String?
+  createdAt DateTime  @default(now()) @map("created_at")
+  readAt    DateTime? @map("read_at")
+
+  @@map("contact_messages")
+}
+
+/// Key/value table for global content that isn't per-entity — homepage
+/// tagline, contact-page copy, site-wide social links, etc.
+model SiteSetting {
+  key     String @id
+  valueEn Json?  @map("value_en")
+  valueFa Json?  @map("value_fa")
+
+  @@map("site_settings")
+}

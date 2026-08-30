@@ -1,0 +1,129 @@
+{
+  "site": {
+    "name": "ایلیا و پوریا",
+    "tagline": "رباتیک و سیستم‌های نهفته، ساخته‌شده از پایه."
+  },
+  "nav": {
+    "home": "خانه",
+    "projects": "پروژه‌ها",
+    "team": "تیم",
+    "blog": "وبلاگ",
+    "about": "درباره ما",
+    "contact": "تماس",
+    "resume": "رزومه",
+    "toggleTheme": "تغییر پوسته",
+    "toggleLanguage": "English"
+  },
+  "home": {
+    "heroEyebrow": "رباتیک و سیستم‌های نهفته",
+    "heroTitle": "ماشین‌هایی می‌سازیم که مهندسان دیگر آرزو می‌کنند خودشان به فکرش می‌افتادند.",
+    "heroSubtitle": "دو مهندس، یک آزمایشگاه. فریمور، حلقه‌های کنترل، و سخت‌افزاری که باید همان بار اول درست کار کند.",
+    "ctaViewProjects": "مشاهده پروژه‌ها",
+    "ctaContact": "تماس با ما",
+    "heroStatus": "وضعیت سیستم",
+    "heroStatusOnline": "فعال",
+    "heroReadout": "FW v2.4 · حلقه کنترل فعال · پشته نهفته",
+    "statProjects": "پروژه",
+    "statEngineers": "مهندس",
+    "capabilitiesEyebrow": "سیستم‌های اصلی",
+    "capabilitiesTitle": "در چه حوزه‌ای مهندسی می‌کنیم",
+    "capabilitiesSubtitle": "از فریمور bare-metal تا کنترل closed-loop — سیستم‌هایی طراحی می‌کنیم که تحویل داده شوند و پایدار بمانند.",
+    "capabilityEmbedded": "سیستم‌های نهفته",
+    "capabilityEmbeddedDesc": "فریمور bare-metal و RTOS روی MCU و SoC — زمان‌بندی حیاتی، محدودیت منابع، آماده تولید.",
+    "capabilityRobotics": "رباتیک و کنترل",
+    "capabilityRoboticsDesc": "سینماتیک، تلفیق سنسور، و حلقه‌های کنترل real-time برای پلتفرم‌های متحرک و مانیپولاتور.",
+    "capabilityFirmware": "معماری فریمور",
+    "capabilityFirmwareDesc": "درایورهای ماژولار، پشته پروتکل، و کدبیس OTA-ready برای چرخه نگهداری طولانی.",
+    "capabilityHardware": "یکپارچه‌سازی سخت‌افزار",
+    "capabilityHardwareDesc": "راه‌اندازی از شماتیک تا PCB، یکپارچگی سیگنال، و co-design تنگاتنگ نرم‌افزار–سخت‌افزار.",
+    "projectsEyebrow": "نمونه‌کار",
+    "featuredProjects": "پروژه‌های ویژه",
+    "featuredProjectsSubtitle": "انتخابی از کارهای آزمایشگاه — سخت‌افزار، فریمور، و سیستم‌های کنترل در میدان.",
+    "viewAllProjects": "مشاهده همه پروژه‌ها",
+    "teamEyebrow": "تیم",
+    "meetTheTeam": "با تیم آشنا شوید",
+    "meetTheTeamSubtitle": "دو مهندس، تخصص‌های متمایز — یک تمرین مشترک در رباتیک و سیستم‌های نهفته.",
+    "blogEyebrow": "وبلاگ",
+    "latestPosts": "تازه‌ترین نوشته‌های وبلاگ",
+    "latestPostsSubtitle": "یادداشت‌هایی از میز کار — گزارش ساخت، تصمیم‌های طراحی، و درس‌های آموخته‌شده.",
+    "viewAllPosts": "مشاهده همه نوشته‌ها",
+    "contactEyebrow": "همکاری",
+    "contactTitle": "پروژه‌ای در ذهن دارید؟",
+    "contactSubtitle": "چه نمونه اولیه باشد، چه پشته فریمور تولیدی، یا پلتفرم رباتیک — بگویید چه می‌سازید."
+  },
+  "projects": {
+    "title": "پروژه‌ها",
+    "subtitle": "[محتوای نمونه] سابقه‌ای واقعی از آنچه ساخته‌ایم.",
+    "viewProject": "مشاهده پروژه",
+    "stack": "فناوری‌ها",
+    "role": "نقش",
+    "year": "سال",
+    "contributors": "همکاران",
+    "viewModel": "مشاهده مدل سه‌بعدی",
+    "gallery": "گالری تصاویر",
+    "empty": "هنوز پروژه‌ای ثبت نشده — بعداً سر بزنید."
+  },
+  "team": {
+    "title": "تیم",
+    "experience": "سوابق کاری",
+    "skills": "مهارت‌ها",
+    "viewResume": "دانلود رزومه",
+    "viewProfile": "مشاهده پروفایل"
+  },
+  "blog": {
+    "title": "وبلاگ",
+    "subtitle": "[محتوای نمونه] یادداشت‌هایی از میز کار.",
+    "readMore": "ادامه مطلب",
+    "empty": "هنوز نوشته‌ای ثبت نشده — بعداً سر بزنید.",
+    "publishedOn": "تاریخ انتشار {date}"
+  },
+  "about": {
+    "title": "درباره ما"
+  },
+  "contact": {
+    "title": "تماس با ما",
+    "subtitle": "[محتوای نمونه] پروژه‌ای در ذهن دارید؟ پیام بفرستید.",
+    "name": "نام",
+    "email": "ایمیل",
+    "message": "پیام",
+    "submit": "ارسال پیام",
+    "success": "پیام ارسال شد — به‌زودی پاسخ می‌دهیم.",
+    "error": "مشکلی پیش آمد. لطفاً دوباره تلاش کنید."
+  },
+  "footer": {
+    "rights": "تمامی حقوق محفوظ است.",
+    "builtWith": "ساخته‌شده توسط ایلیا و پوریا."
+  },
+  "admin": {
+    "login": {
+      "title": "ورود مدیر",
+      "email": "ایمیل",
+      "password": "رمز عبور",
+      "submit": "ورود",
+      "error": "ایمیل یا رمز عبور نادرست است."
+    },
+    "nav": {
+      "dashboard": "داشبورد",
+      "projects": "پروژه‌ها",
+      "team": "تیم",
+      "blog": "وبلاگ",
+      "messages": "پیام‌ها",
+      "settings": "تنظیمات",
+      "signOut": "خروج"
+    },
+    "dashboard": {
+      "title": "داشبورد",
+      "welcome": "خوش آمدید."
+    }
+  },
+  "common": {
+    "loading": "در حال بارگذاری…",
+    "save": "ذخیره",
+    "cancel": "انصراف",
+    "delete": "حذف",
+    "edit": "ویرایش",
+    "create": "ایجاد",
+    "back": "بازگشت",
+    "placeholderNotice": "این محتوای نمونه است — از پنل مدیریت جایگزین کنید."
+  }
+}
