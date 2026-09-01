@@ -4,13 +4,15 @@ import type * as React from "react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--radius-sm)] text-sm font-medium transition-colors disabled:pointer-events-none disabled:opacity-50 outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--radius-sm)] text-sm font-medium transition-[color,background-color,border-color,box-shadow,transform] duration-200 ease-out disabled:pointer-events-none disabled:opacity-50 outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        default: "bg-accent text-accent-fg hover:opacity-90",
+        default:
+          "btn-engage relative overflow-hidden bg-accent text-accent-fg shadow-[inset_0_1px_0_color-mix(in_srgb,white_15%,transparent),0_1px_2px_color-mix(in_srgb,var(--color-bg)_50%,transparent)] hover:-translate-y-px hover:bg-[color-mix(in_srgb,var(--color-accent)_88%,white)] hover:shadow-[inset_0_1px_0_color-mix(in_srgb,white_30%,transparent),0_0_20px_color-mix(in_srgb,var(--color-accent)_35%,transparent),0_4px_12px_color-mix(in_srgb,var(--color-bg)_60%,transparent)] active:translate-y-0 active:shadow-[inset_0_2px_4px_color-mix(in_srgb,black_20%,transparent)]",
         destructive: "bg-error text-fg hover:opacity-90",
-        outline: "border border-border bg-transparent text-fg hover:bg-surface-raised",
+        outline:
+          "btn-engage-outline relative overflow-hidden border border-border bg-transparent text-fg shadow-[inset_0_1px_0_var(--panel-highlight)] hover:-translate-y-px hover:border-[color-mix(in_srgb,var(--color-accent)_45%,var(--color-border))] hover:bg-[color-mix(in_srgb,var(--color-accent)_7%,var(--color-surface))] hover:shadow-[inset_0_1px_0_var(--panel-highlight),0_0_16px_color-mix(in_srgb,var(--color-accent)_14%,transparent)] active:translate-y-0",
         secondary: "bg-surface-raised text-fg hover:opacity-90",
         ghost: "text-fg hover:bg-surface-raised",
         link: "text-link underline-offset-4 hover:underline",

@@ -22,12 +22,12 @@ export async function BlogPostCard({ post }: BlogPostCardProps) {
   return (
     <Link
       href={{ pathname: "/blog/[slug]", params: { slug: post.slug } }}
-      className="group flex h-full cursor-pointer flex-col border border-border bg-bg p-5 transition-colors duration-200 hover:border-accent/60 hover:bg-surface"
+      className="group panel-module flex h-full cursor-pointer flex-col p-5 transition-colors duration-200 hover:border-accent/40"
     >
       {post.publishedAt && (
         <time
           dateTime={post.publishedAt.toISOString()}
-          className="font-mono text-xs text-fg-muted"
+          className="font-mono text-[11px] text-fg-muted"
         >
           {t("publishedOn", {
             date: new Date(post.publishedAt).toLocaleDateString(locale),
@@ -42,9 +42,9 @@ export async function BlogPostCard({ post }: BlogPostCardProps) {
           {excerpt}
         </p>
       )}
-      <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-link transition-colors duration-200 group-hover:text-accent">
+      <span className="mt-4 inline-flex items-center gap-1.5 font-mono text-xs text-fg-muted transition-colors duration-200 group-hover:text-accent">
         {t("readMore")}
-        <ArrowRight className="size-3.5 rtl:rotate-180" aria-hidden />
+        <ArrowRight className="landing-arrow size-3.5" aria-hidden />
       </span>
     </Link>
   );

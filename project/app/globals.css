@@ -15,11 +15,12 @@
  */
 
 @theme {
-  --font-fa: "Vazirmatn Variable", "Inter Variable", sans-serif;
-  --font-en: "Inter Variable", "Vazirmatn Variable", sans-serif;
-  --font-display: var(--font-en);
+  --font-fa: "Vazirmatn Variable", "Source Sans 3 Variable", sans-serif;
+  --font-en: "Source Sans 3 Variable", "Vazirmatn Variable", sans-serif;
+  --font-en-display: "Barlow", "Vazirmatn Variable", sans-serif;
+  --font-display: var(--font-en-display);
   --font-body: var(--font-en);
-  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  --font-mono: "Source Code Pro", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
 
   --radius-sm: 4px;
   --radius-md: 8px;
@@ -32,6 +33,7 @@
   --color-fg-muted: var(--fg-muted);
   --color-accent: var(--accent);
   --color-accent-fg: var(--accent-fg);
+  --color-signal: var(--signal);
   --color-link: var(--link);
   --color-border: var(--border);
   --color-success: var(--success);
@@ -62,57 +64,53 @@
 /* Dark theme — the default/primary presentation (docs/02, docs/04). */
 :root,
 .dark {
-  --bg: #0b0e12;
-  --surface: #12161c;
-  --surface-raised: #171c23;
-  --fg: #e6e9ec;
-  --fg-muted: #9aa3ad;
-  --accent: #f2a93b; /* signature accent — locked in per brand direction */
+  --bg: #07090c;
+  --surface: #0f1217;
+  --surface-raised: #151a21;
+  --fg: #e4e8ec;
+  --fg-muted: #8b949e;
+  --accent: #f2a93b;
   --accent-fg: #14110a;
+  --signal: #2ec4e6;
   --link: #5b9df9;
   --border: rgba(230, 233, 236, 0.08);
   --success: #4ade80;
   --warning: #f2c94c;
   --error: #ef5350;
 
-  /* Blueprint / schematic background layers */
-  --grid-minor-line: color-mix(in srgb, var(--fg) 3.5%, transparent);
-  --grid-medium-line: color-mix(in srgb, var(--fg) 6%, transparent);
-  --grid-major-line: color-mix(in srgb, var(--fg) 10%, transparent);
-  --grid-pad: color-mix(in srgb, var(--accent) 24%, transparent);
-  --grid-pad-ring: color-mix(in srgb, var(--accent) 11%, transparent);
-  --grid-crosshair: color-mix(in srgb, var(--accent) 18%, transparent);
-  --grid-glow-accent: color-mix(in srgb, var(--accent) 9%, transparent);
-  --grid-glow-link: color-mix(in srgb, var(--link) 6%, transparent);
-  --grid-scanline: color-mix(in srgb, var(--fg) 4%, transparent);
-  --grid-trace: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='640' viewBox='0 0 640 640' fill='none'%3E%3Cpath d='M32 320 H176 M208 320 H432 M464 320 H608' stroke='%23E6E9EC' stroke-opacity='0.08' stroke-width='1'/%3E%3Cpath d='M320 32 V176 M320 208 V432 M320 464 V608' stroke='%23E6E9EC' stroke-opacity='0.06' stroke-width='1'/%3E%3Cpath d='M176 176 H320 V320 H176 Z' stroke='%23F2A93B' stroke-opacity='0.16' stroke-width='1'/%3E%3Cpath d='M432 320 H544 V432 H432 Z' stroke='%235B9DF9' stroke-opacity='0.14' stroke-width='1'/%3E%3Cpath d='M96 96 L144 96 L144 144' stroke='%23E6E9EC' stroke-opacity='0.07' stroke-width='1'/%3E%3Cpath d='M544 544 L496 544 L496 496' stroke='%23E6E9EC' stroke-opacity='0.07' stroke-width='1'/%3E%3Cpath d='M208 432 L272 496' stroke='%23F2A93B' stroke-opacity='0.12' stroke-width='1'/%3E%3Cpath d='M432 208 L496 144' stroke='%235B9DF9' stroke-opacity='0.1' stroke-width='1'/%3E%3Ccircle cx='176' cy='320' r='3.5' fill='%23F2A93B' fill-opacity='0.32'/%3E%3Ccircle cx='464' cy='320' r='3.5' fill='%23F2A93B' fill-opacity='0.24'/%3E%3Ccircle cx='320' cy='176' r='3' fill='%235B9DF9' fill-opacity='0.28'/%3E%3Ccircle cx='320' cy='464' r='2.5' fill='%23E6E9EC' fill-opacity='0.18'/%3E%3Ccircle cx='320' cy='320' r='5' stroke='%23F2A93B' stroke-opacity='0.2' stroke-width='1' fill='none'/%3E%3Ccircle cx='320' cy='320' r='1.5' fill='%23F2A93B' fill-opacity='0.4'/%3E%3Cpath d='M80 560 H120 M520 80 H560' stroke='%23E6E9EC' stroke-opacity='0.05' stroke-width='1'/%3E%3C/svg%3E");
+  /* Instrument panel background layers */
+  --grid-minor-line: color-mix(in srgb, var(--fg) 4%, transparent);
+  --grid-medium-line: color-mix(in srgb, var(--fg) 7%, transparent);
+  --grid-major-line: color-mix(in srgb, var(--fg) 11%, transparent);
+  --grid-glow-accent: color-mix(in srgb, var(--accent) 8%, transparent);
+  --grid-glow-signal: color-mix(in srgb, var(--signal) 6%, transparent);
+  --panel-inset: color-mix(in srgb, var(--bg) 70%, black);
+  --panel-highlight: color-mix(in srgb, var(--fg) 6%, transparent);
 }
 
 /* Light theme — same brand, inverted surface, same accent hue. */
 .light {
-  --bg: #f5f6f7;
+  --bg: #eef0f2;
   --surface: #ffffff;
-  --surface-raised: #f0f1f3;
-  --fg: #14171b;
-  --fg-muted: #5c6570;
-  --accent: #c8811a; /* same hue as dark accent, deepened for AA contrast on a light surface */
+  --surface-raised: #e8eaed;
+  --fg: #12151a;
+  --fg-muted: #5a6270;
+  --accent: #c8811a;
   --accent-fg: #ffffff;
+  --signal: #0891b2;
   --link: #2563eb;
   --border: rgba(20, 23, 27, 0.08);
   --success: #16a34a;
   --warning: #b45309;
   --error: #dc2626;
 
-  --grid-minor-line: color-mix(in srgb, var(--fg) 4.5%, transparent);
-  --grid-medium-line: color-mix(in srgb, var(--fg) 7%, transparent);
-  --grid-major-line: color-mix(in srgb, var(--fg) 11%, transparent);
-  --grid-pad: color-mix(in srgb, var(--accent) 22%, transparent);
-  --grid-pad-ring: color-mix(in srgb, var(--accent) 13%, transparent);
-  --grid-crosshair: color-mix(in srgb, var(--accent) 20%, transparent);
-  --grid-glow-accent: color-mix(in srgb, var(--accent) 7%, transparent);
-  --grid-glow-link: color-mix(in srgb, var(--link) 5%, transparent);
-  --grid-scanline: color-mix(in srgb, var(--fg) 5%, transparent);
-  --grid-trace: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='640' viewBox='0 0 640 640' fill='none'%3E%3Cpath d='M32 320 H176 M208 320 H432 M464 320 H608' stroke='%2314171B' stroke-opacity='0.06' stroke-width='1'/%3E%3Cpath d='M320 32 V176 M320 208 V432 M320 464 V608' stroke='%2314171B' stroke-opacity='0.04' stroke-width='1'/%3E%3Cpath d='M176 176 H320 V320 H176 Z' stroke='%23C8811A' stroke-opacity='0.18' stroke-width='1'/%3E%3Cpath d='M432 320 H544 V432 H432 Z' stroke='%232563EB' stroke-opacity='0.14' stroke-width='1'/%3E%3Cpath d='M96 96 L144 96 L144 144' stroke='%2314171B' stroke-opacity='0.05' stroke-width='1'/%3E%3Cpath d='M544 544 L496 544 L496 496' stroke='%2314171B' stroke-opacity='0.05' stroke-width='1'/%3E%3Cpath d='M208 432 L272 496' stroke='%23C8811A' stroke-opacity='0.14' stroke-width='1'/%3E%3Cpath d='M432 208 L496 144' stroke='%232563EB' stroke-opacity='0.11' stroke-width='1'/%3E%3Ccircle cx='176' cy='320' r='3.5' fill='%23C8811A' fill-opacity='0.28'/%3E%3Ccircle cx='464' cy='320' r='3.5' fill='%23C8811A' fill-opacity='0.2'/%3E%3Ccircle cx='320' cy='176' r='3' fill='%232563EB' fill-opacity='0.22'/%3E%3Ccircle cx='320' cy='464' r='2.5' fill='%2314171B' fill-opacity='0.12'/%3E%3Ccircle cx='320' cy='320' r='5' stroke='%23C8811A' stroke-opacity='0.22' stroke-width='1' fill='none'/%3E%3Ccircle cx='320' cy='320' r='1.5' fill='%23C8811A' fill-opacity='0.35'/%3E%3Cpath d='M80 560 H120 M520 80 H560' stroke='%2314171B' stroke-opacity='0.04' stroke-width='1'/%3E%3C/svg%3E");
+  --grid-minor-line: color-mix(in srgb, var(--fg) 5%, transparent);
+  --grid-medium-line: color-mix(in srgb, var(--fg) 8%, transparent);
+  --grid-major-line: color-mix(in srgb, var(--fg) 12%, transparent);
+  --grid-glow-accent: color-mix(in srgb, var(--accent) 6%, transparent);
+  --grid-glow-signal: color-mix(in srgb, var(--signal) 5%, transparent);
+  --panel-inset: color-mix(in srgb, var(--bg) 85%, black);
+  --panel-highlight: color-mix(in srgb, var(--fg) 8%, transparent);
 }
 
 [dir="rtl"] {
@@ -156,8 +154,7 @@
   }
 }
 
-/* Blueprint / schematic backgrounds — docs/04 signature motifs.
-   SiteBackground component renders layered fixed planes; bp-grid = local inset panels */
+/* Instrument panel — site background + shared module primitives */
 
 .site-bg-root {
   pointer-events: none;
@@ -172,195 +169,260 @@
   inset: 0;
 }
 
-/* Layer 1 — graphite depth + ambient copper/blue wash (OLED-friendly, no neon) */
 .site-bg-layer--depth {
   background:
-  radial-gradient(ellipse 70% 50% at 50% -15%, var(--grid-glow-accent), transparent 58%),
-  radial-gradient(ellipse 42% 38% at 100% 18%, var(--grid-glow-link), transparent 62%),
-  radial-gradient(ellipse 38% 34% at 0% 82%, var(--grid-glow-link), transparent 58%),
-  linear-gradient(180deg, color-mix(in srgb, var(--surface) 35%, var(--bg)) 0%, var(--color-bg) 48%, color-mix(in srgb, var(--bg) 92%, black) 100%);
-  animation: site-bg-ambient 14s ease-in-out infinite alternate;
+    radial-gradient(ellipse 55% 45% at 85% 10%, var(--grid-glow-signal), transparent 55%),
+    radial-gradient(ellipse 50% 40% at 10% 90%, var(--grid-glow-accent), transparent 50%),
+    linear-gradient(180deg, color-mix(in srgb, var(--surface) 40%, var(--bg)) 0%, var(--color-bg) 100%);
 }
 
-/* Layer 2 — engineering paper grid with crosshair intersections + fiducial pads */
 .site-bg-layer--grid {
   background-image:
-    radial-gradient(circle at center, var(--grid-pad) 1.5px, transparent 1.6px),
-    radial-gradient(circle at center, var(--grid-pad-ring) 3.5px, transparent 3.7px),
-    linear-gradient(var(--grid-crosshair) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-crosshair) 1px, transparent 1px),
-    linear-gradient(var(--grid-minor-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-minor-line) 1px, transparent 1px),
-    linear-gradient(var(--grid-medium-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-medium-line) 1px, transparent 1px),
-    linear-gradient(var(--grid-major-line) 1.5px, transparent 1.5px),
-    linear-gradient(90deg, var(--grid-major-line) 1.5px, transparent 1.5px);
-  background-size:
-    100px 100px,
-    100px 100px,
-    100px 100px,
-    100px 100px,
-    10px 10px,
-    10px 10px,
-    50px 50px,
-    50px 50px,
-    100px 100px,
-    100px 100px;
-  background-position: center;
-  mask-image: radial-gradient(ellipse 125% 95% at 50% 38%, black 22%, transparent 90%);
-}
-
-/* Layer 3 — PCB trace tile, strongest at viewport edges */
-.site-bg-layer--trace {
-  background-image: var(--grid-trace);
-  background-size: 640px 640px;
-  background-position: center;
-  background-repeat: repeat;
-  opacity: 0.62;
-  mask-image: radial-gradient(ellipse 98% 78% at 50% 44%, transparent 38%, black 100%);
-}
-
-/* Layer 4 — oscilloscope scanlines, very subtle */
-.site-bg-layer--scanline {
-  opacity: 0.55;
-  background-image: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 3px,
-    var(--grid-scanline) 3px,
-    var(--grid-scanline) 4px
-  );
-  mask-image: linear-gradient(to bottom, transparent 8%, black 35%, black 65%, transparent 92%);
-}
-
-/* Layer 5 — soft vignette, keeps content column readable */
-.site-bg-layer--vignette {
-  background:
-    radial-gradient(ellipse 90% 70% at 50% 45%, transparent 42%, color-mix(in srgb, var(--bg) 55%, black) 100%),
-    radial-gradient(ellipse 120% 80% at 50% 50%, transparent 55%, color-mix(in srgb, var(--bg) 40%, transparent) 100%);
-  opacity: 0.85;
-}
-
-/* Layer 6 — PCB fiducial registration marks at viewport corners */
-.site-bg-layer--fiducials {
-  --fiducial-size: 18px;
-  --fiducial-offset: max(1.25rem, env(safe-area-inset-left, 0px));
-  background:
-    linear-gradient(var(--grid-crosshair), var(--grid-crosshair)) 0 0 / var(--fiducial-size) 1px no-repeat,
-    linear-gradient(var(--grid-crosshair), var(--grid-crosshair)) 0 0 / 1px var(--fiducial-size) no-repeat,
-    radial-gradient(circle, var(--grid-pad) 2px, transparent 2.2px) 0 0 / var(--fiducial-size) var(--fiducial-size) no-repeat,
-    linear-gradient(var(--grid-crosshair), var(--grid-crosshair)) 100% 0 / var(--fiducial-size) 1px no-repeat,
-    linear-gradient(var(--grid-crosshair), var(--grid-crosshair)) 100% 0 / 1px var(--fiducial-size) no-repeat,
-    radial-gradient(circle, var(--grid-pad) 2px, transparent 2.2px) 100% 0 / var(--fiducial-size) var(--fiducial-size) no-repeat,
-    linear-gradient(var(--grid-crosshair), var(--grid-crosshair)) 0 100% / var(--fiducial-size) 1px no-repeat,
-    linear-gradient(var(--grid-crosshair), var(--grid-crosshair)) 0 100% / 1px var(--fiducial-size) no-repeat,
-    radial-gradient(circle, var(--grid-pad) 2px, transparent 2.2px) 0 100% / var(--fiducial-size) var(--fiducial-size) no-repeat,
-    linear-gradient(var(--grid-crosshair), var(--grid-crosshair)) 100% 100% / var(--fiducial-size) 1px no-repeat,
-    linear-gradient(var(--grid-crosshair), var(--grid-crosshair)) 100% 100% / 1px var(--fiducial-size) no-repeat,
-    radial-gradient(circle, var(--grid-pad) 2px, transparent 2.2px) 100% 100% / var(--fiducial-size) var(--fiducial-size) no-repeat;
-  background-position:
-    var(--fiducial-offset) var(--fiducial-offset),
-    var(--fiducial-offset) var(--fiducial-offset),
-    var(--fiducial-offset) var(--fiducial-offset),
-    calc(100% - var(--fiducial-offset)) var(--fiducial-offset),
-    calc(100% - var(--fiducial-offset)) var(--fiducial-offset),
-    calc(100% - var(--fiducial-offset)) var(--fiducial-offset),
-    var(--fiducial-offset) calc(100% - var(--fiducial-offset)),
-    var(--fiducial-offset) calc(100% - var(--fiducial-offset)),
-    var(--fiducial-offset) calc(100% - var(--fiducial-offset)),
-    calc(100% - var(--fiducial-offset)) calc(100% - var(--fiducial-offset)),
-    calc(100% - var(--fiducial-offset)) calc(100% - var(--fiducial-offset)),
-    calc(100% - var(--fiducial-offset)) calc(100% - var(--fiducial-offset));
-  opacity: 0.7;
-  mask-image: radial-gradient(ellipse 85% 75% at 50% 50%, transparent 62%, black 100%);
-}
-
-@keyframes site-bg-ambient {
-  from {
-    filter: brightness(1) saturate(1);
-  }
-  to {
-    filter: brightness(1.04) saturate(1.08);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .site-bg-layer--depth {
-    animation: none;
-  }
-}
-
-/* Local blueprint fill — cards, placeholders, inset panels */
-.bp-grid {
-  background-color: var(--color-surface-raised);
-  background-image:
-    radial-gradient(circle at center, var(--grid-pad) 1px, transparent 1.2px),
     linear-gradient(var(--grid-minor-line) 1px, transparent 1px),
     linear-gradient(90deg, var(--grid-minor-line) 1px, transparent 1px),
     linear-gradient(var(--grid-medium-line) 1px, transparent 1px),
     linear-gradient(90deg, var(--grid-medium-line) 1px, transparent 1px);
-  background-size: 40px 40px, 8px 8px, 8px 8px, 40px 40px, 40px 40px;
+  background-size: 20px 20px, 20px 20px, 100px 100px, 100px 100px;
+  background-position: center;
+  mask-image: radial-gradient(ellipse 110% 90% at 50% 40%, black 15%, transparent 88%);
+  opacity: 0.85;
 }
 
-/* Hero / section boost — stronger grid read without duplicating the full page layer */
+.site-bg-layer--vignette {
+  background: radial-gradient(
+    ellipse 85% 75% at 50% 45%,
+    transparent 35%,
+    color-mix(in srgb, var(--bg) 65%, black) 100%
+  );
+  opacity: 0.9;
+}
+
+/* Measurement grid for inset panels (oscilloscope screen, placeholders) */
+.instrument-grid {
+  background-color: var(--color-bg);
+  background-image:
+    linear-gradient(var(--grid-minor-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-minor-line) 1px, transparent 1px),
+    linear-gradient(var(--grid-medium-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-medium-line) 1px, transparent 1px);
+  background-size: 12px 12px, 12px 12px, 48px 48px, 48px 48px;
+}
+
+/* Rack-mount panel module — shared by cards, hero instrument, contact CTA */
+.panel-module {
+  position: relative;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  box-shadow:
+    inset 0 1px 0 var(--panel-highlight),
+    0 1px 2px color-mix(in srgb, var(--bg) 80%, black);
+}
+
+.panel-module__bezel {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fg) 4%, transparent);
+}
+
+.panel-module--hero {
+  background: linear-gradient(
+    165deg,
+    color-mix(in srgb, var(--surface) 95%, var(--signal)) 0%,
+    var(--color-surface) 45%
+  );
+}
+
+.panel-readout {
+  border: 1px solid var(--color-border);
+  background-color: color-mix(in srgb, var(--surface) 80%, var(--bg));
+  box-shadow: inset 0 1px 0 var(--panel-highlight);
+}
+
+/* LED status indicators */
+.led {
+  position: relative;
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  flex-shrink: 0;
+  background-color: var(--color-accent);
+  box-shadow: 0 0 5px 1px color-mix(in srgb, var(--color-accent) 35%, transparent);
+}
+
+.led::before {
+  content: "";
+  position: absolute;
+  inset: 1.5px;
+  border-radius: inherit;
+  background: color-mix(in srgb, white 25%, var(--color-accent));
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.led::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--color-accent) 30%, transparent) 0%,
+    transparent 65%
+  );
+  z-index: -1;
+  pointer-events: none;
+}
+
+.led--dim {
+  box-shadow: 0 0 4px 1px color-mix(in srgb, var(--color-accent) 22%, transparent);
+}
+
+.led--dim::before {
+  opacity: 0.35;
+}
+
+.led--dim::after {
+  inset: -2px;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--color-accent) 18%, transparent) 0%,
+    transparent 60%
+  );
+}
+
+.led--signal {
+  background-color: var(--color-signal);
+  box-shadow: 0 0 5px 1px color-mix(in srgb, var(--color-signal) 35%, transparent);
+}
+
+.led--signal::before {
+  background: color-mix(in srgb, white 25%, var(--color-signal));
+}
+
+.led--signal::after {
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--color-signal) 30%, transparent) 0%,
+    transparent 65%
+  );
+}
+
+.led--pulse {
+  background-color: var(--color-success);
+  box-shadow: 0 0 6px 2px color-mix(in srgb, var(--color-success) 38%, transparent);
+  animation: led-pulse 2.8s ease-in-out infinite;
+}
+
+.led--pulse::before {
+  background: color-mix(in srgb, white 30%, var(--color-success));
+  opacity: 0.55;
+}
+
+.led--pulse::after {
+  inset: -3px;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--color-success) 35%, transparent) 0%,
+    transparent 65%
+  );
+  animation: led-halo-pulse 2.8s ease-in-out infinite;
+}
+
+@keyframes led-pulse {
+  0%,
+  100% {
+    filter: brightness(1.05);
+  }
+  50% {
+    filter: brightness(0.88);
+  }
+}
+
+@keyframes led-halo-pulse {
+  0%,
+  100% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .led--pulse {
+    animation: none;
+    filter: brightness(1.1);
+  }
+
+  .led--pulse::after {
+    animation: none;
+  }
+}
+
+/* Legacy blueprint utilities — kept for non-landing pages */
+.bp-grid {
+  background-color: var(--color-surface-raised);
+  background-image:
+    linear-gradient(var(--grid-minor-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-minor-line) 1px, transparent 1px),
+    linear-gradient(var(--grid-medium-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-medium-line) 1px, transparent 1px);
+  background-size: 8px 8px, 8px 8px, 40px 40px, 40px 40px;
+}
+
 .bp-grid-intense {
   background-image:
-    radial-gradient(circle at center, var(--grid-pad) 1.5px, transparent 1.6px),
-    radial-gradient(circle at center, var(--grid-pad-ring) 3px, transparent 3.2px),
-    linear-gradient(var(--grid-crosshair) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-crosshair) 1px, transparent 1px),
     linear-gradient(var(--grid-minor-line) 1px, transparent 1px),
     linear-gradient(90deg, var(--grid-minor-line) 1px, transparent 1px),
     linear-gradient(var(--grid-major-line) 1.5px, transparent 1.5px),
     linear-gradient(90deg, var(--grid-major-line) 1.5px, transparent 1.5px);
-  background-size:
-    80px 80px,
-    80px 80px,
-    80px 80px,
-    80px 80px,
-    20px 20px,
-    20px 20px,
-    80px 80px,
-    80px 80px;
+  background-size: 16px 16px, 16px 16px, 64px 64px, 64px 64px;
 }
 
-/* Landing page — distinct full-width section bands */
+/* Landing page — instrument panel section bands */
 .landing-section {
   position: relative;
   isolation: isolate;
-  overflow: hidden;
+  overflow: visible;
 }
 
-.landing-section-index {
+.landing-section-channel {
   z-index: 2;
+  color: color-mix(in srgb, var(--fg-muted) 70%, var(--fg));
 }
 
-/* 01 Hero — fills viewport below header, content centered vertically */
 .landing-section-hero {
   border-bottom: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;
-  min-height: calc(100dvh - 4rem); /* match site header h-16 */
+  min-height: calc(100dvh - 4rem);
 }
 
-/* Normal Persian/Latin word spacing — avoid letter-spacing on prose blocks */
 .hero-copy h1,
 .hero-copy p {
   letter-spacing: normal;
   word-spacing: normal;
 }
 
-.landing-section-hero::after {
+.landing-section-hero::before {
   content: "";
   pointer-events: none;
   position: absolute;
-  inset-inline: 0;
-  bottom: 0;
-  height: 5rem;
-  background: linear-gradient(to bottom, transparent, var(--color-bg));
+  inset-inline-start: 0;
+  inset-block: 15%;
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--color-accent) 20%,
+    var(--color-signal) 80%,
+    transparent
+  );
+  opacity: 0.6;
 }
 
-/* 02 Capabilities — solid surface band, accent wash from start */
 .landing-section-capabilities {
   background-color: var(--color-surface);
   border-block: 1px solid var(--color-border);
@@ -372,56 +434,32 @@
   position: absolute;
   inset: 0;
   background: linear-gradient(
-    105deg,
-    color-mix(in srgb, var(--accent) 10%, transparent) 0%,
-    transparent 42%
+    90deg,
+    color-mix(in srgb, var(--signal) 5%, transparent) 0%,
+    transparent 35%
   );
 }
 
-.landing-section-capabilities::after {
-  content: "";
-  pointer-events: none;
-  position: absolute;
-  inset-block: 0;
-  inset-inline-start: 0;
-  width: 3px;
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    var(--color-accent) 25%,
-    var(--color-accent) 75%,
-    transparent
-  );
-  opacity: 0.55;
+.landing-section-projects {
+  border-top: 1px solid var(--color-border);
 }
 
-/* 03 Projects — transparent band, dashed schematic frame */
 .landing-section-projects::before {
   content: "";
   pointer-events: none;
   position: absolute;
-  inset-block: 1.5rem;
-  inset-inline: max(1rem, calc((100% - 72rem) / 2 + 1rem));
-  border: 1px dashed color-mix(in srgb, var(--accent) 28%, transparent);
-  border-radius: var(--radius-lg);
-}
-
-.landing-section-projects::after {
-  content: "";
-  pointer-events: none;
-  position: absolute;
-  inset-inline: 0;
-  top: 0;
+  inset-inline: max(1rem, calc((100% - 72rem) / 2));
+  inset-block-start: 0;
   height: 1px;
   background: linear-gradient(
     90deg,
-    transparent,
-    color-mix(in srgb, var(--accent) 35%, transparent) 50%,
+    var(--color-accent),
+    var(--color-signal) 50%,
     transparent
   );
+  opacity: 0.45;
 }
 
-/* 04 Team — raised surface, cool link glow */
 .landing-section-team {
   background-color: var(--color-surface-raised);
   border-block: 1px solid var(--color-border);
@@ -433,57 +471,20 @@
   position: absolute;
   inset: 0;
   background: radial-gradient(
-    ellipse 50% 60% at 100% 50%,
-    var(--grid-glow-link),
-    transparent 70%
+    ellipse 45% 55% at 0% 50%,
+    var(--grid-glow-signal),
+    transparent 65%
   );
 }
 
-.landing-section-team::after {
-  content: "";
-  pointer-events: none;
-  position: absolute;
-  inset-block: 0;
-  inset-inline-end: 0;
-  width: 3px;
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    var(--color-link) 30%,
-    var(--color-link) 70%,
-    transparent
-  );
-  opacity: 0.35;
-}
-
-/* 05 Blog — surface band, horizontal trace lines */
 .landing-section-blog {
   background-color: var(--color-surface);
   border-top: 1px solid var(--color-border);
 }
 
-.landing-section-blog::before {
-  content: "";
-  pointer-events: none;
-  position: absolute;
-  inset-inline: 0;
-  top: 0;
-  height: 100%;
-  opacity: 0.4;
-  background-image: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 79px,
-    color-mix(in srgb, var(--fg) 6%, transparent) 79px,
-    color-mix(in srgb, var(--fg) 6%, transparent) 80px
-  );
-  mask-image: linear-gradient(to bottom, black 15%, transparent 85%);
-}
-
-/* 06 Contact — accent cap + inset panel zone */
 .landing-section-contact {
   background-color: var(--color-surface);
-  border-top: 3px solid var(--color-accent);
+  border-top: 1px solid var(--color-border);
 }
 
 .landing-section-contact::before {
@@ -492,12 +493,73 @@
   position: absolute;
   inset-inline: 0;
   top: 0;
-  height: 12rem;
-  background: radial-gradient(
-    ellipse 80% 100% at 50% 0%,
-    color-mix(in srgb, var(--accent) 12%, transparent),
-    transparent 70%
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--color-accent) 0%,
+    var(--color-signal) 50%,
+    var(--color-accent) 100%
   );
+  opacity: 0.7;
+}
+
+/* Instrument-panel button hovers — primary "engage" sweep, outline bezel glow */
+.btn-engage::before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    color-mix(in srgb, white 24%, transparent) 48%,
+    color-mix(in srgb, white 10%, transparent) 52%,
+    transparent 65%
+  );
+  transform: translateX(-120%);
+  transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-engage:hover::before {
+  transform: translateX(120%);
+}
+
+.btn-engage-outline::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  opacity: 0;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--color-accent) 22%, transparent),
+    0 0 12px color-mix(in srgb, var(--color-accent) 10%, transparent);
+  transition: opacity 200ms ease-out;
+}
+
+.btn-engage-outline:hover::after {
+  opacity: 1;
+}
+
+/* Landing arrows — slide on parent hover (compose rotate + translate separately) */
+.landing-arrow {
+  transition:
+    translate 220ms cubic-bezier(0.4, 0, 0.2, 1),
+    color 200ms ease-out;
+}
+
+[dir="rtl"] .landing-arrow {
+  rotate: 180deg;
+}
+
+.group:hover .landing-arrow,
+.btn-motion:hover .landing-arrow {
+  translate: 0.25rem 0;
+}
+
+[dir="rtl"] .group:hover .landing-arrow,
+[dir="rtl"] .btn-motion:hover .landing-arrow {
+  translate: -0.25rem 0;
 }
 
 /* Tailwind Typography (`prose`) themed onto our own tokens rather than its

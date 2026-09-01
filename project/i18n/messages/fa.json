@@ -12,7 +12,8 @@
     "contact": "تماس",
     "resume": "رزومه",
     "toggleTheme": "تغییر پوسته",
-    "toggleLanguage": "English"
+    "toggleLanguage": "English",
+    "headerControls": "تنظیمات سایت"
   },
   "home": {
     "heroEyebrow": "رباتیک و سیستم‌های نهفته",
@@ -22,7 +23,6 @@
     "ctaContact": "تماس با ما",
     "heroStatus": "وضعیت سیستم",
     "heroStatusOnline": "فعال",
-    "heroReadout": "FW v2.4 · حلقه کنترل فعال · پشته نهفته",
     "statProjects": "پروژه",
     "statEngineers": "مهندس",
     "capabilitiesEyebrow": "سیستم‌های اصلی",
@@ -92,7 +92,13 @@
   },
   "footer": {
     "rights": "تمامی حقوق محفوظ است.",
-    "builtWith": "ساخته‌شده توسط ایلیا و پوریا."
+    "builtWith": "مهندسی رباتیک و سیستم‌های نهفته.",
+    "navTitle": "راه‌یابی",
+    "navLabel": "راه‌یابی سایت",
+    "contactTitle": "تماس با ما",
+    "phone": "تلفن",
+    "email": "ایمیل",
+    "location": "آدرس"
   },
   "admin": {
     "login": {

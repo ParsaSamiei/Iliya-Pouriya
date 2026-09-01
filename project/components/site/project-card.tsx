@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "@/i18n/navigation";
 
 type ProjectCardData = {
@@ -25,37 +24,39 @@ export function ProjectCard({ project }: { project: ProjectCardData }) {
   return (
     <Link
       href={{ pathname: "/projects/[slug]", params: { slug: project.slug } }}
-      className="cursor-pointer"
+      className="group panel-module block h-full cursor-pointer overflow-hidden transition-colors duration-200 hover:border-accent/40"
     >
-      <Card className="group h-full overflow-hidden transition-colors duration-200 hover:border-accent/60 hover:bg-surface-raised">
-        <div className="relative aspect-video w-full overflow-hidden bg-surface-raised">
-          {project.coverImageUrl ? (
-            <Image
-              src={project.coverImageUrl}
-              alt={title}
-              fill
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
-            />
-          ) : (
-            <div className="bp-grid flex h-full w-full items-center justify-center text-xs font-mono text-fg-muted">
-              {t("empty") ? title : title}
-            </div>
-          )}
-        </div>
-        <CardHeader>
-          <CardTitle>{title}</CardTitle>
-          {summary && <CardDescription className="line-clamp-2">{summary}</CardDescription>}
-        </CardHeader>
+      <div className="relative aspect-video w-full overflow-hidden border-b border-border bg-bg">
+        {project.coverImageUrl ? (
+          <Image
+            src={project.coverImageUrl}
+            alt={title}
+            fill
+            className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+          />
+        ) : (
+          <div className="instrument-grid flex h-full w-full items-center justify-center font-mono text-xs text-fg-muted">
+            {title}
+          </div>
+        )}
+      </div>
+      <div className="p-5">
+        <h3 className="font-display text-lg font-semibold text-fg transition-colors duration-200 group-hover:text-accent">
+          {title}
+        </h3>
+        {summary && (
+          <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-fg-muted">{summary}</p>
+        )}
         {tags.length > 0 && (
-          <CardContent className="flex flex-wrap gap-1.5">
+          <div className="mt-4 flex flex-wrap gap-1.5">
             {tags.map((tag) => (
-              <Badge key={tag} variant="outline">
+              <Badge key={tag} variant="outline" className="font-mono text-[10px]">
                 {tag}
               </Badge>
             ))}
-          </CardContent>
+          </div>
         )}
-      </Card>
+      </div>
     </Link>
   );
 }

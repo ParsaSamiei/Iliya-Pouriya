@@ -12,7 +12,8 @@
     "contact": "Contact",
     "resume": "Resume",
     "toggleTheme": "Toggle theme",
-    "toggleLanguage": "فارسی"
+    "toggleLanguage": "فارسی",
+    "headerControls": "Site preferences"
   },
   "home": {
     "heroEyebrow": "Robotics & Embedded Systems",
@@ -22,7 +23,6 @@
     "ctaContact": "Get in touch",
     "heroStatus": "SYS.STATUS",
     "heroStatusOnline": "ONLINE",
-    "heroReadout": "FW v2.4 · CTRL-LOOP ACTIVE · EMBEDDED STACK",
     "statProjects": "Projects",
     "statEngineers": "Engineers",
     "capabilitiesEyebrow": "Core systems",
@@ -92,7 +92,13 @@
   },
   "footer": {
     "rights": "All rights reserved.",
-    "builtWith": "Built by Iliya & Pouriya."
+    "builtWith": "Robotics & embedded systems engineering.",
+    "navTitle": "Navigation",
+    "navLabel": "Site navigation",
+    "contactTitle": "Contact",
+    "phone": "Phone",
+    "email": "Email",
+    "location": "Location"
   },
   "admin": {
     "login": {

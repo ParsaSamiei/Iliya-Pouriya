@@ -8,29 +8,33 @@ export async function HomeContactCta() {
   const t = await getTranslations("home");
 
   return (
-    <HomeSection variant="contact" id="contact" index="06">
+    <HomeSection variant="contact" id="contact" channel="COM">
       <HomeSectionInner tight>
-        <div className="relative z-10 overflow-hidden border border-border bg-bg p-8 sm:p-12">
-          <div aria-hidden className="pointer-events-none absolute inset-0 bp-grid-intense opacity-50" />
+        <div className="panel-module relative z-10 p-8 sm:p-12">
+          <div className="panel-module__bezel" aria-hidden />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 bg-linear-to-br from-bg/30 via-bg/85 to-bg"
+            className="pointer-events-none absolute inset-0 overflow-hidden instrument-grid opacity-30"
           />
+
           <div className="relative flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
             <div className="max-w-xl">
-              <p className="font-mono text-xs tracking-widest text-accent uppercase">
-                {t("contactEyebrow")}
-              </p>
-              <h2 className="mt-2 font-display text-2xl font-semibold text-fg sm:text-3xl">
+              <div className="flex items-center gap-2.5">
+                <span className="led" aria-hidden />
+                <p className="font-mono text-[11px] tracking-wide text-accent uppercase">
+                  {t("contactEyebrow")}
+                </p>
+              </div>
+              <h2 className="mt-3 font-display text-2xl font-semibold text-fg sm:text-3xl">
                 {t("contactTitle")}
               </h2>
               <p className="mt-3 text-fg-muted">{t("contactSubtitle")}</p>
             </div>
-            <Button asChild size="lg" className="cursor-pointer shrink-0">
+            <Button asChild size="lg" className="btn-motion shrink-0">
               <Link href="/contact">
-                <Mail className="size-4" aria-hidden />
+                <Mail data-icon="inline-start" aria-hidden />
                 {t("ctaContact")}
-                <ArrowRight className="size-4 rtl:rotate-180" aria-hidden />
+                <ArrowRight data-icon="inline-end" className="landing-arrow" aria-hidden />
               </Link>
             </Button>
           </div>

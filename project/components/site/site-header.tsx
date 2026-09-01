@@ -1,37 +1,29 @@
 "use client";
 
-import { Menu, Moon, Sun, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useTheme } from "next-themes";
 import { useState } from "react";
-import { LanguageSwitch } from "@/components/site/language-switch";
+import { SiteHeaderControls } from "@/components/site/site-header-controls";
 import { Button } from "@/components/ui/button";
 import { Link, usePathname } from "@/i18n/navigation";
-
-const NAV_ITEMS = [
-  { href: "/", key: "home" },
-  { href: "/projects", key: "projects" },
-  { href: "/blog", key: "blog" },
-  { href: "/about", key: "about" },
-  { href: "/contact", key: "contact" },
-] as const;
+import { SITE_NAV_ITEMS } from "@/lib/site-nav";
 
 export function SiteHeader() {
   const t = useTranslations("nav");
   const tSite = useTranslations("site");
-  const { resolvedTheme, setTheme } = useTheme();
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-bg/80 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-border bg-bg/90 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-        <Link href="/" className="font-display text-lg font-semibold tracking-tight text-fg">
+        <Link href="/" className="flex items-center gap-2.5 font-display text-lg font-semibold tracking-tight text-fg">
+          <span className="led led--dim" aria-hidden />
           {tSite("name")}
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex">
-          {NAV_ITEMS.map((item) => {
+          {SITE_NAV_ITEMS.map((item) => {
             const active = pathname === item.href;
             return (
               <Link
@@ -48,17 +40,12 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            aria-label={t("toggleTheme")}
-            onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-          >
-            <Sun className="hidden size-4 dark:block" />
-            <Moon className="block size-4 dark:hidden" />
-          </Button>
+          <SiteHeaderControls className="hidden sm:inline-flex" />
 
-          <LanguageSwitch className="hidden sm:inline-flex" />
+          <SiteHeaderControls
+            className="sm:hidden"
+            showLanguage={false}
+          />
 
           <Button
             variant="ghost"
@@ -67,14 +54,14 @@ export function SiteHeader() {
             aria-label="Menu"
             onClick={() => setMobileOpen((v) => !v)}
           >
-            {mobileOpen ? <X className="size-4" /> : <Menu className="size-4" />}
+            {mobileOpen ? <X /> : <Menu />}
           </Button>
         </div>
       </div>
 
       {mobileOpen && (
         <nav className="flex flex-col gap-1 border-t border-border px-4 py-3 md:hidden">
-          {NAV_ITEMS.map((item) => (
+          {SITE_NAV_ITEMS.map((item) => (
             <Link
               key={item.href}
               href={item.href}
@@ -84,9 +71,10 @@ export function SiteHeader() {
               {t(item.key)}
             </Link>
           ))}
-          <LanguageSwitch
-            className="w-full justify-start px-2 py-2 text-sm font-medium text-fg-muted hover:bg-surface-raised hover:text-fg"
-            onSwitch={() => setMobileOpen(false)}
+          <SiteHeaderControls
+            layout="menu"
+            showTheme={false}
+            onLanguageSwitch={() => setMobileOpen(false)}
           />
         </nav>
       )}

@@ -26,7 +26,10 @@ export default function AdminLoginPage() {
       setError(result.error);
       return;
     }
-    router.push(searchParams.get("from") ?? "/admin/dashboard");
+    const from = searchParams.get("from");
+    const destination =
+      !from || from === "/admin" ? "/admin/dashboard" : from;
+    router.push(destination);
     router.refresh();
   }
 

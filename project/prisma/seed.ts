@@ -124,6 +124,82 @@ async function main() {
     },
   });
 
+  await db.siteSetting.upsert({
+    where: { key: "hero_lab_panel" },
+    update: {},
+    create: {
+      key: "hero_lab_panel",
+      valueEn: {
+        panelTitleEn: "Lab systems",
+        panelTitleFa: "سیستم‌های آزمایشگاه",
+        rows: [
+          {
+            labelEn: "Embedded",
+            labelFa: "سیستم‌های نهفته",
+            detailEn: "bare-metal · RTOS · MCU",
+            detailFa: "bare-metal · RTOS · MCU",
+            led: "accent",
+          },
+          {
+            labelEn: "Controls",
+            labelFa: "کنترل",
+            detailEn: "closed-loop · real-time",
+            detailFa: "closed-loop · real-time",
+            led: "signal",
+          },
+          {
+            labelEn: "Firmware",
+            labelFa: "فریمور",
+            detailEn: "drivers · protocols · OTA",
+            detailFa: "درایور · پروتکل · OTA",
+            led: "accent",
+          },
+          {
+            labelEn: "Hardware",
+            labelFa: "سخت‌افزار",
+            detailEn: "schematic · PCB · bring-up",
+            detailFa: "شماتیک · PCB · bring-up",
+            led: "signal",
+          },
+        ],
+      },
+      valueFa: {
+        panelTitleEn: "Lab systems",
+        panelTitleFa: "سیستم‌های آزمایشگاه",
+        rows: [
+          {
+            labelEn: "Embedded",
+            labelFa: "سیستم‌های نهفته",
+            detailEn: "bare-metal · RTOS · MCU",
+            detailFa: "bare-metal · RTOS · MCU",
+            led: "accent",
+          },
+          {
+            labelEn: "Controls",
+            labelFa: "کنترل",
+            detailEn: "closed-loop · real-time",
+            detailFa: "closed-loop · real-time",
+            led: "signal",
+          },
+          {
+            labelEn: "Firmware",
+            labelFa: "فریمور",
+            detailEn: "drivers · protocols · OTA",
+            detailFa: "درایور · پروتکل · OTA",
+            led: "accent",
+          },
+          {
+            labelEn: "Hardware",
+            labelFa: "سخت‌افزار",
+            detailEn: "schematic · PCB · bring-up",
+            detailFa: "شماتیک · PCB · bring-up",
+            led: "signal",
+          },
+        ],
+      },
+    },
+  });
+
   console.log("Seed complete:");
   console.log("  People:", iliya.nameEn, "/", pouriya.nameEn);
   console.log("  Project:", project.slug);

@@ -80,7 +80,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
       <CapabilityGrid />
 
-      <HomeSection variant="projects" id="projects" index="03">
+      <HomeSection variant="projects" id="projects" channel="PRJ">
         <HomeSectionInner>
           <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <SectionHeader
@@ -89,10 +89,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               subtitle={t("featuredProjectsSubtitle")}
               className="mb-0"
             />
-            <Button asChild variant="outline" className="cursor-pointer shrink-0">
+            <Button asChild variant="outline" className="btn-motion shrink-0">
               <Link href="/projects">
                 {t("viewAllProjects")}
-                <ArrowRight className="size-4 rtl:rotate-180" />
+                <ArrowRight data-icon="inline-end" className="landing-arrow" />
               </Link>
             </Button>
           </div>
@@ -112,7 +112,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       </HomeSection>
 
       {people.length > 0 && (
-        <HomeSection variant="team" id="team" index="04">
+        <HomeSection variant="team" id="team" channel="CREW">
           <HomeSectionInner>
             <SectionHeader
               eyebrow={t("teamEyebrow")}
@@ -128,7 +128,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         </HomeSection>
       )}
 
-      <HomeSection variant="blog" id="blog" index="05">
+      <HomeSection variant="blog" id="blog" channel="LOG">
         <HomeSectionInner>
           <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <SectionHeader
@@ -137,10 +137,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               subtitle={t("latestPostsSubtitle")}
               className="mb-0"
             />
-            <Button asChild variant="outline" className="cursor-pointer shrink-0">
+            <Button asChild variant="outline" className="btn-motion shrink-0">
               <Link href="/blog">
                 {t("viewAllPosts")}
-                <ArrowRight className="size-4 rtl:rotate-180" />
+                <ArrowRight data-icon="inline-end" className="landing-arrow" />
               </Link>
             </Button>
           </div>
