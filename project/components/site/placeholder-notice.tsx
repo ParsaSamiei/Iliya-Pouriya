@@ -3,7 +3,7 @@ import { useTranslations } from "next-intl";
 export function PlaceholderNotice() {
   const t = useTranslations("common");
   return (
-    <div className="bp-grid rounded-[var(--radius-lg)] border border-dashed border-border p-8 text-center font-mono text-sm text-fg-muted">
+    <div className="rounded-[var(--radius-md)] border border-dashed border-border bg-surface/60 p-8 text-center text-sm text-fg-muted">
       {t("placeholderNotice")}
     </div>
   );

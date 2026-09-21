@@ -1,6 +1,7 @@
 import { Mail, MapPin, Phone } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
+import { SiteLogo } from "@/components/site/site-logo";
 import { Link } from "@/i18n/navigation";
 import {
   CONTACT_SETTINGS_KEY,
@@ -15,7 +16,7 @@ import { SITE_NAV_ITEMS } from "@/lib/site-nav";
 
 function FooterSectionLabel({ children }: { children: ReactNode }) {
   return (
-    <p className="font-mono text-[11px] tracking-wide text-fg-muted uppercase">{children}</p>
+    <p className="text-xs font-medium tracking-[0.12em] text-fg-muted uppercase">{children}</p>
   );
 }
 
@@ -45,8 +46,8 @@ export async function SiteFooter() {
               href="/"
               className="inline-flex items-center gap-2.5 font-display text-lg font-semibold tracking-tight text-fg transition-colors hover:text-accent"
             >
-              <span className="led led--dim" aria-hidden />
-              {tSite("name")}
+              <SiteLogo size="sm" />
+              <span>{tSite("name")}</span>
             </Link>
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-fg-muted">{tSite("tagline")}</p>
           </div>
@@ -133,10 +134,10 @@ export async function SiteFooter() {
         </div>
 
         <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-border pt-6 text-sm text-fg-muted sm:flex-row">
-          <p className="font-mono text-xs">
+          <p className="text-xs">
             © {year} {tSite("name")}. {t("rights")}
           </p>
-          <p className="font-mono text-xs">{t("builtWith")}</p>
+          <p className="text-xs">{t("builtWith")}</p>
         </div>
       </div>
     </footer>

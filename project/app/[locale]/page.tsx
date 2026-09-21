@@ -1,10 +1,13 @@
 import { ArrowRight } from "lucide-react";
+import { Suspense } from "react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { BlogPostCard } from "@/components/site/blog-post-card";
 import { CapabilityGrid } from "@/components/site/capability-grid";
 import { HomeContactCta } from "@/components/site/home-contact-cta";
 import { HomeHero } from "@/components/site/home-hero";
+import { HomeLoadingSkeleton } from "@/components/site/home-loading-skeleton";
 import { HomeSection, HomeSectionInner } from "@/components/site/home-section";
+import { MotionReveal } from "@/components/site/motion";
 import { PlaceholderNotice } from "@/components/site/placeholder-notice";
 import { ProjectCard } from "@/components/site/project-card";
 import { SectionHeader } from "@/components/site/section-header";
@@ -17,10 +20,19 @@ import { JsonLd, websiteJsonLd } from "@/lib/seo";
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
+
+  return (
+    <Suspense fallback={<HomeLoadingSkeleton />}>
+      <HomePageContent />
+    </Suspense>
+  );
+}
+
+async function HomePageContent() {
   const t = await getTranslations("home");
   const tSite = await getTranslations("site");
 
-  const [featuredProjects, people, latestPosts, projectCount] = await Promise.all([
+  const [featuredProjects, people, latestPosts] = await Promise.all([
     db.project
       .findMany({
         where: { publishedAt: { not: null }, isFeatured: true },
@@ -67,22 +79,38 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         },
       })
       .catch(() => []),
-    db.project
-      .count({ where: { publishedAt: { not: null } } })
-      .catch(() => 0),
   ]);
 
   return (
     <div>
       <JsonLd data={websiteJsonLd(tSite("name"), people)} />
 
-      <HomeHero projectCount={projectCount} engineerCount={people.length} />
+      <HomeHero />
 
-      <CapabilityGrid />
+      {people.length > 0 && (
+        <HomeSection variant="team" id="team">
+          <HomeSectionInner>
+            <MotionReveal>
+              <SectionHeader
+                eyebrow={t("teamEyebrow")}
+                title={t("meetTheTeam")}
+                subtitle={t("meetTheTeamSubtitle")}
+              />
+            </MotionReveal>
+            <div className="relative z-10 grid gap-6 sm:grid-cols-2">
+              {people.map((person, i) => (
+                <MotionReveal key={person.slug} delay={0.06 * i}>
+                  <TeamCard person={person} />
+                </MotionReveal>
+              ))}
+            </div>
+          </HomeSectionInner>
+        </HomeSection>
+      )}
 
-      <HomeSection variant="projects" id="projects" channel="PRJ">
+      <HomeSection variant="projects" id="projects">
         <HomeSectionInner>
-          <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <MotionReveal className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <SectionHeader
               eyebrow={t("projectsEyebrow")}
               title={t("featuredProjects")}
@@ -95,13 +123,15 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 <ArrowRight data-icon="inline-end" className="landing-arrow" />
               </Link>
             </Button>
-          </div>
+          </MotionReveal>
 
           <div className="relative z-10 mt-10">
             {featuredProjects.length > 0 ? (
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {featuredProjects.map((project) => (
-                  <ProjectCard key={project.slug} project={project} />
+                {featuredProjects.map((project, i) => (
+                  <MotionReveal key={project.slug} delay={0.05 * i}>
+                    <ProjectCard project={project} />
+                  </MotionReveal>
                 ))}
               </div>
             ) : (
@@ -111,26 +141,11 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         </HomeSectionInner>
       </HomeSection>
 
-      {people.length > 0 && (
-        <HomeSection variant="team" id="team" channel="CREW">
-          <HomeSectionInner>
-            <SectionHeader
-              eyebrow={t("teamEyebrow")}
-              title={t("meetTheTeam")}
-              subtitle={t("meetTheTeamSubtitle")}
-            />
-            <div className="relative z-10 grid gap-6 sm:grid-cols-2">
-              {people.map((person) => (
-                <TeamCard key={person.slug} person={person} />
-              ))}
-            </div>
-          </HomeSectionInner>
-        </HomeSection>
-      )}
+      <CapabilityGrid />
 
-      <HomeSection variant="blog" id="blog" channel="LOG">
+      <HomeSection variant="blog" id="blog">
         <HomeSectionInner>
-          <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <MotionReveal className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <SectionHeader
               eyebrow={t("blogEyebrow")}
               title={t("latestPosts")}
@@ -143,13 +158,15 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 <ArrowRight data-icon="inline-end" className="landing-arrow" />
               </Link>
             </Button>
-          </div>
+          </MotionReveal>
 
           <div className="relative z-10 mt-10">
             {latestPosts.length > 0 ? (
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {latestPosts.map((post) => (
-                  <BlogPostCard key={post.slug} post={post} />
+                {latestPosts.map((post, i) => (
+                  <MotionReveal key={post.slug} delay={0.05 * i}>
+                    <BlogPostCard post={post} />
+                  </MotionReveal>
                 ))}
               </div>
             ) : (
@@ -159,7 +176,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         </HomeSectionInner>
       </HomeSection>
 
-      <HomeContactCta />
+      <MotionReveal>
+        <HomeContactCta />
+      </MotionReveal>
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 import { SiteBackground } from "@/components/site/site-background";
+import { SiteCursor } from "@/components/site/site-cursor";
 import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -53,6 +54,7 @@ export default async function LocaleLayout({
         <NextIntlClientProvider>
           <ThemeProvider>
             <SiteBackground />
+            <SiteCursor />
             <div className="relative z-10 flex min-h-screen flex-col">
               <SiteHeader />
               <main className="flex-1">{children}</main>

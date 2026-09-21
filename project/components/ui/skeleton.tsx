@@ -1,10 +1,19 @@
 import { cn } from "@/lib/utils";
 
-function Skeleton({ className, ...props }: React.ComponentProps<"div">) {
+type SkeletonProps = React.ComponentProps<"div"> & {
+  /** Soft teal shimmer sweep */
+  shiny?: boolean;
+};
+
+function Skeleton({ className, shiny = true, ...props }: SkeletonProps) {
   return (
     <div
       data-slot="skeleton"
-      className={cn("animate-pulse rounded-[var(--radius-sm)] bg-surface-raised", className)}
+      className={cn(
+        "rounded-[var(--radius-sm)] bg-surface-raised",
+        shiny ? "skeleton-shiny" : "animate-pulse",
+        className,
+      )}
       {...props}
     />
   );

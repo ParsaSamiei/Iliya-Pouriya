@@ -26,16 +26,20 @@ export async function TeamCard({ person }: TeamCardProps) {
   return (
     <Link
       href={{ pathname: "/team/[person]", params: { person: person.slug } }}
-      className="group panel-module flex h-full cursor-pointer flex-col p-6 transition-colors duration-200 hover:border-signal/30"
+      className="group surface-card flex h-full cursor-pointer flex-col p-6"
     >
       <div className="flex items-start gap-4">
-        <Avatar className="size-14 rounded-none border border-border">
-          <AvatarImage src={person.photoUrl ?? undefined} alt={name} />
-          <AvatarFallback className="rounded-none font-mono text-sm">{initials}</AvatarFallback>
+        <Avatar className="size-16 overflow-hidden rounded-sm border border-border">
+          <AvatarImage
+            src={person.photoUrl ?? undefined}
+            alt={name}
+            className="card-media-zoom object-cover"
+          />
+          <AvatarFallback className="rounded-sm text-sm">{initials}</AvatarFallback>
         </Avatar>
         <div className="min-w-0 flex-1">
           <h3 className="font-display text-lg font-semibold text-fg">{name}</h3>
-          <p className="mt-1 font-mono text-[11px] text-signal">{person.title}</p>
+          <p className="mt-1 text-sm text-fg-muted">{person.title}</p>
         </div>
       </div>
 
@@ -43,7 +47,7 @@ export async function TeamCard({ person }: TeamCardProps) {
         <p className="mt-4 line-clamp-3 flex-1 text-sm leading-relaxed text-fg-muted">{bio}</p>
       )}
 
-      <span className="mt-4 inline-flex items-center gap-1.5 font-mono text-xs text-fg-muted transition-colors duration-200 group-hover:text-accent">
+      <span className="mt-5 inline-flex items-center gap-1.5 text-sm text-fg-muted transition-colors duration-200 group-hover:text-accent">
         {t("viewProfile")}
         <ArrowRight className="landing-arrow size-3.5" aria-hidden />
       </span>

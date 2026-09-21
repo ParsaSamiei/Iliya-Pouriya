@@ -3,28 +3,21 @@
 @plugin "@tailwindcss/typography";
 
 /*
- * Design tokens — see docs/04_DESIGN_SYSTEM.md (source of truth) and
- * docs/02_BRAND_IDENTITY.md (direction). Dark is the default/primary theme;
- * light is a fully supported secondary theme, same brand, inverted surface.
- *
- * Pattern: raw hex lives on --bg/--surface/--fg/... at :root/.dark/.light
- * (switched by next-themes via a class on <html>), and @theme below exposes
- * them as Tailwind color tokens (bg-bg, text-fg, bg-accent, ...) so every
- * component can reach for a token instead of a hardcoded hex — see the
- * "hard rules" in docs/00_AI_INSTRUCTIONS.md.
+ * IPZ brand tokens — circuit teal + hexagon violet from logo.png.
+ * Dark is default; light is a fully supported secondary theme.
  */
 
 @theme {
   --font-fa: "Vazirmatn Variable", "Source Sans 3 Variable", sans-serif;
   --font-en: "Source Sans 3 Variable", "Vazirmatn Variable", sans-serif;
-  --font-en-display: "Barlow", "Vazirmatn Variable", sans-serif;
+  --font-en-display: "Syne", "Vazirmatn Variable", sans-serif;
   --font-display: var(--font-en-display);
   --font-body: var(--font-en);
   --font-mono: "Source Code Pro", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
 
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
 
   --color-bg: var(--bg);
   --color-surface: var(--surface);
@@ -40,8 +33,6 @@
   --color-warning: var(--warning);
   --color-error: var(--error);
 
-  /* shadcn/ui (Base UI) semantic slots, mapped onto the brand tokens above —
-     re-skinned once here rather than overridden per-usage, per 04_DESIGN_SYSTEM.md. */
   --color-background: var(--bg);
   --color-foreground: var(--fg);
   --color-card: var(--surface);
@@ -61,56 +52,53 @@
   --radius: var(--radius-md);
 }
 
-/* Dark theme — the default/primary presentation (docs/02, docs/04). */
+/* Dark — near-black like the mark */
 :root,
 .dark {
-  --bg: #07090c;
-  --surface: #0f1217;
-  --surface-raised: #151a21;
-  --fg: #e4e8ec;
-  --fg-muted: #8b949e;
-  --accent: #f2a93b;
-  --accent-fg: #14110a;
-  --signal: #2ec4e6;
-  --link: #5b9df9;
-  --border: rgba(230, 233, 236, 0.08);
-  --success: #4ade80;
-  --warning: #f2c94c;
-  --error: #ef5350;
+  --bg: #0a0a0c;
+  --surface: #121218;
+  --surface-raised: #1a1a24;
+  --fg: #f2f4f7;
+  --fg-muted: #8b909c;
+  --accent: #22cccc;
+  --accent-fg: #041414;
+  --signal: #7766ff;
+  --link: #3dd9d9;
+  --border: rgba(242, 244, 247, 0.1);
+  --success: #3dba7a;
+  --warning: #e0b04a;
+  --error: #e06a6a;
 
-  /* Instrument panel background layers */
-  --grid-minor-line: color-mix(in srgb, var(--fg) 4%, transparent);
-  --grid-medium-line: color-mix(in srgb, var(--fg) 7%, transparent);
-  --grid-major-line: color-mix(in srgb, var(--fg) 11%, transparent);
-  --grid-glow-accent: color-mix(in srgb, var(--accent) 8%, transparent);
-  --grid-glow-signal: color-mix(in srgb, var(--signal) 6%, transparent);
-  --panel-inset: color-mix(in srgb, var(--bg) 70%, black);
-  --panel-highlight: color-mix(in srgb, var(--fg) 6%, transparent);
+  --glow-accent: color-mix(in srgb, var(--accent) 16%, transparent);
+  --glow-signal: color-mix(in srgb, var(--signal) 14%, transparent);
+  --glow-soft: color-mix(in srgb, var(--fg) 4%, transparent);
+  --panel-highlight: color-mix(in srgb, var(--fg) 5%, transparent);
+  --material-wash-a: color-mix(in srgb, var(--accent) 26%, transparent);
+  --material-wash-b: color-mix(in srgb, var(--signal) 22%, transparent);
 }
 
-/* Light theme — same brand, inverted surface, same accent hue. */
+/* Light — cool paper; teal primary, violet secondary (not purple-on-cream) */
 .light {
-  --bg: #eef0f2;
-  --surface: #ffffff;
-  --surface-raised: #e8eaed;
-  --fg: #12151a;
-  --fg-muted: #5a6270;
-  --accent: #c8811a;
+  --bg: #e8eaee;
+  --surface: #f5f6f8;
+  --surface-raised: #ffffff;
+  --fg: #12131a;
+  --fg-muted: #5a6070;
+  --accent: #0f9e9e;
   --accent-fg: #ffffff;
-  --signal: #0891b2;
-  --link: #2563eb;
-  --border: rgba(20, 23, 27, 0.08);
-  --success: #16a34a;
-  --warning: #b45309;
-  --error: #dc2626;
+  --signal: #5a4ad4;
+  --link: #0d8a8a;
+  --border: rgba(18, 19, 26, 0.1);
+  --success: #1f8a4d;
+  --warning: #a67a12;
+  --error: #c44747;
 
-  --grid-minor-line: color-mix(in srgb, var(--fg) 5%, transparent);
-  --grid-medium-line: color-mix(in srgb, var(--fg) 8%, transparent);
-  --grid-major-line: color-mix(in srgb, var(--fg) 12%, transparent);
-  --grid-glow-accent: color-mix(in srgb, var(--accent) 6%, transparent);
-  --grid-glow-signal: color-mix(in srgb, var(--signal) 5%, transparent);
-  --panel-inset: color-mix(in srgb, var(--bg) 85%, black);
-  --panel-highlight: color-mix(in srgb, var(--fg) 8%, transparent);
+  --glow-accent: color-mix(in srgb, var(--accent) 12%, transparent);
+  --glow-signal: color-mix(in srgb, var(--signal) 10%, transparent);
+  --glow-soft: color-mix(in srgb, var(--fg) 3%, transparent);
+  --panel-highlight: color-mix(in srgb, var(--fg) 6%, transparent);
+  --material-wash-a: color-mix(in srgb, var(--accent) 18%, transparent);
+  --material-wash-b: color-mix(in srgb, var(--signal) 14%, transparent);
 }
 
 [dir="rtl"] {
@@ -131,7 +119,6 @@
     font-family: var(--font-en);
   }
 
-  /* Persian reads more comfortably a touch larger than Latin body copy. */
   html[dir="rtl"] {
     font-size: 17px;
   }
@@ -140,8 +127,17 @@
     background-color: var(--color-bg);
     color: var(--color-fg);
   }
-  /* Respect prefers-reduced-motion for decorative motion (grid/trace motifs,
-     theme-switch transitions, STL auto-rotate) — see docs/04 accessibility baseline. */
+
+  ::selection {
+    background-color: var(--accent);
+    color: var(--accent-fg);
+  }
+
+  ::-moz-selection {
+    background-color: var(--accent);
+    color: var(--accent-fg);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -154,8 +150,7 @@
   }
 }
 
-/* Instrument panel — site background + shared module primitives */
-
+/* Soft ambient depth — logo diagonal (teal ↔ violet) */
 .site-bg-root {
   pointer-events: none;
   position: fixed;
@@ -171,377 +166,445 @@
 
 .site-bg-layer--depth {
   background:
-    radial-gradient(ellipse 55% 45% at 85% 10%, var(--grid-glow-signal), transparent 55%),
-    radial-gradient(ellipse 50% 40% at 10% 90%, var(--grid-glow-accent), transparent 50%),
-    linear-gradient(180deg, color-mix(in srgb, var(--surface) 40%, var(--bg)) 0%, var(--color-bg) 100%);
+    radial-gradient(ellipse 55% 45% at 88% 8%, var(--glow-signal), transparent 58%),
+    radial-gradient(ellipse 50% 42% at 8% 92%, var(--glow-accent), transparent 55%),
+    linear-gradient(180deg, color-mix(in srgb, var(--surface) 55%, var(--bg)) 0%, var(--color-bg) 100%);
 }
 
-.site-bg-layer--grid {
-  background-image:
-    linear-gradient(var(--grid-minor-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-minor-line) 1px, transparent 1px),
-    linear-gradient(var(--grid-medium-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-medium-line) 1px, transparent 1px);
-  background-size: 20px 20px, 20px 20px, 100px 100px, 100px 100px;
-  background-position: center;
-  mask-image: radial-gradient(ellipse 110% 90% at 50% 40%, black 15%, transparent 88%);
-  opacity: 0.85;
+.site-bg-layer--grain {
+  opacity: 0.28;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  mix-blend-mode: overlay;
 }
 
 .site-bg-layer--vignette {
   background: radial-gradient(
-    ellipse 85% 75% at 50% 45%,
-    transparent 35%,
-    color-mix(in srgb, var(--bg) 65%, black) 100%
+    ellipse 90% 80% at 50% 40%,
+    transparent 40%,
+    color-mix(in srgb, var(--bg) 55%, transparent) 100%
   );
+}
+
+.surface-card {
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  transition:
+    border-color 220ms ease,
+    background-color 220ms ease;
+}
+
+.surface-card:hover {
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+}
+
+/* Hero wash — logo diagonal split, deeper field */
+.hero-material-wash {
+  background:
+    linear-gradient(
+      135deg,
+      var(--material-wash-a) 0%,
+      transparent 38%,
+      transparent 62%,
+      var(--material-wash-b) 100%
+    ),
+    radial-gradient(ellipse 58% 48% at 18% 28%, var(--material-wash-a), transparent 68%),
+    radial-gradient(ellipse 52% 44% at 82% 72%, var(--material-wash-b), transparent 68%),
+    radial-gradient(ellipse 40% 30% at 50% 100%, var(--glow-soft), transparent 70%),
+    linear-gradient(165deg, var(--surface) 0%, var(--bg) 72%, var(--bg) 100%);
+}
+
+.hero-material-wash::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.22;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+  pointer-events: none;
+}
+
+.hero-atmosphere {
+  pointer-events: none;
+}
+
+.hero-hex-lattice {
   opacity: 0.9;
 }
 
-/* Measurement grid for inset panels (oscilloscope screen, placeholders) */
-.instrument-grid {
-  background-color: var(--color-bg);
-  background-image:
-    linear-gradient(var(--grid-minor-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-minor-line) 1px, transparent 1px),
-    linear-gradient(var(--grid-medium-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-medium-line) 1px, transparent 1px);
-  background-size: 12px 12px, 12px 12px, 48px 48px, 48px 48px;
+.light .hero-hex-lattice {
+  opacity: 1;
 }
 
-/* Rack-mount panel module — shared by cards, hero instrument, contact CTA */
-.panel-module {
-  position: relative;
-  border: 1px solid var(--color-border);
-  background-color: var(--color-surface);
-  box-shadow:
-    inset 0 1px 0 var(--panel-highlight),
-    0 1px 2px color-mix(in srgb, var(--bg) 80%, black);
+.light .hero-orb--accent,
+.light .hero-orb--signal {
+  filter: blur(56px);
+  opacity: 0.95;
 }
 
-.panel-module__bezel {
-  pointer-events: none;
+.light .hero-logo-halo {
+  opacity: 1;
+}
+
+.hero-orb {
   position: absolute;
-  inset: 0;
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fg) 4%, transparent);
+  border-radius: 50%;
+  filter: blur(48px);
+  will-change: transform, opacity;
 }
 
-.panel-module--hero {
+.hero-orb--accent {
+  width: min(42vw, 28rem);
+  height: min(42vw, 28rem);
+  top: 8%;
+  left: -6%;
+  background: var(--glow-accent);
+  animation: hero-orb-drift 14s ease-in-out infinite;
+}
+
+.hero-orb--signal {
+  width: min(38vw, 24rem);
+  height: min(38vw, 24rem);
+  right: -4%;
+  bottom: 6%;
+  background: var(--glow-signal);
+  animation: hero-orb-drift 18s ease-in-out infinite reverse;
+}
+
+.hero-atmosphere__floor {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 38%;
   background: linear-gradient(
-    165deg,
-    color-mix(in srgb, var(--surface) 95%, var(--signal)) 0%,
-    var(--color-surface) 45%
+    to top,
+    color-mix(in srgb, var(--bg) 88%, transparent) 0%,
+    transparent 100%
   );
 }
 
-.panel-readout {
-  border: 1px solid var(--color-border);
-  background-color: color-mix(in srgb, var(--surface) 80%, var(--bg));
-  box-shadow: inset 0 1px 0 var(--panel-highlight);
-}
-
-/* LED status indicators */
-.led {
+.hero-logo-stage {
   position: relative;
-  display: block;
-  width: 7px;
-  height: 7px;
-  border-radius: 9999px;
-  flex-shrink: 0;
-  background-color: var(--color-accent);
-  box-shadow: 0 0 5px 1px color-mix(in srgb, var(--color-accent) 35%, transparent);
+  display: grid;
+  place-items: center;
 }
 
-.led::before {
+.hero-logo-halo {
+  position: absolute;
+  inset: -18%;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--accent) 28%, transparent),
+      transparent 42%,
+      color-mix(in srgb, var(--signal) 24%, transparent)
+    );
+  opacity: 0.85;
+  animation: hero-halo-breathe 5.5s ease-in-out infinite;
+}
+
+.hero-logo-halo::after {
   content: "";
   position: absolute;
-  inset: 1.5px;
-  border-radius: inherit;
-  background: color-mix(in srgb, white 25%, var(--color-accent));
-  opacity: 0.5;
+  inset: 10%;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  background: color-mix(in srgb, var(--bg) 55%, transparent);
+}
+
+.hero-logo-mark {
+  filter: drop-shadow(0 0 28px color-mix(in srgb, var(--accent) 28%, transparent))
+    drop-shadow(0 12px 40px color-mix(in srgb, var(--signal) 18%, transparent));
+}
+
+.hero-scroll-cue {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 1.25rem;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
   pointer-events: none;
 }
 
-.led::after {
-  content: "";
-  position: absolute;
-  inset: -3px;
-  border-radius: inherit;
-  background: radial-gradient(
-    circle,
-    color-mix(in srgb, var(--color-accent) 30%, transparent) 0%,
-    transparent 65%
+.hero-scroll-cue__line {
+  width: 1px;
+  height: 2.75rem;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--color-accent) 30%,
+    var(--color-signal) 70%,
+    transparent
   );
-  z-index: -1;
-  pointer-events: none;
+  animation: hero-scroll-pulse 2.4s ease-in-out infinite;
 }
 
-.led--dim {
-  box-shadow: 0 0 4px 1px color-mix(in srgb, var(--color-accent) 22%, transparent);
+.hero-name {
+  color: var(--color-fg);
 }
 
-.led--dim::before {
-  opacity: 0.35;
+.hero-name--a {
+  text-shadow: 0 0 42px color-mix(in srgb, var(--accent) 22%, transparent);
 }
 
-.led--dim::after {
-  inset: -2px;
-  background: radial-gradient(
-    circle,
-    color-mix(in srgb, var(--color-accent) 18%, transparent) 0%,
-    transparent 60%
-  );
+.hero-name--b {
+  text-shadow: 0 0 42px color-mix(in srgb, var(--signal) 20%, transparent);
 }
 
-.led--signal {
-  background-color: var(--color-signal);
-  box-shadow: 0 0 5px 1px color-mix(in srgb, var(--color-signal) 35%, transparent);
-}
-
-.led--signal::before {
-  background: color-mix(in srgb, white 25%, var(--color-signal));
-}
-
-.led--signal::after {
-  background: radial-gradient(
-    circle,
-    color-mix(in srgb, var(--color-signal) 30%, transparent) 0%,
-    transparent 65%
-  );
-}
-
-.led--pulse {
-  background-color: var(--color-success);
-  box-shadow: 0 0 6px 2px color-mix(in srgb, var(--color-success) 38%, transparent);
-  animation: led-pulse 2.8s ease-in-out infinite;
-}
-
-.led--pulse::before {
-  background: color-mix(in srgb, white 30%, var(--color-success));
-  opacity: 0.55;
-}
-
-.led--pulse::after {
-  inset: -3px;
-  background: radial-gradient(
-    circle,
-    color-mix(in srgb, var(--color-success) 35%, transparent) 0%,
-    transparent 65%
-  );
-  animation: led-halo-pulse 2.8s ease-in-out infinite;
-}
-
-@keyframes led-pulse {
+@keyframes hero-orb-drift {
   0%,
   100% {
-    filter: brightness(1.05);
+    transform: translate(0, 0) scale(1);
+    opacity: 0.7;
   }
   50% {
-    filter: brightness(0.88);
+    transform: translate(3%, -4%) scale(1.08);
+    opacity: 1;
   }
 }
 
-@keyframes led-halo-pulse {
+@keyframes hero-halo-breathe {
   0%,
   100% {
-    opacity: 0.85;
+    opacity: 0.65;
+    transform: scale(1);
   }
   50% {
-    opacity: 0.45;
+    opacity: 1;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes hero-scroll-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scaleY(0.85);
+    transform-origin: top;
+  }
+  50% {
+    opacity: 0.95;
+    transform: scaleY(1);
+    transform-origin: top;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .led--pulse {
-    animation: none;
-    filter: brightness(1.1);
-  }
-
-  .led--pulse::after {
+  .hero-orb--accent,
+  .hero-orb--signal,
+  .hero-logo-halo,
+  .hero-scroll-cue__line {
     animation: none;
   }
+
+  .hero-orb--accent,
+  .hero-orb--signal {
+    opacity: 0.75;
+  }
+
+  .hero-logo-halo {
+    opacity: 0.8;
+  }
 }
 
-/* Legacy blueprint utilities — kept for non-landing pages */
-.bp-grid {
-  background-color: var(--color-surface-raised);
-  background-image:
-    linear-gradient(var(--grid-minor-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-minor-line) 1px, transparent 1px),
-    linear-gradient(var(--grid-medium-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-medium-line) 1px, transparent 1px);
-  background-size: 8px 8px, 8px 8px, 40px 40px, 40px 40px;
-}
-
-.bp-grid-intense {
-  background-image:
-    linear-gradient(var(--grid-minor-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-minor-line) 1px, transparent 1px),
-    linear-gradient(var(--grid-major-line) 1.5px, transparent 1.5px),
-    linear-gradient(90deg, var(--grid-major-line) 1.5px, transparent 1.5px);
-  background-size: 16px 16px, 16px 16px, 64px 64px, 64px 64px;
-}
-
-/* Landing page — instrument panel section bands */
-.landing-section {
-  position: relative;
-  isolation: isolate;
-  overflow: visible;
-}
-
-.landing-section-channel {
-  z-index: 2;
-  color: color-mix(in srgb, var(--fg-muted) 70%, var(--fg));
-}
-
-.landing-section-hero {
-  border-bottom: 1px solid var(--color-border);
-  display: flex;
-  flex-direction: column;
-  min-height: calc(100dvh - 4rem);
-}
-
-.hero-copy h1,
-.hero-copy p {
-  letter-spacing: normal;
-  word-spacing: normal;
-}
-
-.landing-section-hero::before {
-  content: "";
-  pointer-events: none;
-  position: absolute;
-  inset-inline-start: 0;
-  inset-block: 15%;
+/* Dual name seam — teal → violet like the mark */
+.hero-seam {
   width: 2px;
+  align-self: stretch;
+  min-height: 3.25rem;
   background: linear-gradient(
     to bottom,
     transparent,
-    var(--color-accent) 20%,
-    var(--color-signal) 80%,
+    var(--color-accent) 15%,
+    var(--color-signal) 85%,
     transparent
   );
-  opacity: 0.6;
+  box-shadow: 0 0 18px color-mix(in srgb, var(--accent) 35%, transparent);
+  flex-shrink: 0;
+}
+
+@media (max-width: 639px) {
+  .hero-seam {
+    width: auto;
+    height: 2px;
+    min-height: 0;
+    align-self: stretch;
+    background: linear-gradient(
+      to right,
+      transparent,
+      var(--color-accent) 15%,
+      var(--color-signal) 85%,
+      transparent
+    );
+    box-shadow: 0 0 14px color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+}
+
+/* Hexagon clip for logo skeleton / accents */
+.clip-hex {
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+.brand-diagonal {
+  border-image: linear-gradient(to bottom, var(--color-accent), var(--color-signal)) 1;
+}
+
+/* Landing sections */
+.landing-section {
+  position: relative;
+  isolation: isolate;
+  scroll-margin-top: 5rem;
+}
+
+.landing-section-hero {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100dvh - 4rem);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .landing-section-capabilities {
-  background-color: var(--color-surface);
   border-block: 1px solid var(--color-border);
-}
-
-.landing-section-capabilities::before {
-  content: "";
-  pointer-events: none;
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--signal) 5%, transparent) 0%,
-    transparent 35%
-  );
+  background:
+    radial-gradient(ellipse 50% 60% at 100% 0%, var(--glow-signal), transparent 55%),
+    radial-gradient(ellipse 40% 50% at 0% 100%, var(--glow-accent), transparent 50%),
+    color-mix(in srgb, var(--surface) 70%, var(--bg));
 }
 
 .landing-section-projects {
-  border-top: 1px solid var(--color-border);
-}
-
-.landing-section-projects::before {
-  content: "";
-  pointer-events: none;
-  position: absolute;
-  inset-inline: max(1rem, calc((100% - 72rem) / 2));
-  inset-block-start: 0;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    var(--color-accent),
-    var(--color-signal) 50%,
-    transparent
-  );
-  opacity: 0.45;
+  border-bottom: 1px solid var(--color-border);
+  background:
+    radial-gradient(ellipse 45% 40% at 0% 20%, var(--glow-accent), transparent 60%),
+    transparent;
 }
 
 .landing-section-team {
-  background-color: var(--color-surface-raised);
-  border-block: 1px solid var(--color-border);
-}
-
-.landing-section-team::before {
-  content: "";
-  pointer-events: none;
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    ellipse 45% 55% at 0% 50%,
-    var(--grid-glow-signal),
-    transparent 65%
-  );
+  border-bottom: 1px solid var(--color-border);
+  background:
+    radial-gradient(ellipse 55% 50% at 100% 30%, var(--glow-signal), transparent 55%),
+    color-mix(in srgb, var(--surface) 55%, var(--bg));
 }
 
 .landing-section-blog {
-  background-color: var(--color-surface);
-  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  background:
+    radial-gradient(ellipse 40% 45% at 50% 100%, var(--glow-soft), transparent 65%),
+    transparent;
 }
 
 .landing-section-contact {
-  background-color: var(--color-surface);
-  border-top: 1px solid var(--color-border);
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--accent) 8%, transparent) 0%,
+      transparent 40%,
+      color-mix(in srgb, var(--signal) 7%, transparent) 100%
+    ),
+    color-mix(in srgb, var(--surface) 70%, var(--bg));
 }
 
-.landing-section-contact::before {
-  content: "";
-  pointer-events: none;
-  position: absolute;
-  inset-inline: 0;
-  top: 0;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    var(--color-accent) 0%,
-    var(--color-signal) 50%,
-    var(--color-accent) 100%
-  );
-  opacity: 0.7;
+/* Header logo — shine sweeps inside the mark’s alpha silhouette */
+.header-logo-shine {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  isolation: isolate;
+  -webkit-mask-image: url("/logo.png");
+  mask-image: url("/logo.png");
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-mode: alpha;
+  mask-mode: alpha;
 }
 
-/* Instrument-panel button hovers — primary "engage" sweep, outline bezel glow */
-.btn-engage::before {
+.header-logo-shine::after {
   content: "";
-  pointer-events: none;
   position: absolute;
-  inset: 0;
+  inset: -25%;
+  z-index: 1;
+  pointer-events: none;
   background: linear-gradient(
     105deg,
-    transparent 35%,
-    color-mix(in srgb, white 24%, transparent) 48%,
-    color-mix(in srgb, white 10%, transparent) 52%,
-    transparent 65%
+    transparent 46%,
+    color-mix(in srgb, var(--accent) 45%, transparent) 48.5%,
+    color-mix(in srgb, white 68%, transparent) 50%,
+    color-mix(in srgb, var(--signal) 40%, transparent) 51.5%,
+    transparent 54%
   );
-  transform: translateX(-120%);
-  transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(-140%) skewX(-18deg);
+  animation: header-logo-shine 7.5s ease-in-out infinite;
+  mix-blend-mode: soft-light;
 }
 
-.btn-engage:hover::before {
-  transform: translateX(120%);
+@keyframes header-logo-shine {
+  0%,
+  35% {
+    transform: translateX(-140%) skewX(-18deg);
+  }
+  58%,
+  100% {
+    transform: translateX(140%) skewX(-18deg);
+  }
 }
 
-.btn-engage-outline::after {
+@media (prefers-reduced-motion: reduce) {
+  .header-logo-shine::after {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+/* Shiny skeleton — teal shimmer */
+.skeleton-shiny {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--color-surface-raised);
+}
+
+.skeleton-shiny::after {
   content: "";
-  pointer-events: none;
   position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  opacity: 0;
-  box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--color-accent) 22%, transparent),
-    0 0 12px color-mix(in srgb, var(--color-accent) 10%, transparent);
-  transition: opacity 200ms ease-out;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    color-mix(in srgb, var(--accent) 18%, transparent) 42%,
+    color-mix(in srgb, var(--fg) 14%, transparent) 50%,
+    color-mix(in srgb, var(--signal) 14%, transparent) 58%,
+    transparent 70%
+  );
+  animation: skeleton-shine 1.6s ease-in-out infinite;
 }
 
-.btn-engage-outline:hover::after {
-  opacity: 1;
+@keyframes skeleton-shine {
+  100% {
+    transform: translateX(100%);
+  }
 }
 
-/* Landing arrows — slide on parent hover (compose rotate + translate separately) */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-shiny::after {
+    animation: none;
+    opacity: 0;
+  }
+
+  .skeleton-shiny {
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.65;
+  }
+}
+
 .landing-arrow {
   transition:
     translate 220ms cubic-bezier(0.4, 0, 0.2, 1),
@@ -562,9 +625,37 @@
   translate: -0.25rem 0;
 }
 
-/* Tailwind Typography (`prose`) themed onto our own tokens rather than its
-   default gray palette — these vars already switch with .dark/.light on
-   <html>, so `prose` alone (no `prose-invert`) tracks the site's theme. */
+.card-media-zoom {
+  transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.group:hover .card-media-zoom {
+  transform: scale(1.03);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-media-zoom,
+  .group:hover .card-media-zoom {
+    transition: none;
+    transform: none;
+  }
+}
+
+.bp-grid {
+  background-color: var(--color-surface-raised);
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--fg) 5%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--fg) 5%, transparent) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+.bp-grid-intense {
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--fg) 6%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--fg) 6%, transparent) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
 .prose {
   --tw-prose-body: var(--color-fg-muted);
   --tw-prose-headings: var(--color-fg);
@@ -582,4 +673,65 @@
   --tw-prose-pre-bg: var(--color-surface-raised);
   --tw-prose-th-borders: var(--color-border);
   --tw-prose-td-borders: var(--color-border);
+}
+
+/* Custom hexagon cursor — fine pointers only */
+@media (pointer: fine) {
+  html.has-site-cursor,
+  html.has-site-cursor * {
+    cursor: none !important;
+  }
+
+  html.has-site-cursor input,
+  html.has-site-cursor textarea,
+  html.has-site-cursor [contenteditable="true"] {
+    cursor: text !important;
+  }
+}
+
+.site-cursor {
+  transition: opacity 160ms ease;
+}
+
+.site-cursor__ring {
+  translate: -18px -18px;
+}
+
+.site-cursor__hex {
+  display: block;
+  transition:
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 180ms ease;
+  transform-origin: center;
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--accent) 35%, transparent));
+}
+
+.site-cursor__hex--active {
+  transform: scale(1.35) rotate(30deg);
+  filter: drop-shadow(0 0 10px color-mix(in srgb, var(--signal) 40%, transparent));
+}
+
+.site-cursor__dot {
+  width: 5px;
+  height: 5px;
+  translate: -2.5px -2.5px;
+  border-radius: 1px;
+  background: linear-gradient(135deg, var(--accent), var(--signal));
+  box-shadow: 0 0 8px color-mix(in srgb, var(--accent) 55%, transparent);
+  transition:
+    transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 160ms ease;
+}
+
+.site-cursor__dot--active {
+  transform: scale(0.55);
+  opacity: 0.85;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-cursor,
+  .site-cursor__hex,
+  .site-cursor__dot {
+    transition: none;
+  }
 }

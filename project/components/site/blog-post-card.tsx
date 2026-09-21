@@ -22,7 +22,7 @@ export async function BlogPostCard({ post }: BlogPostCardProps) {
   return (
     <Link
       href={{ pathname: "/blog/[slug]", params: { slug: post.slug } }}
-      className="group panel-module flex h-full cursor-pointer flex-col p-5 transition-colors duration-200 hover:border-accent/40"
+      className="group flex h-full cursor-pointer flex-col border-b border-border py-5 transition-colors duration-200 first:pt-0 last:border-b-0 sm:border sm:border-border sm:bg-surface sm:p-5 sm:last:border-b"
     >
       {post.publishedAt && (
         <time
@@ -42,7 +42,7 @@ export async function BlogPostCard({ post }: BlogPostCardProps) {
           {excerpt}
         </p>
       )}
-      <span className="mt-4 inline-flex items-center gap-1.5 font-mono text-xs text-fg-muted transition-colors duration-200 group-hover:text-accent">
+      <span className="mt-4 inline-flex items-center gap-1.5 text-sm text-fg-muted transition-colors duration-200 group-hover:text-accent">
         {t("readMore")}
         <ArrowRight className="landing-arrow size-3.5" aria-hidden />
       </span>

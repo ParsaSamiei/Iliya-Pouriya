@@ -24,18 +24,18 @@ export function ProjectCard({ project }: { project: ProjectCardData }) {
   return (
     <Link
       href={{ pathname: "/projects/[slug]", params: { slug: project.slug } }}
-      className="group panel-module block h-full cursor-pointer overflow-hidden transition-colors duration-200 hover:border-accent/40"
+      className="group surface-card block h-full cursor-pointer overflow-hidden"
     >
-      <div className="relative aspect-video w-full overflow-hidden border-b border-border bg-bg">
+      <div className="relative aspect-video w-full overflow-hidden border-b border-border bg-surface-raised">
         {project.coverImageUrl ? (
           <Image
             src={project.coverImageUrl}
             alt={title}
             fill
-            className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+            className="card-media-zoom object-cover"
           />
         ) : (
-          <div className="instrument-grid flex h-full w-full items-center justify-center font-mono text-xs text-fg-muted">
+          <div className="flex h-full w-full items-center justify-center bg-surface-raised px-4 text-center text-sm text-fg-muted">
             {title}
           </div>
         )}
@@ -56,6 +56,7 @@ export function ProjectCard({ project }: { project: ProjectCardData }) {
             ))}
           </div>
         )}
+        <span className="sr-only">{t("viewProject")}</span>
       </div>
     </Link>
   );

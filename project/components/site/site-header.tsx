@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { SiteHeaderControls } from "@/components/site/site-header-controls";
+import { SiteLogo } from "@/components/site/site-logo";
 import { Button } from "@/components/ui/button";
 import { Link, usePathname } from "@/i18n/navigation";
 import { SITE_NAV_ITEMS } from "@/lib/site-nav";
@@ -17,9 +18,15 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-bg/90 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-2.5 font-display text-lg font-semibold tracking-tight text-fg">
-          <span className="led led--dim" aria-hidden />
-          {tSite("name")}
+        <Link
+          href="/"
+          className="flex items-center gap-2.5 font-display text-lg font-semibold tracking-tight text-fg transition-colors hover:text-accent"
+          aria-label={tSite("name")}
+        >
+          <span className="header-logo-shine">
+            <SiteLogo size="md" />
+          </span>
+          <span className="hidden sm:inline">{tSite("name")}</span>
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex">

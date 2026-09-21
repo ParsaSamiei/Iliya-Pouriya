@@ -9,10 +9,10 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "btn-engage relative overflow-hidden bg-accent text-accent-fg shadow-[inset_0_1px_0_color-mix(in_srgb,white_15%,transparent),0_1px_2px_color-mix(in_srgb,var(--color-bg)_50%,transparent)] hover:-translate-y-px hover:bg-[color-mix(in_srgb,var(--color-accent)_88%,white)] hover:shadow-[inset_0_1px_0_color-mix(in_srgb,white_30%,transparent),0_0_20px_color-mix(in_srgb,var(--color-accent)_35%,transparent),0_4px_12px_color-mix(in_srgb,var(--color-bg)_60%,transparent)] active:translate-y-0 active:shadow-[inset_0_2px_4px_color-mix(in_srgb,black_20%,transparent)]",
+          "bg-accent text-accent-fg hover:bg-[color-mix(in_srgb,var(--color-accent)_88%,white)] active:translate-y-px",
         destructive: "bg-error text-fg hover:opacity-90",
         outline:
-          "btn-engage-outline relative overflow-hidden border border-border bg-transparent text-fg shadow-[inset_0_1px_0_var(--panel-highlight)] hover:-translate-y-px hover:border-[color-mix(in_srgb,var(--color-accent)_45%,var(--color-border))] hover:bg-[color-mix(in_srgb,var(--color-accent)_7%,var(--color-surface))] hover:shadow-[inset_0_1px_0_var(--panel-highlight),0_0_16px_color-mix(in_srgb,var(--color-accent)_14%,transparent)] active:translate-y-0",
+          "border border-border bg-transparent text-fg hover:border-[color-mix(in_srgb,var(--color-accent)_40%,var(--color-border))] hover:bg-[color-mix(in_srgb,var(--color-accent)_6%,var(--color-surface))] active:translate-y-px",
         secondary: "bg-surface-raised text-fg hover:opacity-90",
         ghost: "text-fg hover:bg-surface-raised",
         link: "text-link underline-offset-4 hover:underline",

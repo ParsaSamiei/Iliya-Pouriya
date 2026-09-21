@@ -1,0 +1,110 @@
+import {
+  BlogCardSkeleton,
+  ProjectCardSkeleton,
+  TeamCardSkeleton,
+} from "@/components/site/loading-skeletons";
+import { Skeleton } from "@/components/ui/skeleton";
+
+/** Full-page shiny skeleton matching the IPZ landing layout. */
+export function HomeLoadingSkeleton() {
+  return (
+    <div aria-busy="true" aria-live="polite" className="min-h-[70dvh]">
+      <span className="sr-only">Loading</span>
+
+      <section className="landing-section landing-section-hero border-b border-border">
+        <div className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-4 py-10 sm:py-14">
+          <div className="grid w-full items-center gap-12 lg:grid-cols-[auto_minmax(0,1fr)] lg:gap-20">
+            <Skeleton className="clip-hex size-32 shrink-0 sm:size-40 lg:size-[11rem]" />
+            <div className="flex min-w-0 flex-col gap-6">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
+                <Skeleton className="h-12 w-40 sm:h-14 sm:w-52 lg:h-16 lg:w-60" />
+                <Skeleton className="hidden h-12 w-0.5 sm:block" shiny={false} />
+                <Skeleton className="h-12 w-44 sm:h-14 sm:w-56 lg:h-16 lg:w-64" />
+              </div>
+              <Skeleton className="h-7 w-full max-w-xl sm:h-8" />
+              <Skeleton className="h-5 w-full max-w-lg" />
+              <Skeleton className="h-5 w-3/4 max-w-md" />
+              <div className="mt-2 flex flex-col gap-3 sm:flex-row">
+                <Skeleton className="h-10 w-36" />
+                <Skeleton className="h-10 w-32" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="landing-section landing-section-team border-b border-border">
+        <div className="mx-auto w-full max-w-6xl px-4 py-20 sm:py-24">
+          <Skeleton className="h-3 w-16" />
+          <Skeleton className="mt-3 h-8 w-48" />
+          <Skeleton className="mt-3 h-4 w-72 max-w-full" />
+          <div className="mt-10 grid gap-6 sm:grid-cols-2">
+            <TeamCardSkeleton />
+            <TeamCardSkeleton />
+          </div>
+        </div>
+      </section>
+
+      <section className="landing-section landing-section-projects border-b border-border">
+        <div className="mx-auto w-full max-w-6xl px-4 py-20 sm:py-24">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <Skeleton className="h-3 w-14" />
+              <Skeleton className="mt-3 h-8 w-56" />
+              <Skeleton className="mt-3 h-4 w-64 max-w-full" />
+            </div>
+            <Skeleton className="h-9 w-36 shrink-0" />
+          </div>
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <ProjectCardSkeleton />
+            <ProjectCardSkeleton />
+            <ProjectCardSkeleton className="hidden lg:block" />
+          </div>
+        </div>
+      </section>
+
+      <section className="landing-section landing-section-capabilities border-b border-border">
+        <div className="mx-auto w-full max-w-6xl px-4 py-20 sm:py-24">
+          <Skeleton className="h-3 w-20" />
+          <Skeleton className="mt-3 h-8 w-52" />
+          <Skeleton className="mt-3 h-4 w-80 max-w-full" />
+          <div className="mt-10 grid gap-8 sm:grid-cols-2">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="border-s-2 border-border ps-5">
+                <Skeleton className="h-5 w-40" />
+                <Skeleton className="mt-3 h-4 w-full" />
+                <Skeleton className="mt-2 h-4 w-5/6" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="landing-section landing-section-blog border-b border-border">
+        <div className="mx-auto w-full max-w-6xl px-4 py-20 sm:py-24">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <Skeleton className="h-3 w-12" />
+              <Skeleton className="mt-3 h-8 w-44" />
+              <Skeleton className="mt-3 h-4 w-60 max-w-full" />
+            </div>
+            <Skeleton className="h-9 w-32 shrink-0" />
+          </div>
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <BlogCardSkeleton />
+            <BlogCardSkeleton className="hidden sm:block" />
+            <BlogCardSkeleton className="hidden lg:block" />
+          </div>
+        </div>
+      </section>
+
+      <section className="landing-section landing-section-contact border-b border-border">
+        <div className="mx-auto w-full max-w-6xl px-4 py-20 sm:py-24">
+          <Skeleton className="h-8 w-64 max-w-full" />
+          <Skeleton className="mt-4 h-4 w-80 max-w-full" />
+          <Skeleton className="mt-8 h-11 w-40" />
+        </div>
+      </section>
+    </div>
+  );
+}

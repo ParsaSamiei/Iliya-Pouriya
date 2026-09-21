@@ -1,11 +1,12 @@
 "use client";
 
-import { OrbitControls, Stage } from "@react-three/drei";
+import { OrbitControls, Stage, useProgress } from "@react-three/drei";
 import { Canvas, useLoader } from "@react-three/fiber";
 import { Box } from "lucide-react";
 import { Suspense, useMemo, useState } from "react";
 import * as THREE from "three";
 import { STLLoader } from "three/examples/jsm/loaders/STLLoader.js";
+import { StlViewerSkeleton } from "@/components/site/loading-skeletons";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -37,10 +38,15 @@ function Mesh({ url, wireframe }: { url: string; wireframe: boolean }) {
 }
 
 function ViewerFallback() {
+  return <StlViewerSkeleton className="h-full rounded-none" />;
+}
+
+function ModelLoadOverlay() {
+  const { active } = useProgress();
+  if (!active) return null;
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-fg-muted">
-      <Box className="size-8 animate-pulse" />
-      <span className="font-mono text-xs">Loading model…</span>
+    <div className="pointer-events-none absolute inset-0 z-10">
+      <StlViewerSkeleton className="h-full rounded-none" />
     </div>
   );
 }
@@ -101,6 +107,7 @@ export function StlViewer({ models, locale }: { models: StlModel[]; locale: stri
       )}
 
       <div className="relative h-80 overflow-hidden rounded-[var(--radius-lg)] border border-border bg-surface sm:h-96">
+        <ModelLoadOverlay />
         <Canvas
           camera={{ position: [4, 4, 4], fov: 40 }}
           shadows={{ type: THREE.PCFShadowMap }}
@@ -116,7 +123,7 @@ export function StlViewer({ models, locale }: { models: StlModel[]; locale: stri
         <Button
           size="sm"
           variant="secondary"
-          className="absolute top-3 right-3 font-mono text-xs"
+          className="absolute top-3 right-3 z-20 font-mono text-xs"
           onClick={() => setWireframe((v) => !v)}
         >
           {wireframe ? "Solid" : "Wireframe"}

@@ -23,15 +23,14 @@ export function SectionHeader({
         className,
       )}
     >
-      <div
+      <p
         className={cn(
-          "flex items-center gap-2.5",
-          align === "center" && "justify-center",
+          "text-xs font-medium tracking-[0.14em] text-accent uppercase",
+          align === "center" && "mx-auto",
         )}
       >
-        <span className="led led--dim" aria-hidden />
-        <p className="font-mono text-[11px] tracking-wide text-accent uppercase">{eyebrow}</p>
-      </div>
+        {eyebrow}
+      </p>
       <h2 className="mt-3 font-display text-2xl font-semibold tracking-tight text-fg sm:text-3xl">
         {title}
       </h2>
