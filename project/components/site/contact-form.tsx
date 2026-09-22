@@ -2,8 +2,8 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -20,7 +20,6 @@ import { type ContactMessageInput, contactMessageSchema } from "@/lib/validation
 
 export function ContactForm() {
   const t = useTranslations("contact");
-  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
 
   const form = useForm<ContactMessageInput>({
     resolver: zodResolver(contactMessageSchema),
@@ -28,13 +27,12 @@ export function ContactForm() {
   });
 
   async function onSubmit(values: ContactMessageInput) {
-    setStatus("idle");
     const result = await submitContactMessage(values);
     if (result.ok) {
-      setStatus("success");
+      toast.success(t("success"));
       form.reset();
     } else {
-      setStatus("error");
+      toast.error(result.error || t("error"));
     }
   }
 
@@ -84,9 +82,6 @@ export function ContactForm() {
         <Button type="submit" disabled={form.formState.isSubmitting}>
           {form.formState.isSubmitting ? "…" : t("submit")}
         </Button>
-
-        {status === "success" && <p className="text-sm text-success">{t("success")}</p>}
-        {status === "error" && <p className="text-sm text-error">{t("error")}</p>}
       </form>
     </Form>
   );

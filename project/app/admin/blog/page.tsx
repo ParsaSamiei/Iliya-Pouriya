@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { DeleteBlogPostButton } from "@/components/admin/delete-blog-post-button";
 import { Badge } from "@/components/ui/badge";
@@ -11,6 +12,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { db } from "@/lib/db";
+
+export const metadata: Metadata = {
+  title: "Blog",
+};
 
 export default async function AdminBlogPage() {
   const posts = await db.blogPost.findMany({

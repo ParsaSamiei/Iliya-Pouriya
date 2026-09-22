@@ -124,81 +124,69 @@ async function main() {
     },
   });
 
-  await db.siteSetting.upsert({
-    where: { key: "hero_lab_panel" },
-    update: {},
-    create: {
-      key: "hero_lab_panel",
-      valueEn: {
-        panelTitleEn: "Lab systems",
-        panelTitleFa: "سیستم‌های آزمایشگاه",
-        rows: [
-          {
-            labelEn: "Embedded",
-            labelFa: "سیستم‌های نهفته",
-            detailEn: "bare-metal · RTOS · MCU",
-            detailFa: "bare-metal · RTOS · MCU",
-            led: "accent",
-          },
-          {
-            labelEn: "Controls",
-            labelFa: "کنترل",
-            detailEn: "closed-loop · real-time",
-            detailFa: "closed-loop · real-time",
-            led: "signal",
-          },
-          {
-            labelEn: "Firmware",
-            labelFa: "فریمور",
-            detailEn: "drivers · protocols · OTA",
-            detailFa: "درایور · پروتکل · OTA",
-            led: "accent",
-          },
-          {
-            labelEn: "Hardware",
-            labelFa: "سخت‌افزار",
-            detailEn: "schematic · PCB · bring-up",
-            detailFa: "شماتیک · PCB · bring-up",
-            led: "signal",
-          },
-        ],
-      },
-      valueFa: {
-        panelTitleEn: "Lab systems",
-        panelTitleFa: "سیستم‌های آزمایشگاه",
-        rows: [
-          {
-            labelEn: "Embedded",
-            labelFa: "سیستم‌های نهفته",
-            detailEn: "bare-metal · RTOS · MCU",
-            detailFa: "bare-metal · RTOS · MCU",
-            led: "accent",
-          },
-          {
-            labelEn: "Controls",
-            labelFa: "کنترل",
-            detailEn: "closed-loop · real-time",
-            detailFa: "closed-loop · real-time",
-            led: "signal",
-          },
-          {
-            labelEn: "Firmware",
-            labelFa: "فریمور",
-            detailEn: "drivers · protocols · OTA",
-            detailFa: "درایور · پروتکل · OTA",
-            led: "accent",
-          },
-          {
-            labelEn: "Hardware",
-            labelFa: "سخت‌افزار",
-            detailEn: "schematic · PCB · bring-up",
-            detailFa: "شماتیک · PCB · bring-up",
-            led: "signal",
-          },
-        ],
-      },
-    },
-  });
+  const existingRecs = await db.recommendation.count();
+  if (existingRecs === 0) {
+    await db.recommendation.createMany({
+      data: [
+        {
+          quoteEn:
+            "[Placeholder] Working with Iliya and Pouriya was a rare combination of careful engineering and fast iteration. Replace this via /admin/recommendations.",
+          quoteFa:
+            "[محتوای نمونه] همکاری با ایلیا و پوریا ترکیبی نادر از مهندسی دقیق و تکرار سریع بود. از طریق /admin/recommendations جایگزین کنید.",
+          authorNameEn: "[Placeholder] Collaborator Name",
+          authorNameFa: "[محتوای نمونه] نام همکار",
+          authorRoleEn: "Research lead, Example Lab",
+          authorRoleFa: "سرپرست پژوهش، آزمایشگاه نمونه",
+          isPublished: true,
+          sortOrder: 0,
+        },
+        {
+          quoteEn:
+            "[Placeholder] They ship firmware that holds up under real constraints — clear architecture, honest timelines. Edit or remove this quote in the admin panel.",
+          quoteFa:
+            "[محتوای نمونه] آن‌ها فریمورهایی تحویل می‌دهند که زیر محدودیت‌های واقعی دوام می‌آورد — معماری شفاف، زمان‌بندی صادقانه. این نقل‌قول را در پنل مدیریت ویرایش یا حذف کنید.",
+          authorNameEn: "[Placeholder] Mentor Name",
+          authorNameFa: "[محتوای نمونه] نام مربی",
+          authorRoleEn: "Advisor",
+          authorRoleFa: "مشاور",
+          isPublished: true,
+          sortOrder: 1,
+        },
+      ],
+    });
+  }
+
+  const existingClients = await db.client.count();
+  if (existingClients === 0) {
+    await db.client.createMany({
+      data: [
+        {
+          nameEn: "[Placeholder] Example Lab",
+          nameFa: "[محتوای نمونه] آزمایشگاه نمونه",
+          noteEn: "Embedded control stack for a mobile platform.",
+          noteFa: "پشته کنترل نهفته برای یک پلتفرم متحرک.",
+          isPublished: true,
+          sortOrder: 0,
+        },
+        {
+          nameEn: "[Placeholder] Field Robotics Co.",
+          nameFa: "[محتوای نمونه] شرکت رباتیک میدانی",
+          noteEn: "Firmware bring-up and sensor integration.",
+          noteFa: "راه‌اندازی فریمور و یکپارچه‌سازی سنسور.",
+          isPublished: true,
+          sortOrder: 1,
+        },
+        {
+          nameEn: "[Placeholder] University Workshop",
+          nameFa: "[محتوای نمونه] کارگاه دانشگاهی",
+          noteEn: "Prototype hardware and closed-loop demos.",
+          noteFa: "سخت‌افزار نمونه و دموهای حلقه بسته.",
+          isPublished: true,
+          sortOrder: 2,
+        },
+      ],
+    });
+  }
 
   console.log("Seed complete:");
   console.log("  People:", iliya.nameEn, "/", pouriya.nameEn);

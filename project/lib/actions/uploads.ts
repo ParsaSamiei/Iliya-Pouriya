@@ -4,12 +4,12 @@ import { saveUpload, type UploadCategory, UploadValidationError } from "@/lib/up
 
 export type UploadFileResult = { ok: true; url: string } | { ok: false; error: string };
 
-const CLIENT_ALLOWED: UploadCategory[] = ["projects", "blog", "profiles", "resumes"];
+const CLIENT_ALLOWED: UploadCategory[] = ["projects", "blog", "profiles", "resumes", "gallery"];
 
 /**
- * Shared upload action for cover images, profile photos, and resumes —
- * the STL model flow (lib/actions/projects.ts::uploadProjectModel) stays
- * separate since it also writes a ProjectModel row, not just a URL.
+ * Shared upload action kept for any server-side callers.
+ * Browser uploads should use `/api/admin/upload` via lib/upload-client.ts —
+ * Server Actions are unreliable for large multipart bodies.
  */
 export async function uploadFile(
   category: UploadCategory,

@@ -1,5 +1,10 @@
+import type { Metadata } from "next";
 import { MessageRow } from "@/components/admin/message-row";
 import { db } from "@/lib/db";
+
+export const metadata: Metadata = {
+  title: "Messages",
+};
 
 export default async function AdminMessagesPage({
   searchParams,

@@ -190,22 +190,42 @@ export function AboutPageSkeleton() {
 export function ContactPageSkeleton() {
   return (
     <LoadingShell>
-      <div className="mx-auto max-w-xl px-4 py-16">
-        <PageHeaderSkeleton narrow />
-        <div className="mt-10 space-y-5">
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-16" />
-            <Skeleton className="h-10 w-full" />
+      <div className="mx-auto max-w-5xl px-4 py-16">
+        <div className="max-w-xl">
+          <PageHeaderSkeleton narrow />
+        </div>
+        <div className="mt-10 grid gap-12 lg:grid-cols-[minmax(0,16rem)_minmax(0,1fr)] lg:gap-16">
+          <div className="space-y-8">
+            <div className="space-y-3">
+              <Skeleton className="h-4 w-20" />
+              <Skeleton className="ms-6 h-5 w-36" />
+              <Skeleton className="ms-6 h-5 w-32" />
+            </div>
+            <div className="space-y-3">
+              <Skeleton className="h-4 w-16" />
+              <Skeleton className="ms-6 h-5 w-44" />
+            </div>
+            <div className="space-y-3">
+              <Skeleton className="h-4 w-20" />
+              <Skeleton className="ms-6 h-5 w-48" />
+              <Skeleton className="ms-6 h-5 w-40" />
+            </div>
           </div>
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-14" />
-            <Skeleton className="h-10 w-full" />
+          <div className="min-w-0 space-y-5">
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-16" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-14" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-20" />
+              <Skeleton className="h-36 w-full" />
+            </div>
+            <Skeleton className="h-10 w-28" />
           </div>
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-20" />
-            <Skeleton className="h-36 w-full" />
-          </div>
-          <Skeleton className="h-10 w-28" />
         </div>
       </div>
     </LoadingShell>

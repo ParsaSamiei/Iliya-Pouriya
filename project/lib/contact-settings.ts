@@ -1,13 +1,19 @@
 import type { ContactSettingsData } from "@/lib/validation/contact-settings";
 import { contactSettingsSchema } from "@/lib/validation/contact-settings";
+import { SOCIAL_CHANNELS } from "@/lib/social-channels";
 
 export const CONTACT_SETTINGS_KEY = "contact_settings";
+
+const emptySocialUrls = Object.fromEntries(
+  SOCIAL_CHANNELS.map((channel) => [channel.field, ""]),
+) as Pick<ContactSettingsData, (typeof SOCIAL_CHANNELS)[number]["field"]>;
 
 export const DEFAULT_CONTACT_SETTINGS: ContactSettingsData = {
   phones: [],
   emails: [],
   locationEn: "",
   locationFa: "",
+  ...emptySocialUrls,
 };
 
 export type ContactSettingsView = {
@@ -17,10 +23,18 @@ export type ContactSettingsView = {
 };
 
 function normalizeLists(data: ContactSettingsData): ContactSettingsData {
+  const social = Object.fromEntries(
+    SOCIAL_CHANNELS.map((channel) => {
+      const raw = data[channel.field];
+      return [channel.field, typeof raw === "string" ? raw.trim() : ""];
+    }),
+  ) as Pick<ContactSettingsData, (typeof SOCIAL_CHANNELS)[number]["field"]>;
+
   return {
     ...data,
     phones: data.phones.map((p) => p.trim()).filter(Boolean),
     emails: data.emails.map((e) => e.trim()).filter(Boolean),
+    ...social,
   };
 }
 

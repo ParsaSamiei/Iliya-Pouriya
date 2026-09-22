@@ -6,6 +6,7 @@
   "nav": {
     "home": "Home",
     "projects": "Projects",
+    "gallery": "Gallery",
     "team": "Team",
     "blog": "Blog",
     "about": "About",
@@ -42,6 +43,10 @@
     "featuredProjects": "Selected projects",
     "featuredProjectsSubtitle": "Builds from the lab — hardware, firmware, and control systems in the field.",
     "viewAllProjects": "View all projects",
+    "galleryEyebrow": "Field",
+    "galleryTitle": "Lab & field",
+    "gallerySubtitle": "Photos and build clips from the bench and beyond.",
+    "viewAllGallery": "View all media",
     "teamEyebrow": "People",
     "meetTheTeam": "The engineers",
     "meetTheTeamSubtitle": "Two distinct backgrounds, one shared practice in robotics and embedded systems.",
@@ -52,6 +57,49 @@
     "contactEyebrow": "Contact",
     "contactTitle": "Have a project in mind?",
     "contactSubtitle": "Prototype, production firmware, or a robotics platform — tell us what you're building."
+  },
+  "gallery": {
+    "title": "Gallery",
+    "subtitle": "Photos and videos from the lab, builds, and field work.",
+    "filterLabel": "Filter gallery",
+    "filterAll": "All",
+    "openItem": "Open",
+    "empty": "No media yet — check back soon.",
+    "emptyFiltered": "Nothing in this filter yet.",
+    "videoBadge": "Video",
+    "playVideo": "Play video",
+    "carousel": {
+      "label": "Gallery carousel",
+      "slide": "slide",
+      "status": "{current} of {total}",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "lightbox": {
+      "close": "Close",
+      "previous": "Previous",
+      "next": "Next",
+      "status": "{current} / {total}"
+    },
+    "player": {
+      "play": "Play",
+      "pause": "Pause",
+      "mute": "Mute",
+      "unmute": "Unmute",
+      "seek": "Seek",
+      "fullscreen": "Fullscreen",
+      "exitFullscreen": "Exit fullscreen"
+    }
+  },
+  "clients": {
+    "carousel": {
+      "label": "Who we've worked with",
+      "slide": "slide",
+      "status": "{current} of {total}",
+      "previous": "Previous",
+      "next": "Next",
+      "opensInNewTab": "opens in a new tab"
+    }
   },
   "projects": {
     "title": "Projects",
@@ -85,6 +133,12 @@
   "contact": {
     "title": "Contact",
     "subtitle": "[Placeholder] Have a project in mind? Send a message.",
+    "infoLabel": "Contact details",
+    "phone": "Phone",
+    "emailLabel": "Email",
+    "address": "Address",
+    "socialTitle": "Social networks",
+    "opensInNewTab": "opens in a new tab",
     "name": "Name",
     "email": "Email",
     "message": "Message",
@@ -100,7 +154,10 @@
     "contactTitle": "Contact",
     "phone": "Phone",
     "email": "Email",
-    "location": "Location"
+    "location": "Address",
+    "follow": "Follow us",
+    "opensInNewTab": "opens in a new tab",
+    "sponsors": "Partners and sponsors"
   },
   "admin": {
     "login": {

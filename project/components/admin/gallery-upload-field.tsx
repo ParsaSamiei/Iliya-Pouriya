@@ -1,29 +1,38 @@
 "use client";
 
-import { ImagePlus, Loader2, X } from "lucide-react";
+import { ImagePlus, Loader2, Play, X } from "lucide-react";
 import Image from "next/image";
 import { useId, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
-import { uploadFile } from "@/lib/actions/uploads";
+import {
+  isVideoUrl,
+  normalizeProjectGallery,
+  type ProjectGalleryMedia,
+} from "@/lib/project-gallery";
+import { uploadAdminFile, type ClientUploadCategory } from "@/lib/upload-client";
+import { extractVideoThumbnail } from "@/lib/video-thumbnail";
 
 /**
- * Multiple-image companion to ImageUploadField (single URL + preview) — this
- * one manages an array, submitted as a JSON-encoded hidden field and parsed
- * server-side by lib/actions/projects.ts::parseGalleryField.
+ * Multi-file gallery field for projects — images and videos.
+ * Videos get an auto-generated poster frame uploaded alongside them.
  */
 export function GalleryUploadField({
   name,
   label,
+  category = "projects",
   defaultValue = [],
 }: {
   name: string;
   label: string;
-  defaultValue?: string[];
+  category?: ClientUploadCategory;
+  defaultValue?: unknown;
 }) {
   const id = useId();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [urls, setUrls] = useState<string[]>(defaultValue);
+  const [items, setItems] = useState<ProjectGalleryMedia[]>(() =>
+    normalizeProjectGallery(defaultValue),
+  );
   const [pending, startTransition] = useTransition();
 
   function onFilesChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -31,24 +40,47 @@ export function GalleryUploadField({
     if (files.length === 0) return;
 
     startTransition(async () => {
-      const results = await Promise.all(
-        files.map(async (file) => {
-          const formData = new FormData();
-          formData.set("file", file);
-          return uploadFile("projects", formData);
-        }),
-      );
+      const uploaded: ProjectGalleryMedia[] = [];
+      let failed = 0;
 
-      const uploaded = results.filter((r): r is { ok: true; url: string } => r.ok);
-      const failed = results.length - uploaded.length;
+      for (const file of files) {
+        const isVideo = file.type.startsWith("video/") || isVideoUrl(file.name);
+        const result = await uploadAdminFile(category, file);
+        if (!result.ok) {
+          failed += 1;
+          continue;
+        }
+
+        if (!isVideo) {
+          uploaded.push({
+            mediaType: "IMAGE",
+            imageUrl: result.url,
+            videoUrl: null,
+          });
+          continue;
+        }
+
+        let posterUrl: string | null = null;
+        const thumb = await extractVideoThumbnail(file);
+        if (thumb) {
+          const poster = await uploadAdminFile(category, thumb);
+          if (poster.ok) posterUrl = poster.url;
+        }
+
+        uploaded.push({
+          mediaType: "VIDEO",
+          imageUrl: posterUrl,
+          videoUrl: result.url,
+        });
+      }
 
       if (uploaded.length > 0) {
-        setUrls((prev) => [...prev, ...uploaded.map((r) => r.url)]);
+        setItems((prev) => [...prev, ...uploaded]);
       }
       if (failed > 0) {
-        toast.error(`${failed} image${failed > 1 ? "s" : ""} failed to upload.`);
+        toast.error(`${failed} file${failed > 1 ? "s" : ""} failed to upload.`);
       } else if (uploaded.length > 0) {
-        toast.success(`${uploaded.length} image${uploaded.length > 1 ? "s" : ""} added.`);
+        toast.success(`${uploaded.length} file${uploaded.length > 1 ? "s" : ""} added.`);
       }
 
       event.target.value = "";
@@ -56,38 +88,75 @@ export function GalleryUploadField({
   }
 
   function removeAt(index: number) {
-    setUrls((prev) => prev.filter((_, i) => i !== index));
+    setItems((prev) => prev.filter((_, i) => i !== index));
   }
 
   return (
     <div className="space-y-1.5">
       <Label htmlFor={id}>{label}</Label>
-      <input type="hidden" name={name} value={JSON.stringify(urls)} />
+      <p className="text-xs text-fg-muted">
+        Images (JPEG/PNG/WebP) or videos (MP4/WebM), up to 100 MB. Video posters are
+        generated automatically.
+      </p>
+      <input type="hidden" name={name} value={JSON.stringify(items)} />
 
       <div className="flex flex-wrap gap-2">
-        {urls.map((url, index) => (
-          <div
-            key={url}
-            className="group relative size-20 overflow-hidden rounded-[var(--radius-sm)] border border-border"
-          >
-            <Image src={url} alt="" fill className="object-cover" unoptimized />
-            <button
-              type="button"
-              onClick={() => removeAt(index)}
-              aria-label="Remove image"
-              className="absolute top-0.5 right-0.5 rounded-full bg-bg/80 p-0.5 opacity-0 transition-opacity group-hover:opacity-100"
+        {items.map((item, index) => {
+          const previewUrl = item.imageUrl ?? item.videoUrl;
+          const key = `${item.mediaType}-${previewUrl}-${index}`;
+          return (
+            <div
+              key={key}
+              className="group relative size-20 overflow-hidden rounded-[var(--radius-sm)] border border-border bg-surface-raised"
             >
-              <X className="size-3.5 text-fg" />
-            </button>
-          </div>
-        ))}
+              {item.imageUrl ? (
+                <>
+                  <Image
+                    src={item.imageUrl}
+                    alt=""
+                    fill
+                    sizes="80px"
+                    className="object-cover"
+                    unoptimized
+                  />
+                  {item.mediaType === "VIDEO" && (
+                    <span className="absolute inset-0 flex items-center justify-center bg-bg/25">
+                      <Play className="size-5 fill-current text-accent" />
+                    </span>
+                  )}
+                </>
+              ) : item.mediaType === "VIDEO" && item.videoUrl ? (
+                <video
+                  src={item.videoUrl}
+                  muted
+                  playsInline
+                  preload="metadata"
+                  className="size-full object-cover"
+                />
+              ) : (
+                <div className="flex size-full flex-col items-center justify-center gap-1 bg-bg text-fg-muted">
+                  <Play className="size-5 fill-current text-accent" />
+                  <span className="text-[9px] font-medium uppercase">Video</span>
+                </div>
+              )}
+              <button
+                type="button"
+                onClick={() => removeAt(index)}
+                aria-label="Remove media"
+                className="absolute top-0.5 right-0.5 cursor-pointer rounded-full bg-bg/80 p-0.5 opacity-0 transition-opacity group-hover:opacity-100"
+              >
+                <X className="size-3.5 text-fg" />
+              </button>
+            </div>
+          );
+        })}
 
         <button
           type="button"
           id={id}
           onClick={() => fileInputRef.current?.click()}
           disabled={pending}
-          className="flex size-20 flex-col items-center justify-center gap-1 rounded-[var(--radius-sm)] border border-dashed border-border text-fg-muted hover:border-accent hover:text-accent disabled:opacity-50"
+          className="flex size-20 cursor-pointer flex-col items-center justify-center gap-1 rounded-[var(--radius-sm)] border border-dashed border-border text-fg-muted hover:border-accent hover:text-accent disabled:opacity-50"
         >
           {pending ? (
             <Loader2 className="size-5 animate-spin" />
@@ -101,7 +170,7 @@ export function GalleryUploadField({
         <input
           ref={fileInputRef}
           type="file"
-          accept="image/*"
+          accept="image/jpeg,image/png,image/webp,video/mp4,video/webm"
           multiple
           className="hidden"
           onChange={onFilesChange}

@@ -3,7 +3,7 @@
 @plugin "@tailwindcss/typography";
 
 /*
- * IPZ brand tokens — circuit teal + hexagon violet from logo.png.
+ * IPZ brand tokens — sampled from logo.png circuit teal + hexagon violet.
  * Dark is default; light is a fully supported secondary theme.
  */
 
@@ -52,7 +52,7 @@
   --radius: var(--radius-md);
 }
 
-/* Dark — near-black like the mark */
+/* Dark — near-black like the mark; teal/violet from logo */
 :root,
 .dark {
   --bg: #0a0a0c;
@@ -60,44 +60,46 @@
   --surface-raised: #1a1a24;
   --fg: #f2f4f7;
   --fg-muted: #8b909c;
-  --accent: #22cccc;
-  --accent-fg: #041414;
-  --signal: #7766ff;
-  --link: #3dd9d9;
+  /* logo circuit dominant ≈ #30c8c0 / #28c8c0 */
+  --accent: #30c8c0;
+  --accent-fg: #031413;
+  /* logo hex dominant ≈ #7860f8 */
+  --signal: #7860f8;
+  --link: #52d4cc;
   --border: rgba(242, 244, 247, 0.1);
   --success: #3dba7a;
   --warning: #e0b04a;
   --error: #e06a6a;
 
-  --glow-accent: color-mix(in srgb, var(--accent) 16%, transparent);
-  --glow-signal: color-mix(in srgb, var(--signal) 14%, transparent);
+  --glow-accent: color-mix(in srgb, var(--accent) 18%, transparent);
+  --glow-signal: color-mix(in srgb, var(--signal) 16%, transparent);
   --glow-soft: color-mix(in srgb, var(--fg) 4%, transparent);
   --panel-highlight: color-mix(in srgb, var(--fg) 5%, transparent);
-  --material-wash-a: color-mix(in srgb, var(--accent) 26%, transparent);
+  --material-wash-a: color-mix(in srgb, var(--accent) 24%, transparent);
   --material-wash-b: color-mix(in srgb, var(--signal) 22%, transparent);
 }
 
-/* Light — cool paper; teal primary, violet secondary (not purple-on-cream) */
+/* Light — cool paper; same logo pair, deeper for contrast */
 .light {
   --bg: #e8eaee;
   --surface: #f5f6f8;
   --surface-raised: #ffffff;
   --fg: #12131a;
   --fg-muted: #5a6070;
-  --accent: #0f9e9e;
+  --accent: #1a9e98;
   --accent-fg: #ffffff;
-  --signal: #5a4ad4;
-  --link: #0d8a8a;
+  --signal: #5f4ed0;
+  --link: #178f8a;
   --border: rgba(18, 19, 26, 0.1);
   --success: #1f8a4d;
   --warning: #a67a12;
   --error: #c44747;
 
-  --glow-accent: color-mix(in srgb, var(--accent) 12%, transparent);
-  --glow-signal: color-mix(in srgb, var(--signal) 10%, transparent);
+  --glow-accent: color-mix(in srgb, var(--accent) 14%, transparent);
+  --glow-signal: color-mix(in srgb, var(--signal) 12%, transparent);
   --glow-soft: color-mix(in srgb, var(--fg) 3%, transparent);
   --panel-highlight: color-mix(in srgb, var(--fg) 6%, transparent);
-  --material-wash-a: color-mix(in srgb, var(--accent) 18%, transparent);
+  --material-wash-a: color-mix(in srgb, var(--accent) 16%, transparent);
   --material-wash-b: color-mix(in srgb, var(--signal) 14%, transparent);
 }
 
@@ -109,6 +111,11 @@
 @layer base {
   * {
     border-color: var(--color-border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
   }
 
   html[dir="rtl"] body {
@@ -139,6 +146,10 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
     *,
     *::before,
     *::after {
@@ -324,12 +335,33 @@
   z-index: 10;
   display: flex;
   justify-content: center;
-  pointer-events: none;
+}
+
+.hero-scroll-cue__btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.75rem;
+  color: var(--color-accent);
+  outline: none;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.hero-scroll-cue__btn:hover {
+  color: var(--color-signal);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+
+.hero-scroll-cue__btn:focus-visible {
+  color: var(--color-signal);
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--color-accent);
 }
 
 .hero-scroll-cue__line {
   width: 1px;
-  height: 2.75rem;
+  height: 2.25rem;
   background: linear-gradient(
     to bottom,
     transparent,
@@ -338,6 +370,13 @@
     transparent
   );
   animation: hero-scroll-pulse 2.4s ease-in-out infinite;
+}
+
+.hero-scroll-cue__icon {
+  width: 1.15rem;
+  height: 1.15rem;
+  opacity: 0.85;
+  animation: hero-scroll-nudge 2.4s ease-in-out infinite;
 }
 
 .hero-name {
@@ -390,11 +429,24 @@
   }
 }
 
+@keyframes hero-scroll-nudge {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translateY(3px);
+    opacity: 1;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero-orb--accent,
   .hero-orb--signal,
   .hero-logo-halo,
-  .hero-scroll-cue__line {
+  .hero-scroll-cue__line,
+  .hero-scroll-cue__icon {
     animation: none;
   }
 
@@ -450,7 +502,11 @@
   border-image: linear-gradient(to bottom, var(--color-accent), var(--color-signal)) 1;
 }
 
-/* Landing sections */
+/*
+ * Landing sections — ordered circuit bands.
+ * Sequence: Hero → Projects → Team → Capabilities → Recommendations → Blog → Contact
+ * Full-bleed 2px rule on top of every section after hero (sits between rec ↔ blog).
+ */
 .landing-section {
   position: relative;
   isolation: isolate;
@@ -461,47 +517,377 @@
   display: flex;
   flex-direction: column;
   min-height: calc(100dvh - 4rem);
-  border-bottom: 1px solid var(--color-border);
 }
 
-.landing-section-capabilities {
-  border-block: 1px solid var(--color-border);
-  background:
-    radial-gradient(ellipse 50% 60% at 100% 0%, var(--glow-signal), transparent 55%),
-    radial-gradient(ellipse 40% 50% at 0% 100%, var(--glow-accent), transparent 50%),
-    color-mix(in srgb, var(--surface) 70%, var(--bg));
+/* Hard separator — full viewport width, logo teal → violet */
+.landing-section:not(.landing-section-hero)::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  z-index: 5;
+  height: 2px;
+  pointer-events: none;
+  background: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--accent) 75%, transparent) 0%,
+    color-mix(in srgb, var(--fg) 28%, transparent) 50%,
+    color-mix(in srgb, var(--signal) 75%, transparent) 100%
+  );
 }
 
+/* 1 — ambient · teal start */
 .landing-section-projects {
-  border-bottom: 1px solid var(--color-border);
-  background:
-    radial-gradient(ellipse 45% 40% at 0% 20%, var(--glow-accent), transparent 60%),
-    transparent;
+  background-color: transparent;
+  background-image: radial-gradient(
+    ellipse 55% 60% at 0% 40%,
+    var(--glow-accent),
+    transparent 65%
+  );
 }
 
+/* 1b — gallery · surface plate after projects */
+.landing-section-gallery {
+  background-color: var(--surface);
+  background-image: radial-gradient(
+    ellipse 50% 55% at 100% 30%,
+    var(--glow-accent),
+    transparent 62%
+  );
+}
+
+/* 2 — surface plate · violet end */
 .landing-section-team {
-  border-bottom: 1px solid var(--color-border);
-  background:
-    radial-gradient(ellipse 55% 50% at 100% 30%, var(--glow-signal), transparent 55%),
-    color-mix(in srgb, var(--surface) 55%, var(--bg));
+  background-color: var(--surface);
+  background-image: radial-gradient(
+    ellipse 55% 60% at 100% 40%,
+    var(--glow-signal),
+    transparent 65%
+  );
 }
 
+/* 3 — teal-tinted · teal bottom-start */
+.landing-section-capabilities {
+  background-color: color-mix(in srgb, var(--accent) 7%, var(--bg));
+  background-image: radial-gradient(
+    ellipse 50% 55% at 0% 90%,
+    var(--glow-accent),
+    transparent 62%
+  );
+}
+
+/* 3b — roster tape · quiet plate between practice and voices */
+.landing-section-clients {
+  background-color: var(--bg);
+  background-image: radial-gradient(
+    ellipse 60% 45% at 50% 100%,
+    color-mix(in srgb, var(--accent) 8%, transparent),
+    transparent 70%
+  );
+}
+
+/* Infinite roster marquee — RTL tape; pauses under pointer so hover can stick */
+.clients-marquee {
+  position: relative;
+  --clients-marquee-duration: 32s;
+  /* Room for tile lift without clipping */
+  padding-block: 0.75rem;
+  margin-block: -0.75rem;
+}
+
+.clients-marquee__viewport {
+  overflow: hidden;
+  mask-image: linear-gradient(
+    to left,
+    transparent 0%,
+    #000 5%,
+    #000 95%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to left,
+    transparent 0%,
+    #000 5%,
+    #000 95%,
+    transparent 100%
+  );
+}
+
+.clients-marquee__track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+.clients-marquee__group {
+  display: flex;
+  flex: none;
+  gap: 0.75rem;
+  padding-inline-end: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .clients-marquee__group {
+    gap: 1rem;
+    padding-inline-end: 1rem;
+  }
+}
+
+.clients-marquee__track--running {
+  animation: clients-marquee-scroll-rtl var(--clients-marquee-duration) linear
+    infinite;
+}
+
+.clients-marquee--paused .clients-marquee__track--running {
+  animation-play-state: paused;
+}
+
+.clients-marquee__slide {
+  flex: 0 0 auto;
+  width: 11.5rem;
+  height: 10.75rem;
+}
+
+@media (min-width: 640px) {
+  .clients-marquee__slide {
+    width: 12.5rem;
+    height: 11.25rem;
+  }
+}
+
+@keyframes clients-marquee-scroll-rtl {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(50%, 0, 0);
+  }
+}
+
+/* Client roster tile — fixed footprint; rest = mute; hover = active channel */
+.client-tile {
+  position: relative;
+  z-index: 0;
+  box-sizing: border-box;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 1.1rem 0.9rem 1.35rem;
+  border: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
+  border-radius: var(--radius-md);
+  background-color: color-mix(in srgb, var(--surface) 55%, transparent);
+  outline: none;
+  cursor: default;
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 180ms ease;
+}
+
+a.client-tile {
+  cursor: pointer;
+}
+
+.client-tile::after {
+  content: "";
+  position: absolute;
+  inset-inline: 18%;
+  bottom: 0.45rem;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: center;
+  opacity: 0;
+  transition:
+    transform 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 160ms ease;
+}
+
+.client-tile__media {
+  display: flex;
+  height: 3.5rem;
+  width: 100%;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.client-tile__logo {
+  max-height: 3rem;
+  width: auto;
+  max-width: 9rem;
+  object-fit: contain;
+  opacity: 0.55;
+  filter: grayscale(0.45);
+  transition:
+    opacity 180ms ease,
+    filter 180ms ease,
+    transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.client-tile__mark {
+  font-family: var(--font-display, inherit);
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: color-mix(in srgb, var(--fg-muted) 70%, transparent);
+  transition:
+    color 180ms ease,
+    transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.client-tile__name {
+  margin-top: 0.75rem;
+  display: -webkit-box;
+  width: 100%;
+  min-height: 2.625rem;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  text-align: center;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--fg);
+  transition: color 180ms ease;
+}
+
+.client-tile__note {
+  margin-top: 0.25rem;
+  display: -webkit-box;
+  width: 100%;
+  min-height: 2.25rem;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  text-align: center;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--fg-muted);
+  opacity: 0.85;
+  transition:
+    color 180ms ease,
+    opacity 180ms ease;
+}
+
+.clients-marquee__slide:hover .client-tile,
+.client-tile:hover,
+.client-tile:focus-visible {
+  z-index: 1;
+  border-color: color-mix(in srgb, var(--accent) 70%, var(--border));
+  background-color: color-mix(in srgb, var(--accent) 14%, var(--surface-raised));
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--accent) 25%, transparent),
+    0 14px 32px -12px color-mix(in srgb, var(--accent) 45%, transparent);
+  transform: translateY(-6px) scale(1.03);
+}
+
+.clients-marquee__slide:hover .client-tile::after,
+.client-tile:hover::after,
+.client-tile:focus-visible::after {
+  transform: scaleX(1);
+  opacity: 1;
+}
+
+.clients-marquee__slide:hover .client-tile__logo,
+.client-tile:hover .client-tile__logo,
+.client-tile:focus-visible .client-tile__logo {
+  opacity: 1;
+  filter: grayscale(0);
+  transform: scale(1.08);
+}
+
+.clients-marquee__slide:hover .client-tile__mark,
+.client-tile:hover .client-tile__mark,
+.client-tile:focus-visible .client-tile__mark {
+  color: var(--accent);
+  transform: scale(1.08);
+}
+
+.clients-marquee__slide:hover .client-tile__name,
+.client-tile:hover .client-tile__name,
+.client-tile:focus-visible .client-tile__name {
+  color: var(--accent);
+}
+
+.clients-marquee__slide:hover .client-tile__note,
+.client-tile:hover .client-tile__note,
+.client-tile:focus-visible .client-tile__note {
+  color: var(--fg);
+  opacity: 1;
+}
+
+.client-tile:focus-visible {
+  box-shadow:
+    0 0 0 2px var(--bg),
+    0 0 0 4px var(--accent),
+    0 14px 32px -12px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .clients-marquee__track--running {
+    animation: none !important;
+  }
+
+  .client-tile,
+  .client-tile::after,
+  .client-tile__logo,
+  .client-tile__mark {
+    transition-duration: 0.01ms !important;
+  }
+
+  .clients-marquee__slide:hover .client-tile,
+  .client-tile:hover,
+  .client-tile:focus-visible {
+    transform: none;
+  }
+
+  .clients-marquee__slide:hover .client-tile__logo,
+  .client-tile:hover .client-tile__logo,
+  .client-tile:focus-visible .client-tile__logo,
+  .clients-marquee__slide:hover .client-tile__mark,
+  .client-tile:hover .client-tile__mark,
+  .client-tile:focus-visible .client-tile__mark {
+    transform: none;
+  }
+}
+
+/* 4 — raised plate · violet end */
+.landing-section-recommendations {
+  background-color: var(--surface-raised);
+  background-image: radial-gradient(
+    ellipse 55% 60% at 100% 50%,
+    var(--glow-signal),
+    transparent 65%
+  );
+}
+
+/* 5 — deep ambient · teal start (clearly darker than recommendations) */
 .landing-section-blog {
-  border-bottom: 1px solid var(--color-border);
-  background:
-    radial-gradient(ellipse 40% 45% at 50% 100%, var(--glow-soft), transparent 65%),
-    transparent;
+  background-color: var(--bg);
+  background-image: radial-gradient(
+    ellipse 50% 55% at 0% 35%,
+    var(--glow-accent),
+    transparent 62%
+  );
 }
 
+/* 6 — surface seal · logo diagonal */
 .landing-section-contact {
-  background:
-    linear-gradient(
-      135deg,
-      color-mix(in srgb, var(--accent) 8%, transparent) 0%,
-      transparent 40%,
-      color-mix(in srgb, var(--signal) 7%, transparent) 100%
-    ),
-    color-mix(in srgb, var(--surface) 70%, var(--bg));
+  background-color: var(--surface);
+  background-image: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--accent) 12%, transparent) 0%,
+    transparent 42%,
+    color-mix(in srgb, var(--signal) 11%, transparent) 100%
+  );
 }
 
 /* Header logo — shine sweeps inside the mark’s alpha silhouette */

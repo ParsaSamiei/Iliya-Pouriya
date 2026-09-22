@@ -1,5 +1,10 @@
+import type { Metadata } from "next";
 import { ExperienceList } from "@/components/admin/experience-list";
 import { db } from "@/lib/db";
+
+export const metadata: Metadata = {
+  title: "Experience",
+};
 
 export default async function AdminExperiencePage() {
   const people = await db.person.findMany({

@@ -1,6 +1,11 @@
+import type { Metadata } from "next";
 import { PersonEditForm } from "@/components/admin/person-edit-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { db } from "@/lib/db";
+
+export const metadata: Metadata = {
+  title: "People",
+};
 
 export default async function AdminPeoplePage() {
   const people = await db.person.findMany({ orderBy: { sortOrder: "asc" } });

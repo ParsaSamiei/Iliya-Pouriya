@@ -3,7 +3,7 @@ import { routing } from "@/i18n/routing";
 import { db } from "@/lib/db";
 import { SITE_URL } from "@/lib/seo";
 
-const STATIC_PATHS = ["", "/projects", "/blog", "/about", "/contact"];
+const STATIC_PATHS = ["", "/projects", "/gallery", "/blog", "/about", "/contact"];
 
 function localizedPath(locale: string, path: string) {
   return locale === routing.defaultLocale ? path || "/" : `/${locale}${path}`;

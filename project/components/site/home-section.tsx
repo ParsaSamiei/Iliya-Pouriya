@@ -3,9 +3,12 @@ import type { ReactNode } from "react";
 
 const VARIANT_CLASS = {
   hero: "landing-section-hero",
-  capabilities: "landing-section-capabilities",
   projects: "landing-section-projects",
+  gallery: "landing-section-gallery",
   team: "landing-section-team",
+  capabilities: "landing-section-capabilities",
+  clients: "landing-section-clients",
+  recommendations: "landing-section-recommendations",
   blog: "landing-section-blog",
   contact: "landing-section-contact",
 } as const;

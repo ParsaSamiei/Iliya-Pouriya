@@ -11,18 +11,31 @@ import path from "node:path";
  * local dev can point somewhere else.
  */
 
-export type UploadCategory = "projects" | "blog" | "resumes" | "profiles" | "models";
+export type UploadCategory =
+  | "projects"
+  | "blog"
+  | "resumes"
+  | "profiles"
+  | "models"
+  | "gallery"
+  | "sponsors"
+  | "clients";
 
 const UPLOADS_ROOT =
   process.env.UPLOADS_DIR?.trim() || path.join(process.cwd(), "public", "uploads");
 
 const LIMITS_BYTES: Record<UploadCategory, number> = {
-  projects: 15 * 1024 * 1024,
+  // Projects gallery can include videos; keep in sync with serverActions.bodySizeLimit.
+  projects: 100 * 1024 * 1024,
   blog: 15 * 1024 * 1024,
   resumes: 10 * 1024 * 1024,
   profiles: 5 * 1024 * 1024,
   // STL viewer note in docs/06: cap around 20–30 MB so it stays fast in-browser.
   models: 30 * 1024 * 1024,
+  // Gallery videos can be larger; images stay well under this cap.
+  gallery: 100 * 1024 * 1024,
+  sponsors: 5 * 1024 * 1024,
+  clients: 5 * 1024 * 1024,
 };
 
 const ALLOWED_EXTENSIONS: Record<UploadCategory, string[]> = {
@@ -31,6 +44,9 @@ const ALLOWED_EXTENSIONS: Record<UploadCategory, string[]> = {
   resumes: [".pdf"],
   profiles: [".jpg", ".jpeg", ".png", ".webp"],
   models: [".stl"],
+  gallery: [".jpg", ".jpeg", ".png", ".webp", ".mp4", ".webm"],
+  sponsors: [".jpg", ".jpeg", ".png", ".webp"],
+  clients: [".jpg", ".jpeg", ".png", ".webp"],
 };
 
 export class UploadValidationError extends Error {}

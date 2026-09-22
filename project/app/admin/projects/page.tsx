@@ -1,7 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { SortableProjectsTable } from "@/components/admin/sortable-projects-table";
 import { Button } from "@/components/ui/button";
 import { db } from "@/lib/db";
+
+export const metadata: Metadata = {
+  title: "Projects",
+};
 
 export default async function AdminProjectsPage() {
   const projects = await db.project.findMany({

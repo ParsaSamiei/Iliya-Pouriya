@@ -23,12 +23,16 @@ export function SettingField({
 
   function onSubmit(formData: FormData) {
     startTransition(async () => {
-      await updateSiteSetting(
-        settingKey,
-        String(formData.get("valueEn") ?? ""),
-        String(formData.get("valueFa") ?? ""),
-      );
-      toast.success(`${label} saved.`);
+      try {
+        await updateSiteSetting(
+          settingKey,
+          String(formData.get("valueEn") ?? ""),
+          String(formData.get("valueFa") ?? ""),
+        );
+        toast.success(`${label} saved.`);
+      } catch {
+        toast.error(`Could not save ${label}.`);
+      }
     });
   }
 

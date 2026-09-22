@@ -1,41 +1,36 @@
-import { getTranslations } from "next-intl/server";
 import { HomeSection, HomeSectionInner } from "@/components/site/home-section";
-import { MotionReveal } from "@/components/site/motion";
+import {
+  MotionItem,
+  MotionReveal,
+  MotionStaggerInView,
+} from "@/components/site/motion";
 import { SectionHeader } from "@/components/site/section-header";
+import type { LandingCopyView } from "@/lib/landing-copy";
 
-const CAPABILITIES = [
-  { key: "capabilityEmbedded" },
-  { key: "capabilityRobotics" },
-  { key: "capabilityFirmware" },
-  { key: "capabilityHardware" },
-] as const;
-
-export async function CapabilityGrid() {
-  const t = await getTranslations("home");
-
+export function CapabilityGrid({ copy }: { copy: LandingCopyView }) {
   return (
     <HomeSection variant="capabilities" id="capabilities">
       <HomeSectionInner>
         <MotionReveal>
           <SectionHeader
-            eyebrow={t("capabilitiesEyebrow")}
-            title={t("capabilitiesTitle")}
-            subtitle={t("capabilitiesSubtitle")}
+            eyebrow={copy.capabilitiesEyebrow}
+            title={copy.capabilitiesTitle}
+            subtitle={copy.capabilitiesSubtitle}
           />
         </MotionReveal>
 
-        <div className="relative z-10 grid gap-8 sm:grid-cols-2">
-          {CAPABILITIES.map(({ key }, i) => (
-            <MotionReveal key={key} delay={0.05 * i}>
+        <MotionStaggerInView className="relative z-10 grid gap-8 sm:grid-cols-2" stagger={0.08}>
+          {copy.capabilities.map((item, index) => (
+            <MotionItem key={`${item.title}-${index}`}>
               <article className="group relative border-s-2 border-transparent ps-5 transition-[padding] duration-200 [border-image:linear-gradient(to_bottom,var(--color-accent),var(--color-signal))_1] hover:ps-6">
                 <h3 className="font-display text-base font-semibold text-fg transition-colors duration-200 group-hover:text-accent">
-                  {t(`${key}`)}
+                  {item.title}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-fg-muted">{t(`${key}Desc`)}</p>
+                <p className="mt-2 text-sm leading-relaxed text-fg-muted">{item.desc}</p>
               </article>
-            </MotionReveal>
+            </MotionItem>
           ))}
-        </div>
+        </MotionStaggerInView>
       </HomeSectionInner>
     </HomeSection>
   );

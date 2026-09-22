@@ -1,7 +1,21 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ProjectForm } from "@/components/admin/project-form";
 import { ProjectModelManager } from "@/components/admin/project-model-manager";
 import { db } from "@/lib/db";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const project = await db.project.findUnique({
+    where: { id },
+    select: { titleEn: true },
+  });
+  return { title: project ? `Edit: ${project.titleEn}` : "Edit project" };
+}
 
 export default async function EditProjectPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

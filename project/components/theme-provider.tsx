@@ -20,6 +20,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       // satisfies "follow OS preference, otherwise dark" in practice.
       themes={["light", "dark"]}
       disableTransitionOnChange
+      // React 19 warns when a client component mounts an executable <script>.
+      // Leave the blocking script as JavaScript in the server HTML (so it runs
+      // before paint), and mark client re-mounts as a data block so they don't warn.
+      scriptProps={typeof window === "undefined" ? undefined : { type: "application/json" }}
     >
       {children}
     </NextThemesProvider>

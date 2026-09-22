@@ -11,7 +11,7 @@ export function HomeLoadingSkeleton() {
     <div aria-busy="true" aria-live="polite" className="min-h-[70dvh]">
       <span className="sr-only">Loading</span>
 
-      <section className="landing-section landing-section-hero border-b border-border">
+      <section className="landing-section landing-section-hero">
         <div className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-4 py-10 sm:py-14">
           <div className="grid w-full items-center gap-12 lg:grid-cols-[auto_minmax(0,1fr)] lg:gap-20">
             <Skeleton className="clip-hex size-32 shrink-0 sm:size-40 lg:size-[11rem]" />
@@ -33,19 +33,7 @@ export function HomeLoadingSkeleton() {
         </div>
       </section>
 
-      <section className="landing-section landing-section-team border-b border-border">
-        <div className="mx-auto w-full max-w-6xl px-4 py-20 sm:py-24">
-          <Skeleton className="h-3 w-16" />
-          <Skeleton className="mt-3 h-8 w-48" />
-          <Skeleton className="mt-3 h-4 w-72 max-w-full" />
-          <div className="mt-10 grid gap-6 sm:grid-cols-2">
-            <TeamCardSkeleton />
-            <TeamCardSkeleton />
-          </div>
-        </div>
-      </section>
-
-      <section className="landing-section landing-section-projects border-b border-border">
+      <section className="landing-section landing-section-projects">
         <div className="mx-auto w-full max-w-6xl px-4 py-20 sm:py-24">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
@@ -63,7 +51,19 @@ export function HomeLoadingSkeleton() {
         </div>
       </section>
 
-      <section className="landing-section landing-section-capabilities border-b border-border">
+      <section className="landing-section landing-section-team">
+        <div className="mx-auto w-full max-w-6xl px-4 py-20 sm:py-24">
+          <Skeleton className="h-3 w-16" />
+          <Skeleton className="mt-3 h-8 w-48" />
+          <Skeleton className="mt-3 h-4 w-72 max-w-full" />
+          <div className="mt-10 grid gap-6 sm:grid-cols-2">
+            <TeamCardSkeleton />
+            <TeamCardSkeleton />
+          </div>
+        </div>
+      </section>
+
+      <section className="landing-section landing-section-capabilities">
         <div className="mx-auto w-full max-w-6xl px-4 py-20 sm:py-24">
           <Skeleton className="h-3 w-20" />
           <Skeleton className="mt-3 h-8 w-52" />
@@ -80,7 +80,48 @@ export function HomeLoadingSkeleton() {
         </div>
       </section>
 
-      <section className="landing-section landing-section-blog border-b border-border">
+      <section className="landing-section landing-section-clients">
+        <div className="mx-auto w-full max-w-6xl px-4 py-20 sm:py-24">
+          <Skeleton className="h-3 w-16" />
+          <Skeleton className="mt-3 h-8 w-56" />
+          <Skeleton className="mt-3 h-4 w-80 max-w-full" />
+          <div className="mt-10 flex gap-4 overflow-hidden">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="flex min-w-[42%] flex-col items-center gap-3 sm:min-w-[22%]">
+                <Skeleton className="h-12 w-28" />
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-3 w-32" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="landing-section landing-section-recommendations">
+        <div className="mx-auto w-full max-w-6xl px-4 py-20 sm:py-24">
+          <Skeleton className="h-3 w-16" />
+          <Skeleton className="mt-3 h-8 w-48" />
+          <Skeleton className="mt-3 h-4 w-72 max-w-full" />
+          <div className="mt-10 grid gap-6 sm:grid-cols-2">
+            {Array.from({ length: 2 }).map((_, i) => (
+              <div key={i} className="surface-card flex flex-col p-6">
+                <Skeleton className="h-5 w-full" />
+                <Skeleton className="mt-2 h-5 w-5/6" />
+                <Skeleton className="mt-2 h-5 w-4/6" />
+                <div className="mt-6 flex items-center gap-3">
+                  <Skeleton className="size-11 shrink-0 rounded-sm" />
+                  <div className="min-w-0 flex-1">
+                    <Skeleton className="h-4 w-32" />
+                    <Skeleton className="mt-2 h-3 w-40" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="landing-section landing-section-blog">
         <div className="mx-auto w-full max-w-6xl px-4 py-20 sm:py-24">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
@@ -98,8 +139,8 @@ export function HomeLoadingSkeleton() {
         </div>
       </section>
 
-      <section className="landing-section landing-section-contact border-b border-border">
-        <div className="mx-auto w-full max-w-6xl px-4 py-20 sm:py-24">
+      <section className="landing-section landing-section-contact">
+        <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:py-20">
           <Skeleton className="h-8 w-64 max-w-full" />
           <Skeleton className="mt-4 h-4 w-80 max-w-full" />
           <Skeleton className="mt-8 h-11 w-40" />

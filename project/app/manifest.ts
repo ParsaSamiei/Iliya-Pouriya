@@ -1,10 +1,13 @@
 import type { MetadataRoute } from "next";
+import { getSiteMetadataData } from "@/lib/get-site-metadata";
 
-export default function manifest(): MetadataRoute.Manifest {
+export default async function manifest(): Promise<MetadataRoute.Manifest> {
+  const site = await getSiteMetadataData();
+
   return {
-    name: "Iliya & Pouriya",
-    short_name: "Iliya & Pouriya",
-    description: "Robotics & embedded systems, built from first principles.",
+    name: site.nameEn,
+    short_name: site.nameEn,
+    description: site.taglineEn,
     start_url: "/",
     display: "standalone",
     background_color: "#14161a",

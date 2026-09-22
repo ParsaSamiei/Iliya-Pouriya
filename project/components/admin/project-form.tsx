@@ -71,7 +71,7 @@ export function ProjectForm({
           <GalleryUploadField
             name="gallery"
             label="Gallery"
-            defaultValue={Array.isArray(project?.gallery) ? (project.gallery as string[]) : []}
+            defaultValue={project?.gallery ?? []}
           />
 
           <Tabs value={tab} onValueChange={(v) => setTab(v as "en" | "fa")}>

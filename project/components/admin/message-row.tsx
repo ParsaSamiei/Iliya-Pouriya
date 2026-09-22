@@ -1,6 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
+import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,6 +10,17 @@ import { markMessageRead } from "@/lib/actions/messages";
 
 export function MessageRow({ message }: { message: ContactMessage }) {
   const [pending, startTransition] = useTransition();
+
+  function onMarkRead() {
+    startTransition(async () => {
+      try {
+        await markMessageRead(message.id);
+        toast.success("Marked as read.");
+      } catch {
+        toast.error("Could not mark message as read.");
+      }
+    });
+  }
 
   return (
     <Card className={message.readAt ? "opacity-70" : undefined}>
@@ -21,12 +33,7 @@ export function MessageRow({ message }: { message: ContactMessage }) {
           <div className="flex items-center gap-2">
             {message.recipient && <Badge variant="outline">{message.recipient}</Badge>}
             {!message.readAt && (
-              <Button
-                size="sm"
-                variant="ghost"
-                disabled={pending}
-                onClick={() => startTransition(() => markMessageRead(message.id))}
-              >
+              <Button size="sm" variant="ghost" disabled={pending} onClick={onMarkRead}>
                 Mark read
               </Button>
             )}

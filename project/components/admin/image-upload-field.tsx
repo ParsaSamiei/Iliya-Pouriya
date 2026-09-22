@@ -7,9 +7,10 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { uploadFile } from "@/lib/actions/uploads";
-
-type UploadCategory = "projects" | "blog" | "profiles" | "resumes";
+import {
+  type ClientUploadCategory,
+  uploadAdminFile,
+} from "@/lib/upload-client";
 
 export function ImageUploadField({
   name,
@@ -21,7 +22,7 @@ export function ImageUploadField({
 }: {
   name: string;
   label: string;
-  category: UploadCategory;
+  category: ClientUploadCategory;
   defaultValue?: string;
   accept?: string;
   showPreview?: boolean;
@@ -35,11 +36,8 @@ export function ImageUploadField({
     const file = event.target.files?.[0];
     if (!file) return;
 
-    const formData = new FormData();
-    formData.set("file", file);
-
     startTransition(async () => {
-      const result = await uploadFile(category, formData);
+      const result = await uploadAdminFile(category, file);
       if (result.ok) {
         setValue(result.url);
         toast.success("Uploaded.");
@@ -85,7 +83,7 @@ export function ImageUploadField({
           {/* unoptimized: avoids requiring the `sharp` package for Next's
               image optimizer in the self-hosted standalone build — this is
               just an admin-panel preview thumbnail, not public-facing. */}
-          <Image src={value} alt="" fill className="object-cover" unoptimized />
+          <Image src={value} alt="" fill sizes="128px" className="object-cover" unoptimized />
         </div>
       )}
     </div>

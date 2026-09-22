@@ -35,7 +35,13 @@ export function HomeHeroAtmosphere() {
         </defs>
 
         {/* Soft hex field — logo vernacular, not a measurement grid */}
-        <g stroke="url(#hero-hex-stroke)" strokeWidth="1" opacity="0.55">
+        <motion.g
+          stroke="url(#hero-hex-stroke)"
+          strokeWidth="1"
+          initial={reduce ? false : { opacity: 0 }}
+          animate={{ opacity: 0.55 }}
+          transition={{ duration: reduce ? 0 : 1.25, ease: [0.22, 1, 0.36, 1] }}
+        >
           <path d="M80 120 L160 80 L240 120 L240 200 L160 240 L80 200 Z" />
           <path d="M280 200 L360 160 L440 200 L440 280 L360 320 L280 280 Z" />
           <path d="M520 80 L600 40 L680 80 L680 160 L600 200 L520 160 Z" />
@@ -46,7 +52,7 @@ export function HomeHeroAtmosphere() {
           <path d="M960 120 L1040 80 L1120 120 L1120 200 L1040 240 L960 200 Z" />
           <path d="M900 520 L980 480 L1060 520 L1060 600 L980 640 L900 600 Z" />
           <path d="M60 620 L140 580 L220 620 L220 700 L140 740 L60 700 Z" />
-        </g>
+        </motion.g>
 
         {/* Brand diagonal beam */}
         <motion.path
@@ -54,9 +60,9 @@ export function HomeHeroAtmosphere() {
           stroke="url(#hero-beam)"
           strokeWidth="1.5"
           strokeLinecap="round"
-          initial={false}
+          initial={reduce ? false : { pathLength: 0, opacity: 0 }}
           animate={{ pathLength: 1, opacity: 0.9 }}
-          transition={{ duration: reduce ? 0 : 1.4, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: reduce ? 0 : 1.5, ease: [0.22, 1, 0.36, 1] }}
         />
         <path
           d="M-20 760 L1300 0"

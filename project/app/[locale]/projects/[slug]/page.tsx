@@ -65,14 +65,20 @@ export default async function ProjectDetailPage({
   const title = locale === "fa" ? project.titleFa : project.titleEn;
   const content = locale === "fa" ? project.contentFa : project.contentEn;
   const tags = (project.tags as string[] | null) ?? [];
-  const gallery = Array.isArray(project.gallery) ? (project.gallery as string[]) : [];
+  const gallery = project.gallery;
 
   return (
     <article className="mx-auto max-w-3xl px-4 py-16">
       <JsonLd data={projectJsonLd(project)} />
       {project.coverImageUrl && (
         <div className="relative mb-8 aspect-video w-full overflow-hidden rounded-[var(--radius-lg)] bg-surface-raised">
-          <Image src={project.coverImageUrl} alt={title} fill className="object-cover" />
+          <Image
+            src={project.coverImageUrl}
+            alt={title}
+            fill
+            sizes="(max-width: 768px) 100vw, 768px"
+            className="object-cover"
+          />
         </div>
       )}
 
@@ -111,12 +117,12 @@ export default async function ProjectDetailPage({
         </div>
       )}
 
-      {gallery.length > 0 && (
+      {Array.isArray(gallery) && gallery.length > 0 && (
         <div className="mt-8">
           <h2 className="mb-3 font-mono text-xs tracking-widest text-fg-muted uppercase">
             {t("gallery")}
           </h2>
-          <ProjectGallery images={gallery} alt={title} />
+          <ProjectGallery gallery={gallery} alt={title} />
         </div>
       )}
 

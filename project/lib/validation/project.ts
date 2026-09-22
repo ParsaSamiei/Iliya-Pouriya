@@ -20,7 +20,15 @@ export const projectSchema = z.object({
   contentEn: z.string().optional(),
   contentFa: z.string().optional(),
   coverImageUrl: z.string().optional(),
-  gallery: z.array(z.string()).optional(),
+  gallery: z
+    .array(
+      z.object({
+        mediaType: z.enum(["IMAGE", "VIDEO"]),
+        imageUrl: z.string().nullable(),
+        videoUrl: z.string().nullable(),
+      }),
+    )
+    .optional(),
   tags: z.array(z.string()).optional(),
   externalLinks: externalLinksSchema.optional(),
   isFeatured: z.boolean().default(false),

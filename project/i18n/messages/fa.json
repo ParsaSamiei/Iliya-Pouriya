@@ -6,6 +6,7 @@
   "nav": {
     "home": "خانه",
     "projects": "پروژه‌ها",
+    "gallery": "گالری",
     "team": "تیم",
     "blog": "وبلاگ",
     "about": "درباره ما",
@@ -42,6 +43,10 @@
     "featuredProjects": "پروژه‌های منتخب",
     "featuredProjectsSubtitle": "ساخت‌هایی از آزمایشگاه — سخت‌افزار، فریمور، و سیستم‌های کنترل در میدان.",
     "viewAllProjects": "مشاهده همه پروژه‌ها",
+    "galleryEyebrow": "میدان",
+    "galleryTitle": "آزمایشگاه و میدان",
+    "gallerySubtitle": "عکس‌ها و کلیپ‌های ساخت از میز کار و فراتر.",
+    "viewAllGallery": "مشاهده همه رسانه‌ها",
     "teamEyebrow": "افراد",
     "meetTheTeam": "مهندسان",
     "meetTheTeamSubtitle": "دو پیشینه متمایز، یک تمرین مشترک در رباتیک و سیستم‌های نهفته.",
@@ -52,6 +57,49 @@
     "contactEyebrow": "تماس",
     "contactTitle": "پروژه‌ای در ذهن دارید؟",
     "contactSubtitle": "نمونه اولیه، فریمور تولیدی، یا پلتفرم رباتیک — بگویید چه می‌سازید."
+  },
+  "gallery": {
+    "title": "گالری",
+    "subtitle": "عکس‌ها و ویدیوهایی از آزمایشگاه، ساخت‌ها، و کار در میدان.",
+    "filterLabel": "فیلتر گالری",
+    "filterAll": "همه",
+    "openItem": "باز کردن",
+    "empty": "هنوز رسانه‌ای نیست — به‌زودی برگردید.",
+    "emptyFiltered": "چیزی در این فیلتر نیست.",
+    "videoBadge": "ویدیو",
+    "playVideo": "پخش ویدیو",
+    "carousel": {
+      "label": "کاروسل گالری",
+      "slide": "اسلاید",
+      "status": "{current} از {total}",
+      "previous": "قبلی",
+      "next": "بعدی"
+    },
+    "lightbox": {
+      "close": "بستن",
+      "previous": "قبلی",
+      "next": "بعدی",
+      "status": "{current} / {total}"
+    },
+    "player": {
+      "play": "پخش",
+      "pause": "توقف",
+      "mute": "بی‌صدا",
+      "unmute": "با صدا",
+      "seek": "جابه‌جایی",
+      "fullscreen": "تمام‌صفحه",
+      "exitFullscreen": "خروج از تمام‌صفحه"
+    }
+  },
+  "clients": {
+    "carousel": {
+      "label": "با چه کسانی کار کرده‌ایم",
+      "slide": "اسلاید",
+      "status": "{current} از {total}",
+      "previous": "قبلی",
+      "next": "بعدی",
+      "opensInNewTab": "در تب جدید باز می‌شود"
+    }
   },
   "projects": {
     "title": "پروژه‌ها",
@@ -85,6 +133,12 @@
   "contact": {
     "title": "تماس با ما",
     "subtitle": "[محتوای نمونه] پروژه‌ای در ذهن دارید؟ پیام بفرستید.",
+    "infoLabel": "اطلاعات تماس",
+    "phone": "تلفن",
+    "emailLabel": "ایمیل",
+    "address": "آدرس",
+    "socialTitle": "شبکه‌های اجتماعی",
+    "opensInNewTab": "در تب جدید باز می‌شود",
     "name": "نام",
     "email": "ایمیل",
     "message": "پیام",
@@ -100,7 +154,10 @@
     "contactTitle": "تماس با ما",
     "phone": "تلفن",
     "email": "ایمیل",
-    "location": "آدرس"
+    "location": "آدرس",
+    "follow": "ما را دنبال کنید",
+    "opensInNewTab": "در تب جدید باز می‌شود",
+    "sponsors": "حامیان و اسپانسرها"
   },
   "admin": {
     "login": {

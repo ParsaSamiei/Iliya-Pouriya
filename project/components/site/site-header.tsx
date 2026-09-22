@@ -9,9 +9,8 @@ import { Button } from "@/components/ui/button";
 import { Link, usePathname } from "@/i18n/navigation";
 import { SITE_NAV_ITEMS } from "@/lib/site-nav";
 
-export function SiteHeader() {
+export function SiteHeader({ siteName }: { siteName: string }) {
   const t = useTranslations("nav");
-  const tSite = useTranslations("site");
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -21,17 +20,20 @@ export function SiteHeader() {
         <Link
           href="/"
           className="flex items-center gap-2.5 font-display text-lg font-semibold tracking-tight text-fg transition-colors hover:text-accent"
-          aria-label={tSite("name")}
+          aria-label={siteName}
         >
           <span className="header-logo-shine">
             <SiteLogo size="md" />
           </span>
-          <span className="hidden sm:inline">{tSite("name")}</span>
+          <span className="hidden sm:inline">{siteName}</span>
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex">
           {SITE_NAV_ITEMS.map((item) => {
-            const active = pathname === item.href;
+            const active =
+              item.href === "/"
+                ? pathname === "/"
+                : pathname === item.href || pathname.startsWith(`${item.href}/`);
             return (
               <Link
                 key={item.href}

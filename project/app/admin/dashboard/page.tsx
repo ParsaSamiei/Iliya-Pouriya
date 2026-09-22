@@ -1,6 +1,11 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { db } from "@/lib/db";
+
+export const metadata: Metadata = {
+  title: "Dashboard",
+};
 
 export default async function AdminDashboardPage() {
   const [projectCount, postCount, unreadMessages, recentMessages] = await Promise.all([

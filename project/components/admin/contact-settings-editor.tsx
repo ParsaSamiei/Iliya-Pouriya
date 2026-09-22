@@ -1,13 +1,15 @@
 "use client";
 
-import { Mail, MapPin, Phone, Plus, Trash2 } from "lucide-react";
+import { Mail, MapPin, Phone, Plus, Share2, Trash2 } from "lucide-react";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { updateContactSettings } from "@/lib/actions/settings";
+import { SOCIAL_CHANNELS, type SocialChannelField } from "@/lib/social-channels";
 import type { ContactSettingsData } from "@/lib/validation/contact-settings";
 
 type ContactSettingsEditorProps = {
@@ -103,13 +105,17 @@ export function ContactSettingsEditor({ initial }: ContactSettingsEditorProps) {
     }));
   }
 
+  function updateSocialField(field: SocialChannelField, value: string) {
+    setData((current) => ({ ...current, [field]: value }));
+  }
+
   function onSave() {
     startTransition(async () => {
       try {
         await updateContactSettings(data);
         toast.success("Contact settings saved.");
       } catch {
-        toast.error("Could not save — check email addresses are valid.");
+        toast.error("Could not save — check emails and social links are valid https:// URLs.");
       }
     });
   }
@@ -119,8 +125,8 @@ export function ContactSettingsEditor({ initial }: ContactSettingsEditorProps) {
       <CardHeader>
         <CardTitle className="text-base">Contact us</CardTitle>
         <p className="text-sm text-fg-muted">
-          Phone numbers, emails, and location shown in the site footer. Leave fields empty to
-          hide them from visitors.
+          Phone numbers, emails, address, and social links shown on the Contact page and in the
+          site footer. Leave fields empty to hide them from visitors.
         </p>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -153,30 +159,61 @@ export function ContactSettingsEditor({ initial }: ContactSettingsEditorProps) {
         <div className="space-y-3">
           <div className="flex items-center gap-2">
             <MapPin className="size-4 text-fg-muted" aria-hidden />
-            <Label>Location</Label>
+            <Label>Address</Label>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-1.5">
               <Label htmlFor="contact-location-en">Address (English)</Label>
-              <Input
+              <Textarea
                 id="contact-location-en"
                 value={data.locationEn}
-                placeholder="Tehran, Iran"
+                placeholder={"No. 12, Example St.\nTehran, Iran"}
+                rows={3}
                 disabled={pending}
                 onChange={(e) => setData((c) => ({ ...c, locationEn: e.target.value }))}
               />
             </div>
             <div className="space-y-1.5" dir="rtl">
               <Label htmlFor="contact-location-fa">آدرس (فارسی)</Label>
-              <Input
+              <Textarea
                 id="contact-location-fa"
                 dir="rtl"
                 value={data.locationFa}
-                placeholder="تهران، ایران"
+                placeholder={"خیابان نمونه، پلاک ۱۲\nتهران، ایران"}
+                rows={3}
                 disabled={pending}
                 onChange={(e) => setData((c) => ({ ...c, locationFa: e.target.value }))}
               />
             </div>
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <Share2 className="size-4 text-fg-muted" aria-hidden />
+            <Label>Social networks</Label>
+          </div>
+          <p className="text-xs text-fg-muted">
+            Profile URLs for Telegram, Bale, YouTube, Aparat, and Instagram. Empty fields are
+            hidden on the public site.
+          </p>
+          <div className="space-y-3">
+            {SOCIAL_CHANNELS.map((channel) => (
+              <div key={channel.field} className="space-y-1.5">
+                <Label htmlFor={channel.field}>
+                  {channel.labelEn} ({channel.labelFa})
+                </Label>
+                <Input
+                  id={channel.field}
+                  type="url"
+                  dir="ltr"
+                  placeholder={channel.placeholder}
+                  value={data[channel.field]}
+                  disabled={pending}
+                  onChange={(e) => updateSocialField(channel.field, e.target.value)}
+                />
+              </div>
+            ))}
           </div>
         </div>
 

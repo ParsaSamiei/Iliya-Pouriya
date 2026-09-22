@@ -3,6 +3,11 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
+import {
+  normalizeProjectGallery,
+  projectGalleryUrls,
+  type ProjectGalleryMedia,
+} from "@/lib/project-gallery";
 import { deleteUpload, saveUpload, UploadValidationError } from "@/lib/uploads";
 import { projectSchema } from "@/lib/validation/project";
 
@@ -39,16 +44,13 @@ function parseProjectForm(formData: FormData) {
   });
 }
 
-/** GalleryUploadField submits the URL list as a JSON-encoded hidden field —
+/** GalleryUploadField submits media as a JSON-encoded hidden field —
  * falls back to an empty gallery on missing/malformed input rather than
  * failing the whole form submission over it. */
-function parseGalleryField(raw: FormDataEntryValue | null): string[] {
+function parseGalleryField(raw: FormDataEntryValue | null): ProjectGalleryMedia[] {
   if (typeof raw !== "string" || !raw) return [];
   try {
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed)
-      ? parsed.filter((item): item is string => typeof item === "string")
-      : [];
+    return normalizeProjectGallery(JSON.parse(raw));
   } catch {
     return [];
   }
@@ -80,7 +82,9 @@ export async function updateProject(id: string, formData: FormData): Promise<Act
   }
 
   const existing = await db.project.findUnique({ where: { id }, select: { gallery: true } });
-  const previousGallery = Array.isArray(existing?.gallery) ? (existing.gallery as string[]) : [];
+  const previousUrls = new Set(
+    projectGalleryUrls(normalizeProjectGallery(existing?.gallery)),
+  );
 
   const { contributorIds, ...data } = parsed.data;
   await db.project.update({
@@ -96,8 +100,8 @@ export async function updateProject(id: string, formData: FormData): Promise<Act
 
   // Delete any gallery files that were removed from the form (not just
   // uploaded, but actually saved) — leaving them would strand disk space.
-  const nextGallery = new Set(data.gallery ?? []);
-  const removedFromGallery = previousGallery.filter((url) => !nextGallery.has(url));
+  const nextUrls = new Set(projectGalleryUrls(data.gallery ?? []));
+  const removedFromGallery = [...previousUrls].filter((url) => !nextUrls.has(url));
   await Promise.all(removedFromGallery.map((url) => deleteUpload(url)));
 
   revalidatePath("/admin/projects");
@@ -114,11 +118,11 @@ export async function deleteProject(id: string): Promise<ActionResult> {
   });
   if (!project) return { ok: false, error: "Not found." };
 
-  const gallery = Array.isArray(project.gallery) ? (project.gallery as string[]) : [];
+  const galleryUrls = projectGalleryUrls(normalizeProjectGallery(project.gallery));
 
   await Promise.all([
     ...project.models.map((m) => deleteUpload(m.fileUrl)),
-    ...gallery.map((url) => deleteUpload(url)),
+    ...galleryUrls.map((url) => deleteUpload(url)),
     project.coverImageUrl ? deleteUpload(project.coverImageUrl) : Promise.resolve(),
   ]);
 

@@ -3,6 +3,8 @@
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { ChevronDown } from "lucide-react";
+import { SmoothHashLink } from "@/components/site/smooth-hash-link";
 
 type HomeHeroMotionProps = {
   logo: ReactNode;
@@ -11,6 +13,8 @@ type HomeHeroMotionProps = {
   subtitle: ReactNode;
   actions: ReactNode;
 };
+
+const easeOut = [0.22, 1, 0.36, 1] as const;
 
 /** Orchestrated hero entrance — keeps content visible before hydration. */
 export function HomeHeroMotion({
@@ -41,20 +45,20 @@ export function HomeHeroMotion({
             ? { opacity: 1, scale: 1, rotate: 0 }
             : { opacity: 1, scale: 0.97, rotate: -3 }
         }
-        transition={{ duration: reduce ? 0 : 0.7, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: reduce ? 0 : 0.7, ease: easeOut }}
       >
         {logo}
       </motion.div>
 
       <div className="flex min-w-0 flex-col">
-        <HeroCopy enter={enter} reduce={Boolean(reduce)} delay={0.08} y={14}>
+        <HeroCopy enter={enter} reduce={Boolean(reduce)} delay={0.08} y={12}>
           {lockup}
         </HeroCopy>
         <HeroCopy
           enter={enter}
           reduce={Boolean(reduce)}
           delay={0.16}
-          y={12}
+          y={10}
           className="mt-7 sm:mt-9"
         >
           {title}
@@ -63,7 +67,7 @@ export function HomeHeroMotion({
           enter={enter}
           reduce={Boolean(reduce)}
           delay={0.24}
-          y={10}
+          y={8}
           className="mt-4"
         >
           {subtitle}
@@ -72,7 +76,7 @@ export function HomeHeroMotion({
           enter={enter}
           reduce={Boolean(reduce)}
           delay={0.32}
-          y={8}
+          y={6}
           className="mt-9"
         >
           {actions}
@@ -103,12 +107,38 @@ function HeroCopy({
       initial={false}
       animate={enter ? { opacity: 1, y: 0 } : { opacity: 1, y }}
       transition={{
-        duration: reduce ? 0 : 0.5,
+        duration: reduce ? 0 : 0.52,
         delay: enter && !reduce ? delay : 0,
-        ease: [0.22, 1, 0.36, 1],
+        ease: easeOut,
       }}
     >
       {children}
+    </motion.div>
+  );
+}
+
+/** Scroll-to-next control at the bottom of the hero. */
+export function HomeHeroScrollCue({
+  href = "#projects",
+  label,
+}: {
+  href?: `#${string}`;
+  label: string;
+}) {
+  const reduce = useReducedMotion();
+
+  return (
+    <motion.div
+      className="hero-scroll-cue"
+      initial={reduce ? false : { opacity: 0, y: -6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: reduce ? 0 : 0.7, delay: reduce ? 0 : 0.85, ease: easeOut }}
+    >
+      <SmoothHashLink href={href} className="hero-scroll-cue__btn" aria-label={label}>
+        <span className="hero-scroll-cue__line" aria-hidden />
+        <ChevronDown className="hero-scroll-cue__icon" aria-hidden />
+        <span className="sr-only">{label}</span>
+      </SmoothHashLink>
     </motion.div>
   );
 }

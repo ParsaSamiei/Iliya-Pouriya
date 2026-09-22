@@ -190,6 +190,25 @@ model ContactMessage {
   @@map("contact_messages")
 }
 
+/// Third-party recommendations / testimonials shown on the homepage.
+model Recommendation {
+  id             String   @id @default(uuid())
+  quoteEn        String   @map("quote_en")
+  quoteFa        String   @map("quote_fa")
+  authorNameEn   String   @map("author_name_en")
+  authorNameFa   String   @map("author_name_fa")
+  authorRoleEn   String?  @map("author_role_en")
+  authorRoleFa   String?  @map("author_role_fa")
+  authorPhotoUrl String?  @map("author_photo_url")
+  authorUrl      String?  @map("author_url")
+  isPublished    Boolean  @default(true) @map("is_published")
+  sortOrder      Int      @default(0) @map("sort_order")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  @@index([isPublished, sortOrder])
+  @@map("recommendations")
+}
+
 /// Key/value table for global content that isn't per-entity — homepage
 /// tagline, contact-page copy, site-wide social links, etc.
 model SiteSetting {
@@ -198,4 +217,93 @@ model SiteSetting {
   valueFa Json?  @map("value_fa")
 
   @@map("site_settings")
+}
+
+enum GalleryMediaType {
+  IMAGE
+  VIDEO
+
+  @@map("gallery_media_type")
+}
+
+/// Site-wide gallery media (images + videos), independent of project galleries.
+model GalleryItem {
+  id         String           @id @default(uuid())
+  mediaType  GalleryMediaType @default(IMAGE) @map("media_type")
+  /// Required for IMAGE; optional poster for VIDEO.
+  imageUrl   String?          @map("image_url")
+  videoUrl   String?          @map("video_url")
+  altEn      String?          @map("alt_en")
+  altFa      String?          @map("alt_fa")
+  captionEn  String?          @map("caption_en")
+  captionFa  String?          @map("caption_fa")
+  sortOrder  Int              @default(0) @map("sort_order")
+  createdAt  DateTime         @default(now()) @map("created_at")
+
+  tags GalleryItemTag[]
+
+  @@index([sortOrder])
+  @@map("gallery_items")
+}
+
+model GalleryTag {
+  id        String   @id @default(uuid())
+  slug      String   @unique
+  nameEn    String   @map("name_en")
+  nameFa    String   @map("name_fa")
+  sortOrder Int      @default(0) @map("sort_order")
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  items GalleryItemTag[]
+
+  @@index([isActive, sortOrder])
+  @@map("gallery_tags")
+}
+
+model GalleryItemTag {
+  itemId String      @map("item_id")
+  item   GalleryItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  tagId  String      @map("tag_id")
+  tag    GalleryTag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([itemId, tagId])
+  @@index([tagId])
+  @@map("gallery_item_tags")
+}
+
+/// Partners / sponsors shown as logos in the site footer only
+/// (no dedicated public page). Managed from /admin/sponsors.
+model Sponsor {
+  id          String   @id @default(uuid())
+  name        String
+  /// Optional — a sponsor can be listed by name alone.
+  logoUrl     String?  @map("logo_url")
+  /// Optional outbound link when the logo/name is clicked.
+  url         String?
+  isPublished Boolean  @default(true) @map("is_published")
+  sortOrder   Int      @default(0) @map("sort_order")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([isPublished, sortOrder])
+  @@map("sponsors")
+}
+
+/// Organizations / people the team has worked with — homepage carousel.
+/// Separate from Sponsors (footer). Managed from /admin/clients.
+model Client {
+  id          String   @id @default(uuid())
+  nameEn      String   @map("name_en")
+  nameFa      String   @map("name_fa")
+  /// Optional short note about the collaboration.
+  noteEn      String?  @map("note_en")
+  noteFa      String?  @map("note_fa")
+  logoUrl     String?  @map("logo_url")
+  url         String?
+  isPublished Boolean  @default(true) @map("is_published")
+  sortOrder   Int      @default(0) @map("sort_order")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([isPublished, sortOrder])
+  @@map("clients")
 }

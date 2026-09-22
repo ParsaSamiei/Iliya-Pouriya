@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -13,22 +14,20 @@ export default function AdminLoginPage() {
   const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    setError(null);
     const result = await adminSignIn(email, password);
     setLoading(false);
     if (!result.ok) {
-      setError(result.error);
+      toast.error(result.error);
       return;
     }
+    toast.success("Signed in.");
     const from = searchParams.get("from");
-    const destination =
-      !from || from === "/admin" ? "/admin/dashboard" : from;
+    const destination = !from || from === "/admin" ? "/admin/dashboard" : from;
     router.push(destination);
     router.refresh();
   }
@@ -61,7 +60,6 @@ export default function AdminLoginPage() {
                 required
               />
             </div>
-            {error && <p className="text-sm text-error">{error}</p>}
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? "Signing in…" : "Sign in"}
             </Button>

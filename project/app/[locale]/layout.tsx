@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 import { SiteBackground } from "@/components/site/site-background";
 import { SiteCursor } from "@/components/site/site-cursor";
@@ -11,6 +11,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { routing } from "@/i18n/routing";
 import "@/lib/fonts";
+import { getSiteMetadata } from "@/lib/get-site-metadata";
 import { buildLocaleAlternates } from "@/lib/seo";
 import "../globals.css";
 
@@ -24,12 +25,17 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "site" });
+  const site = await getSiteMetadata(locale);
   return {
-    title: { default: `${t("name")} — ${t("tagline")}`, template: `%s — ${t("name")}` },
-    description: t("tagline"),
+    title: { default: `${site.name} — ${site.tagline}`, template: `%s — ${site.name}` },
+    description: site.tagline,
     alternates: buildLocaleAlternates("/"),
-    openGraph: { siteName: t("name"), type: "website" },
+    openGraph: {
+      siteName: site.name,
+      title: `${site.name} — ${site.tagline}`,
+      description: site.tagline,
+      type: "website",
+    },
   };
 }
 
@@ -47,16 +53,17 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
 
   const dir = locale === "fa" ? "rtl" : "ltr";
+  const site = await getSiteMetadata(locale);
 
   return (
-    <html lang={locale} dir={dir} suppressHydrationWarning>
+    <html lang={locale} dir={dir} data-scroll-behavior="smooth" suppressHydrationWarning>
       <body className="min-h-screen bg-bg font-body text-fg antialiased">
         <NextIntlClientProvider>
           <ThemeProvider>
             <SiteBackground />
             <SiteCursor />
             <div className="relative z-10 flex min-h-screen flex-col">
-              <SiteHeader />
+              <SiteHeader siteName={site.name} />
               <main className="flex-1">{children}</main>
               <SiteFooter />
             </div>

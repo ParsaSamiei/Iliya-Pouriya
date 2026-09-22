@@ -70,7 +70,13 @@ export default async function BlogPostPage({
       <JsonLd data={blogPostingJsonLd(post)} />
       {post.coverImageUrl && (
         <div className="relative mb-8 aspect-video w-full overflow-hidden rounded-[var(--radius-lg)] bg-surface-raised">
-          <Image src={post.coverImageUrl} alt={title} fill className="object-cover" />
+          <Image
+            src={post.coverImageUrl}
+            alt={title}
+            fill
+            sizes="(max-width: 768px) 100vw, 768px"
+            className="object-cover"
+          />
         </div>
       )}
       <p className="font-mono text-xs text-fg-muted">

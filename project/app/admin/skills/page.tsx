@@ -1,5 +1,10 @@
+import type { Metadata } from "next";
 import { SkillList } from "@/components/admin/skill-list";
 import { db } from "@/lib/db";
+
+export const metadata: Metadata = {
+  title: "Skills",
+};
 
 export default async function AdminSkillsPage() {
   const people = await db.person.findMany({
