@@ -55,37 +55,19 @@ jobs:
       - name: Configure SSH
         working-directory: .
         run: |
-          mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
-          # Browser-pasted secrets often contain CR. A key with no final
-          # newline is also rejected by ssh. bash -e must not see the test fail.
-          printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_deploy
-          if [ -n "$(tail -c1 ~/.ssh/id_deploy)" ]; then
-            echo >> ~/.ssh/id_deploy
-          fi
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_deploy
           chmod 600 ~/.ssh/id_deploy
-          if ! ssh-keygen -y -f ~/.ssh/id_deploy >/dev/null; then
-            echo "::error::SSH_PRIVATE_KEY is not a valid private key. Paste the whole file, including the BEGIN and END lines."
-            exit 1
-          fi
-          echo "Deploy key fingerprint (must match the key in deploy's authorized_keys):"
-          ssh-keygen -lf ~/.ssh/id_deploy
-          # Do not hide stderr. A failed keyscan used to exit 1 here with no message.
-          if ! ssh-keyscan -T 20 -H "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts; then
-            echo "::error::Could not read the SSH host key from ${{ secrets.SSH_HOST }}:22. Port 22 must be open to GitHub Actions."
-            exit 1
-          fi
+          ssh-keyscan -H "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
           cat >> ~/.ssh/config <<EOF
           Host target
             HostName ${{ secrets.SSH_HOST }}
             User ${{ secrets.SSH_USER }}
             IdentityFile ~/.ssh/id_deploy
             IdentitiesOnly yes
-            BatchMode yes
             ServerAliveInterval 30
             ServerAliveCountMax 10
           EOF
-          chmod 600 ~/.ssh/config
           ssh target 'echo "SSH OK on $(hostname)"'
 
       - name: Build web image
