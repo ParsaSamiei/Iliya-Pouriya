@@ -68,7 +68,13 @@ export async function updateContactSettings(data: ContactSettingsData) {
   );
   const normalized = {
     ...parsed,
-    phones: parsed.phones.map((p) => p.trim()).filter(Boolean),
+    phones: parsed.phones
+      .map((p) => ({
+        nameEn: p.nameEn.trim(),
+        nameFa: p.nameFa.trim(),
+        number: p.number.trim(),
+      }))
+      .filter((p) => p.number),
     emails: parsed.emails.map((e) => e.trim()).filter(Boolean),
     ...socialUrls,
   };

@@ -75,7 +75,11 @@ async function main() {
 
   const project = await db.project.upsert({
     where: { slug: "placeholder-project" },
-    update: {},
+    update: {
+      status: "ACTIVE",
+      statusUpdatedAt: new Date(),
+      showOnStatusBoard: true,
+    },
     create: {
       slug: "placeholder-project",
       titleEn: "[Placeholder] Sample Project",
@@ -92,6 +96,9 @@ async function main() {
       tags: ["placeholder"],
       isFeatured: true,
       publishedAt: new Date(),
+      status: "ACTIVE",
+      statusUpdatedAt: new Date(),
+      showOnStatusBoard: true,
       sortOrder: 0,
       contributors: {
         create: [{ personId: iliya.id }, { personId: pouriya.id }],

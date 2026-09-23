@@ -1,10 +1,9 @@
 import { headers } from "next/headers";
 
 /**
- * Best-effort client IP for rate limiting. Caddy (see Caddyfile /
- * docker-compose.yml) sits in front of the app and sets X-Forwarded-For on
- * every proxied request by default — this is what makes per-IP limiting
- * meaningful in production.
+ * Best-effort client IP for rate limiting. nginx (see infra/nginx.conf)
+ * sits in front of the app and sets X-Forwarded-For on every proxied
+ * request — this is what makes per-IP limiting meaningful in production.
  *
  * In local dev (no reverse proxy in front of `next dev`), this header is
  * absent and every request falls back to the same "unknown" bucket, so

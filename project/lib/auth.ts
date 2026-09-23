@@ -11,7 +11,7 @@ import { loginSchema } from "./validation/auth";
  * "No public sign-up. Admin accounts are seeded manually." There are exactly
  * two admin accounts (Iliya, Pouriya), both with full access — no roles.
  */
-export const { handlers, auth, signIn, signOut } = NextAuth({
+export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
   session: { strategy: "jwt" },
   pages: { signIn: "/admin/login" },
   providers: [
@@ -52,8 +52,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    jwt({ token, user }) {
+    jwt({ token, user, trigger, session }) {
       if (user) token.id = user.id;
+      if (trigger === "update" && session?.user && typeof session.user.email === "string") {
+        token.email = session.user.email;
+      }
       return token;
     },
     session({ session, token }) {

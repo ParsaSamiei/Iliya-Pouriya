@@ -19,7 +19,7 @@ Next.js 16.3 · React 19.2 · TypeScript · Tailwind CSS v4 · Prisma 7.7
 Auth.js v5 (Credentials) · next-intl · next-themes · three.js / React Three
 Fiber (STL viewer) · react-markdown + remark-gfm (content editing/rendering)
 · shadcn/ui components (hand-written — see note below) · Docker Compose +
-Caddy.
+nginx.
 
 ## Getting started (local dev)
 
@@ -67,16 +67,10 @@ worth knowing since it affects a few files here:
   `generate`/`migrate`, not by the running app) is a separate, still-Rust
   binary downloaded from `binaries.prisma.sh` — that's the one this sandbox
   couldn't reach.
-- **Caveat worth knowing**: `prisma` and `dotenv` (which `prisma.config.ts`
-  needs) are devDependencies, so they aren't in the pruned
-  `.next/standalone` output the production container runs from. Running
-  migrations *inside* the deployed container (`docker compose exec app npx
-  prisma migrate deploy`, as suggested under Deployment below) will fetch
-  those on-demand via `npx`, which needs outbound internet access from that
-  container at that moment. If that's not available in your setup, run
-  migrations from a machine with the full `devDependencies` installed
-  instead (e.g. your local checkout, pointed at the production
-  `DATABASE_URL`).
+- Migrations run in the `migrator` image (`Dockerfile` target `migrator`),
+  which has the Prisma CLI from `npm ci`. The `web` container is the
+  standalone build and does not include that CLI. Compose starts `web`
+  only after `migrator` exits 0.
 
 ## ⚠️ Things to verify on your machine
 
@@ -190,23 +184,26 @@ Two endpoints are throttled per-IP (`lib/rate-limit.ts`, `lib/request.ts`):
 
 **Important limitation**: the limiter is in-memory and per-process, which is
 correct for this app's deployment as-is (`docker-compose.yml` runs exactly
-one `app` container). If you ever horizontally scale the app service behind
+one `web` container). If you ever horizontally scale the app service behind
 a load balancer, separate processes won't share these counts — swap
 `lib/rate-limit.ts` for a shared store (Redis + `@upstash/ratelimit` or
 similar) at that point. It also depends on the reverse proxy setting
-`X-Forwarded-For` (Caddy does this by default — see the Caddyfile comment);
+`X-Forwarded-For` (container nginx does this — see `infra/nginx.conf`);
 without a proxy in front (e.g. bare `next dev` in local development),
 every visitor falls into the same bucket.
 
 ## Deployment
 
-See `docker-compose.yml`, `Dockerfile`, and `Caddyfile`. Update the domain
-in `Caddyfile`, set real secrets in `.env`, then:
+Host nginx owns `:80`/`:443`. This stack does not: container nginx is
+published on `:8080`, Postgres on `127.0.0.1:5432`. Install
+`infra/nginx-host.conf` as the host vhost and put the real domain in
+`server_name` when you have one. `NEXT_PUBLIC_SITE_URL` is baked in at
+build time.
 
 ```bash
 docker compose up -d --build
-docker compose exec app npx prisma migrate deploy
-docker compose exec app npm run db:seed   # first run only — then edit via /admin
+# migrations run automatically via the migrator service
+docker compose run --rm migrator npx prisma db seed   # first run only
 ```
 
 ## Repo layout

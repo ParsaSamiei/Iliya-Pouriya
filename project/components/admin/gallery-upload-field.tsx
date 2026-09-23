@@ -143,7 +143,7 @@ export function GalleryUploadField({
                 type="button"
                 onClick={() => removeAt(index)}
                 aria-label="Remove media"
-                className="absolute top-0.5 right-0.5 cursor-pointer rounded-full bg-bg/80 p-0.5 opacity-0 transition-opacity group-hover:opacity-100"
+                className="ctrl-hover absolute top-0.5 right-0.5 cursor-pointer rounded-full bg-bg/80 p-0.5 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-bg hover:text-accent"
               >
                 <X className="size-3.5 text-fg" />
               </button>
@@ -156,7 +156,7 @@ export function GalleryUploadField({
           id={id}
           onClick={() => fileInputRef.current?.click()}
           disabled={pending}
-          className="flex size-20 cursor-pointer flex-col items-center justify-center gap-1 rounded-[var(--radius-sm)] border border-dashed border-border text-fg-muted hover:border-accent hover:text-accent disabled:opacity-50"
+          className="ctrl-hover flex size-20 cursor-pointer flex-col items-center justify-center gap-1 rounded-[var(--radius-sm)] border border-dashed border-border text-fg-muted hover:border-accent hover:text-accent hover:shadow-[0_4px_14px_var(--glow-soft)] disabled:opacity-50"
         >
           {pending ? (
             <Loader2 className="size-5 animate-spin" />

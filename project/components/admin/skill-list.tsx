@@ -67,6 +67,7 @@ export function SkillList({ person, skills }: { person: Person; skills: Skill[] 
                       onClick={() => onDelete(skill.id)}
                       disabled={pending}
                       aria-label={`Remove ${skill.name}`}
+                      className="ctrl-hover rounded-sm p-0.5 text-fg-muted hover:bg-surface hover:text-error"
                     >
                       <X className="size-3" />
                     </button>

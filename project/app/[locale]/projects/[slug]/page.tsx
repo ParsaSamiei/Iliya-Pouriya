@@ -3,6 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { MarkdownContent } from "@/components/site/markdown-content";
+import { MotionReveal } from "@/components/site/motion";
 import { ProjectGallery } from "@/components/site/project-gallery";
 import { StlViewerLazy } from "@/components/site/stl-viewer-lazy";
 import { Badge } from "@/components/ui/badge";
@@ -71,7 +72,7 @@ export default async function ProjectDetailPage({
     <article className="mx-auto max-w-3xl px-4 py-16">
       <JsonLd data={projectJsonLd(project)} />
       {project.coverImageUrl && (
-        <div className="relative mb-8 aspect-video w-full overflow-hidden rounded-[var(--radius-lg)] bg-surface-raised">
+        <MotionReveal className="relative mb-8 aspect-video w-full overflow-hidden rounded-[var(--radius-lg)] bg-surface-raised">
           <Image
             src={project.coverImageUrl}
             alt={title}
@@ -79,29 +80,31 @@ export default async function ProjectDetailPage({
             sizes="(max-width: 768px) 100vw, 768px"
             className="object-cover"
           />
-        </div>
+        </MotionReveal>
       )}
 
-      <h1 className="font-display text-3xl font-semibold text-fg sm:text-4xl">{title}</h1>
+      <MotionReveal delay={project.coverImageUrl ? 0.08 : 0}>
+        <h1 className="font-display text-3xl font-semibold text-fg sm:text-4xl">{title}</h1>
 
-      <div className="mt-3 flex flex-wrap items-center gap-2 text-sm text-fg-muted">
-        {project.contributors.length > 0 && (
-          <span className={locale === "fa" ? "font-display" : "font-mono"}>
-            {formatPersonList(
-              project.contributors.map(({ person }) => person),
-              locale,
-            )}
-          </span>
-        )}
-        {tags.map((tag) => (
-          <Badge key={tag} variant="outline">
-            {tag}
-          </Badge>
-        ))}
-      </div>
+        <div className="mt-3 flex flex-wrap items-center gap-2 text-sm text-fg-muted">
+          {project.contributors.length > 0 && (
+            <span className={locale === "fa" ? "font-display" : "font-mono"}>
+              {formatPersonList(
+                project.contributors.map(({ person }) => person),
+                locale,
+              )}
+            </span>
+          )}
+          {tags.map((tag) => (
+            <Badge key={tag} variant="outline">
+              {tag}
+            </Badge>
+          ))}
+        </div>
+      </MotionReveal>
 
       {project.models.length > 0 && (
-        <div className="mt-8">
+        <MotionReveal className="mt-8" delay={0.06}>
           <h2 className="mb-3 font-mono text-xs tracking-widest text-fg-muted uppercase">
             {t("viewModel")}
           </h2>
@@ -114,19 +117,23 @@ export default async function ProjectDetailPage({
               fileUrl: m.fileUrl,
             }))}
           />
-        </div>
+        </MotionReveal>
       )}
 
       {Array.isArray(gallery) && gallery.length > 0 && (
-        <div className="mt-8">
+        <MotionReveal className="mt-8" delay={0.06}>
           <h2 className="mb-3 font-mono text-xs tracking-widest text-fg-muted uppercase">
             {t("gallery")}
           </h2>
           <ProjectGallery gallery={gallery} alt={title} />
-        </div>
+        </MotionReveal>
       )}
 
-      {content && <MarkdownContent content={content} dir={locale === "fa" ? "rtl" : "ltr"} />}
+      {content && (
+        <MotionReveal delay={0.08}>
+          <MarkdownContent content={content} dir={locale === "fa" ? "rtl" : "ltr"} />
+        </MotionReveal>
+      )}
     </article>
   );
 }

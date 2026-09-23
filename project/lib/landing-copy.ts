@@ -38,6 +38,18 @@ export const DEFAULT_LANDING_COPY: LandingCopyData = {
   viewAllProjectsEn: "View all projects",
   viewAllProjectsFa: "مشاهده همه پروژه‌ها",
 
+  statusBoardEyebrowEn: "Lab · Status",
+  statusBoardEyebrowFa: "آزمایشگاه · وضعیت",
+  statusBoardTitleEn: "What’s running now",
+  statusBoardTitleFa: "الان چه چیزی در حال اجراست",
+  statusBoardSubtitleEn: "Active builds, field trials, and systems already shipped.",
+  statusBoardSubtitleFa: "ساخت‌های فعال، آزمون میدان، و سیستم‌هایی که تحویل شده‌اند.",
+  statusBoardEmptyEn: "Set the board counts in admin settings.",
+  statusBoardEmptyFa: "شمارنده‌ها را از پنل مدیریت تنظیم کنید.",
+  statusBoardActiveCount: 1,
+  statusBoardFieldCount: 0,
+  statusBoardCompleteCount: 0,
+
   capabilitiesEyebrowEn: "Practice",
   capabilitiesEyebrowFa: "حوزه کار",
   capabilitiesTitleEn: "What we work on",
@@ -134,6 +146,13 @@ export type LandingCopyView = {
   featuredProjects: string;
   featuredProjectsSubtitle: string;
   viewAllProjects: string;
+  statusBoardEyebrow: string;
+  statusBoardTitle: string;
+  statusBoardSubtitle: string;
+  statusBoardEmpty: string;
+  statusBoardActiveCount: number;
+  statusBoardFieldCount: number;
+  statusBoardCompleteCount: number;
   capabilitiesEyebrow: string;
   capabilitiesTitle: string;
   capabilitiesSubtitle: string;
@@ -164,10 +183,33 @@ export function parseLandingCopy(value: unknown): LandingCopyData {
     capabilities: Array.isArray(incoming.capabilities)
       ? incoming.capabilities
       : DEFAULT_LANDING_COPY.capabilities,
+    statusBoardActiveCount: coerceCount(
+      incoming.statusBoardActiveCount,
+      DEFAULT_LANDING_COPY.statusBoardActiveCount,
+    ),
+    statusBoardFieldCount: coerceCount(
+      incoming.statusBoardFieldCount,
+      DEFAULT_LANDING_COPY.statusBoardFieldCount,
+    ),
+    statusBoardCompleteCount: coerceCount(
+      incoming.statusBoardCompleteCount,
+      DEFAULT_LANDING_COPY.statusBoardCompleteCount,
+    ),
   };
 
   const result = landingCopySchema.safeParse(merged);
   return result.success ? result.data : DEFAULT_LANDING_COPY;
+}
+
+function coerceCount(value: unknown, fallback: number): number {
+  if (typeof value === "number" && Number.isFinite(value)) {
+    return Math.max(0, Math.min(9999, Math.trunc(value)));
+  }
+  if (typeof value === "string" && value.trim() !== "") {
+    const parsed = Number.parseInt(value, 10);
+    if (Number.isFinite(parsed)) return Math.max(0, Math.min(9999, parsed));
+  }
+  return fallback;
 }
 
 export function resolveLandingCopy(data: LandingCopyData, locale: string): LandingCopyView {
@@ -188,6 +230,15 @@ export function resolveLandingCopy(data: LandingCopyData, locale: string): Landi
       ? data.featuredProjectsSubtitleFa
       : data.featuredProjectsSubtitleEn,
     viewAllProjects: isFa ? data.viewAllProjectsFa : data.viewAllProjectsEn,
+    statusBoardEyebrow: isFa ? data.statusBoardEyebrowFa : data.statusBoardEyebrowEn,
+    statusBoardTitle: isFa ? data.statusBoardTitleFa : data.statusBoardTitleEn,
+    statusBoardSubtitle: isFa
+      ? data.statusBoardSubtitleFa
+      : data.statusBoardSubtitleEn,
+    statusBoardEmpty: isFa ? data.statusBoardEmptyFa : data.statusBoardEmptyEn,
+    statusBoardActiveCount: data.statusBoardActiveCount,
+    statusBoardFieldCount: data.statusBoardFieldCount,
+    statusBoardCompleteCount: data.statusBoardCompleteCount,
     capabilitiesEyebrow: isFa ? data.capabilitiesEyebrowFa : data.capabilitiesEyebrowEn,
     capabilitiesTitle: isFa ? data.capabilitiesTitleFa : data.capabilitiesTitleEn,
     capabilitiesSubtitle: isFa

@@ -9,7 +9,7 @@ import {
   type ProjectGalleryMedia,
 } from "@/lib/project-gallery";
 import { deleteUpload, saveUpload, UploadValidationError } from "@/lib/uploads";
-import { projectSchema } from "@/lib/validation/project";
+import { PROJECT_STATUSES, projectSchema } from "@/lib/validation/project";
 
 export type ActionResult = { ok: true } | { ok: false; error: string };
 
@@ -21,6 +21,10 @@ function parseProjectForm(formData: FormData) {
     .filter(Boolean);
 
   const gallery = parseGalleryField(formData.get("gallery"));
+  const rawStatus = String(formData.get("status") ?? "ACTIVE");
+  const status = PROJECT_STATUSES.includes(rawStatus as (typeof PROJECT_STATUSES)[number])
+    ? rawStatus
+    : "ACTIVE";
 
   return projectSchema.safeParse({
     slug: String(formData.get("slug") ?? ""),
@@ -40,6 +44,8 @@ function parseProjectForm(formData: FormData) {
     },
     isFeatured: formData.get("isFeatured") === "on",
     publishedAt: formData.get("published") === "on" ? new Date() : null,
+    status,
+    showOnStatusBoard: formData.get("showOnStatusBoard") === "on",
     contributorIds,
   });
 }
@@ -66,12 +72,14 @@ export async function createProject(formData: FormData): Promise<ActionResult> {
   const project = await db.project.create({
     data: {
       ...data,
+      statusUpdatedAt: new Date(),
       contributors: { create: contributorIds.map((personId) => ({ personId })) },
     },
   });
 
   revalidatePath("/admin/projects");
   revalidatePath("/[locale]/projects", "page");
+  revalidatePath("/[locale]", "page");
   redirect(`/admin/projects/${project.id}`);
 }
 
@@ -81,16 +89,21 @@ export async function updateProject(id: string, formData: FormData): Promise<Act
     return { ok: false, error: parsed.error.issues[0]?.message ?? "Invalid input." };
   }
 
-  const existing = await db.project.findUnique({ where: { id }, select: { gallery: true } });
+  const existing = await db.project.findUnique({
+    where: { id },
+    select: { gallery: true, status: true },
+  });
   const previousUrls = new Set(
     projectGalleryUrls(normalizeProjectGallery(existing?.gallery)),
   );
 
   const { contributorIds, ...data } = parsed.data;
+  const statusChanged = existing?.status !== data.status;
   await db.project.update({
     where: { id },
     data: {
       ...data,
+      ...(statusChanged ? { statusUpdatedAt: new Date() } : {}),
       contributors: {
         deleteMany: {},
         create: contributorIds.map((personId) => ({ personId })),
@@ -107,6 +120,7 @@ export async function updateProject(id: string, formData: FormData): Promise<Act
   revalidatePath("/admin/projects");
   revalidatePath("/[locale]/projects", "page");
   revalidatePath("/[locale]/projects/[slug]", "page");
+  revalidatePath("/[locale]", "page");
 
   return { ok: true };
 }

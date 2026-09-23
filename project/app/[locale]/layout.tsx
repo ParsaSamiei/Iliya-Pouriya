@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
+import { ContactWidget } from "@/components/site/contact-widget";
 import { SiteBackground } from "@/components/site/site-background";
 import { SiteCursor } from "@/components/site/site-cursor";
 import { SiteFooter } from "@/components/site/site-footer";
@@ -67,6 +68,7 @@ export default async function LocaleLayout({
               <main className="flex-1">{children}</main>
               <SiteFooter />
             </div>
+            <ContactWidget />
             <Toaster />
           </ThemeProvider>
         </NextIntlClientProvider>

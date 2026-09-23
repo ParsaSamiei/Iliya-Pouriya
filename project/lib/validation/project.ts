@@ -8,6 +8,11 @@ const externalLinksSchema = z
   })
   .partial();
 
+export const PROJECT_STATUSES = ["ACTIVE", "FIELD", "COMPLETE"] as const;
+export type ProjectStatusValue = (typeof PROJECT_STATUSES)[number];
+
+export const projectStatusSchema = z.enum(PROJECT_STATUSES);
+
 export const projectSchema = z.object({
   slug: z
     .string()
@@ -33,6 +38,8 @@ export const projectSchema = z.object({
   externalLinks: externalLinksSchema.optional(),
   isFeatured: z.boolean().default(false),
   publishedAt: z.date().nullable().optional(),
+  status: projectStatusSchema.default("ACTIVE"),
+  showOnStatusBoard: z.boolean().default(true),
   contributorIds: z.array(z.string().uuid()).min(1).max(2),
 });
 

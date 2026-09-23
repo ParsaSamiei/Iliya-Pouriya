@@ -48,6 +48,25 @@ export function HomeLoadingSkeleton() {
             <ProjectCardSkeleton />
             <ProjectCardSkeleton className="hidden lg:block" />
           </div>
+          <div className="mt-12 overflow-hidden rounded-md border border-border">
+            <div className="border-b border-border px-4 py-3 sm:px-5">
+              <Skeleton className="h-2.5 w-24" />
+              <Skeleton className="mt-2 h-5 w-48" />
+              <Skeleton className="mt-2 h-3 w-72 max-w-full" />
+            </div>
+            <div className="grid sm:grid-cols-3">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="flex items-center gap-4 border-b border-border px-4 py-5 last:border-b-0 sm:flex-col sm:items-start sm:gap-3 sm:border-b-0 sm:border-e sm:px-5 sm:py-6 sm:last:border-e-0"
+                >
+                  <Skeleton className="size-2 shrink-0" shiny={false} />
+                  <Skeleton className="h-2.5 w-14" />
+                  <Skeleton className="h-9 w-16" />
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 

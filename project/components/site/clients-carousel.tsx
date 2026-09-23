@@ -1,14 +1,12 @@
 "use client";
 
+import type { EmblaOptionsType } from "embla-carousel";
+import AutoScroll from "embla-carousel-auto-scroll";
+import useEmblaCarousel from "embla-carousel-react";
+import { ChevronLeft, ChevronRight, type LucideIcon } from "lucide-react";
 import Image from "next/image";
-import { useTranslations } from "next-intl";
-import {
-  useEffect,
-  useMemo,
-  useState,
-  type CSSProperties,
-  type FocusEvent,
-} from "react";
+import { useLocale, useTranslations } from "next-intl";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 export type ClientsCarouselItem = {
@@ -18,6 +16,14 @@ export type ClientsCarouselItem = {
   logoUrl: string | null;
   url: string | null;
 };
+
+const DRAG_THRESHOLD_PX = 8;
+const SCROLL_SPEED = 1.6;
+/**
+ * Embla silently falls back to `loop: false` unless slide content is wider
+ * than the viewport. Fixed-width tiles need enough copies to unlock looping.
+ */
+const MIN_LOOP_SLIDES = 20;
 
 function useReducedMotion() {
   const [reduced, setReduced] = useState(false);
@@ -31,25 +37,70 @@ function useReducedMotion() {
   return reduced;
 }
 
-/** Repeat the roster so one half is wide enough for a seamless -50% loop. */
-function buildGroup(items: ClientsCarouselItem[], minSlots: number) {
+type LoopSlide = ClientsCarouselItem & {
+  key: string;
+  sourceIndex: number;
+};
+
+/** Repeat the roster until there is enough content for seamless infinite scroll. */
+function buildLoopSlides(items: ClientsCarouselItem[], minSlides: number): LoopSlide[] {
   if (items.length === 0) return [];
-  const repeats = Math.max(1, Math.ceil(minSlots / items.length));
-  const out: Array<ClientsCarouselItem & { key: string; primary: boolean }> = [];
+  if (items.length === 1) {
+    return [{ ...items[0], key: items[0].id, sourceIndex: 0 }];
+  }
+
+  const repeats = Math.max(2, Math.ceil(minSlides / items.length));
+  const out: LoopSlide[] = [];
   for (let r = 0; r < repeats; r++) {
-    for (const item of items) {
-      out.push({ ...item, key: `${item.id}-${r}`, primary: r === 0 });
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      out.push({
+        ...item,
+        key: `${item.id}-${r}`,
+        sourceIndex: i,
+      });
     }
   }
   return out;
 }
 
+function useDragGuard() {
+  const pointerStart = useRef<{ x: number; y: number } | null>(null);
+  const dragged = useRef(false);
+
+  const onPointerDown = useCallback((event: React.PointerEvent) => {
+    pointerStart.current = { x: event.clientX, y: event.clientY };
+    dragged.current = false;
+  }, []);
+
+  const onPointerMove = useCallback((event: React.PointerEvent) => {
+    if (!pointerStart.current) return;
+    const dx = Math.abs(event.clientX - pointerStart.current.x);
+    const dy = Math.abs(event.clientY - pointerStart.current.y);
+    if (dx > DRAG_THRESHOLD_PX || dy > DRAG_THRESHOLD_PX) {
+      dragged.current = true;
+    }
+  }, []);
+
+  const onPointerUp = useCallback(() => {
+    pointerStart.current = null;
+  }, []);
+
+  const wasDragged = useCallback(() => {
+    const result = dragged.current;
+    dragged.current = false;
+    return result;
+  }, []);
+
+  return { onPointerDown, onPointerMove, onPointerUp, wasDragged };
+}
+
 function ClientTile({
   item,
-  interactive,
+  dragGuard,
 }: {
   item: ClientsCarouselItem;
-  interactive: boolean;
+  dragGuard: ReturnType<typeof useDragGuard>;
 }) {
   const t = useTranslations("clients.carousel");
 
@@ -76,7 +127,7 @@ function ClientTile({
     </>
   );
 
-  if (item.url && interactive) {
+  if (item.url) {
     return (
       <a
         href={item.url}
@@ -84,6 +135,13 @@ function ClientTile({
         rel="noopener noreferrer"
         aria-label={`${item.name} (${t("opensInNewTab")})`}
         className="client-tile"
+        onPointerDown={dragGuard.onPointerDown}
+        onPointerMove={dragGuard.onPointerMove}
+        onPointerUp={dragGuard.onPointerUp}
+        onPointerCancel={dragGuard.onPointerUp}
+        onClick={(event) => {
+          if (dragGuard.wasDragged()) event.preventDefault();
+        }}
       >
         {body}
       </a>
@@ -91,10 +149,7 @@ function ClientTile({
   }
 
   return (
-    <div
-      className="client-tile"
-      aria-label={interactive ? item.name : undefined}
-    >
+    <div className="client-tile" aria-label={item.name}>
       {body}
     </div>
   );
@@ -102,74 +157,189 @@ function ClientTile({
 
 export function ClientsCarousel({ items }: { items: ClientsCarouselItem[] }) {
   const t = useTranslations("clients.carousel");
+  const locale = useLocale();
+  const isRtl = locale === "fa";
   const reduceMotion = useReducedMotion();
-  const [paused, setPaused] = useState(false);
+  const dragGuard = useDragGuard();
+  const [minSlides, setMinSlides] = useState(MIN_LOOP_SLIDES);
 
-  const canLoop = items.length > 0 && !reduceMotion;
-  const groupItems = useMemo(() => buildGroup(items, 8), [items]);
-  const durationSec = Math.max(24, groupItems.length * 4);
+  const hasMultipleSlides = items.length > 1;
+  const canAutoScroll = hasMultipleSlides && !reduceMotion;
+  const slides = useMemo(
+    () => buildLoopSlides(items, hasMultipleSlides ? minSlides : 1),
+    [items, hasMultipleSlides, minSlides],
+  );
 
-  function handleBlur(event: FocusEvent<HTMLDivElement>) {
-    const next = event.relatedTarget;
-    if (next instanceof Node && event.currentTarget.contains(next)) return;
-    setPaused(false);
+  const plugins = useMemo(
+    () =>
+      canAutoScroll
+        ? [
+            AutoScroll({
+              speed: SCROLL_SPEED,
+              startDelay: 0,
+              playOnInit: true,
+              stopOnMouseEnter: true,
+              stopOnFocusIn: true,
+              stopOnInteraction: false,
+            }),
+          ]
+        : [],
+    [canAutoScroll],
+  );
+
+  const options: EmblaOptionsType = useMemo(
+    () => ({
+      loop: hasMultipleSlides,
+      align: "start",
+      dragFree: true,
+      containScroll: false,
+      direction: isRtl ? "rtl" : "ltr",
+    }),
+    [hasMultipleSlides, isRtl],
+  );
+
+  const [viewportRef, emblaApi] = useEmblaCarousel(options, plugins);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    emblaApi.reInit();
+  }, [emblaApi, slides.length]);
+
+  // Grow the slide list until Embla confirms looping is possible.
+  useEffect(() => {
+    if (!emblaApi || !hasMultipleSlides) return;
+
+    const ensureLoop = () => {
+      if (emblaApi.internalEngine().slideLooper.canLoop()) return;
+
+      setMinSlides((current) => {
+        const next = current + Math.max(items.length, 4);
+        const cap = Math.max(MIN_LOOP_SLIDES, items.length * 10);
+        return next > cap ? current : next;
+      });
+    };
+
+    // After reInit from slides.length, measure on the next frame.
+    const frame = window.requestAnimationFrame(ensureLoop);
+    emblaApi.on("resize", ensureLoop);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      emblaApi.off("resize", ensureLoop);
+    };
+  }, [emblaApi, hasMultipleSlides, items.length, slides.length]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    const autoScroll = emblaApi.plugins()?.autoScroll;
+    if (!autoScroll) return;
+
+    if (canAutoScroll) {
+      autoScroll.play();
+    } else {
+      autoScroll.stop();
+    }
+  }, [emblaApi, canAutoScroll, slides.length]);
+
+  const scrollPrev = useCallback(() => {
+    emblaApi?.scrollPrev();
+    emblaApi?.plugins()?.autoScroll?.play();
+  }, [emblaApi]);
+
+  const scrollNext = useCallback(() => {
+    emblaApi?.scrollNext();
+    emblaApi?.plugins()?.autoScroll?.play();
+  }, [emblaApi]);
+
+  function handleKeyDown(event: React.KeyboardEvent<HTMLButtonElement>) {
+    const forwardKey = isRtl ? "ArrowLeft" : "ArrowRight";
+    const backKey = isRtl ? "ArrowRight" : "ArrowLeft";
+
+    if (event.key === forwardKey) {
+      event.preventDefault();
+      scrollNext();
+    } else if (event.key === backKey) {
+      event.preventDefault();
+      scrollPrev();
+    }
   }
 
   return (
-    <div
-      className={cn("clients-marquee", paused && "clients-marquee--paused")}
-      dir="rtl"
-      role="region"
-      aria-roledescription="carousel"
-      aria-label={t("label")}
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocusCapture={() => setPaused(true)}
-      onBlurCapture={handleBlur}
-    >
-      <div className="clients-marquee__viewport">
-        <div
-          className={cn(
-            "clients-marquee__track",
-            canLoop && "clients-marquee__track--running",
-          )}
-          style={
-            canLoop
-              ? ({ "--clients-marquee-duration": `${durationSec}s` } as CSSProperties)
-              : undefined
-          }
-        >
-          <div className="clients-marquee__group">
-            {groupItems.map((item, index) => (
-              <div
-                key={`a-${item.key}`}
-                className="clients-marquee__slide"
-                aria-label={
-                  item.primary
-                    ? t("status", {
-                        current: (index % items.length) + 1,
-                        total: items.length,
-                      })
-                    : undefined
-                }
-                aria-hidden={item.primary ? undefined : true}
-              >
-                <ClientTile item={item} interactive={item.primary} />
-              </div>
-            ))}
-          </div>
-
-          {canLoop ? (
-            <div className="clients-marquee__group" aria-hidden="true">
-              {groupItems.map((item) => (
-                <div key={`b-${item.key}`} className="clients-marquee__slide">
-                  <ClientTile item={item} interactive={false} />
-                </div>
-              ))}
+    <div className="clients-marquee relative">
+      <div
+        ref={viewportRef}
+        role="region"
+        aria-roledescription="carousel"
+        aria-label={t("label")}
+        className="clients-marquee__viewport"
+      >
+        <div className="clients-marquee__track">
+          {slides.map((slide) => (
+            <div
+              key={slide.key}
+              role="group"
+              aria-roledescription={t("slide")}
+              aria-label={t("status", {
+                current: slide.sourceIndex + 1,
+                total: items.length,
+              })}
+              className="clients-marquee__slide"
+            >
+              <ClientTile item={slide} dragGuard={dragGuard} />
             </div>
-          ) : null}
+          ))}
         </div>
       </div>
+
+      {hasMultipleSlides ? (
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-between px-1 sm:px-2">
+          <StepButton
+            label={t("previous")}
+            icon={ChevronLeft}
+            onClick={scrollPrev}
+            onKeyDown={handleKeyDown}
+            className="start-0"
+          />
+          <StepButton
+            label={t("next")}
+            icon={ChevronRight}
+            onClick={scrollNext}
+            onKeyDown={handleKeyDown}
+            className="end-0"
+          />
+        </div>
+      ) : null}
     </div>
+  );
+}
+
+function StepButton({
+  label,
+  icon: Icon,
+  onClick,
+  onKeyDown,
+  className,
+}: {
+  label: string;
+  icon: LucideIcon;
+  onClick: () => void;
+  onKeyDown: (event: React.KeyboardEvent<HTMLButtonElement>) => void;
+  className: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      onKeyDown={onKeyDown}
+      aria-label={label}
+      className={cn(
+        "pointer-events-auto absolute top-1/2 -translate-y-1/2",
+        "ctrl-hover-glow flex size-9 items-center justify-center rounded-full border border-border bg-bg/85 text-fg backdrop-blur-sm sm:size-10",
+        "cursor-pointer transition-colors duration-200 hover:border-accent hover:text-accent",
+        "focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none",
+        className,
+      )}
+    >
+      <Icon className="size-4 rtl:-scale-x-100 sm:size-5" aria-hidden="true" />
+    </button>
   );
 }

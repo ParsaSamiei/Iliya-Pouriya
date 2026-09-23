@@ -38,9 +38,9 @@ export function HomeHeroAtmosphere() {
         <motion.g
           stroke="url(#hero-hex-stroke)"
           strokeWidth="1"
-          initial={reduce ? false : { opacity: 0 }}
-          animate={{ opacity: 0.55 }}
-          transition={{ duration: reduce ? 0 : 1.25, ease: [0.22, 1, 0.36, 1] }}
+          initial={reduce ? false : { opacity: 0, y: 12 }}
+          animate={{ opacity: 0.55, y: 0 }}
+          transition={{ duration: reduce ? 0 : 1.15, ease: [0.22, 1, 0.36, 1] }}
         >
           <path d="M80 120 L160 80 L240 120 L240 200 L160 240 L80 200 Z" />
           <path d="M280 200 L360 160 L440 200 L440 280 L360 320 L280 280 Z" />

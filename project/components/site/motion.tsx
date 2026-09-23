@@ -4,7 +4,13 @@ import { motion, useReducedMotion, type HTMLMotionProps } from "framer-motion";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
+/** Soft ease-out — entering elements settle, they don’t ease in linearly. */
 const easeOut = [0.22, 1, 0.36, 1] as const;
+
+/** Subtle but readable rise for section headers / blocks. */
+const REVEAL_Y = 22;
+/** Card / list item rise — a touch less than headers. */
+const ITEM_Y = 18;
 
 type MotionRevealProps = {
   children: ReactNode;
@@ -14,12 +20,12 @@ type MotionRevealProps = {
   once?: boolean;
 } & Omit<HTMLMotionProps<"div">, "children" | "className">;
 
-/** Fade + rise entrance; respects prefers-reduced-motion without SSR branch. */
+/** Fade + rise on scroll; runs once by default; respects prefers-reduced-motion. */
 export function MotionReveal({
   children,
   className,
   delay = 0,
-  y = 10,
+  y = REVEAL_Y,
   once = true,
   ...props
 }: MotionRevealProps) {
@@ -30,9 +36,9 @@ export function MotionReveal({
       className={className}
       initial={reduce ? false : { opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once, margin: "-48px 0px" }}
+      viewport={{ once, margin: "-10% 0px -8% 0px", amount: 0.2 }}
       transition={{
-        duration: reduce ? 0 : 0.5,
+        duration: reduce ? 0 : 0.55,
         delay: reduce ? 0 : delay,
         ease: easeOut,
       }}
@@ -87,12 +93,12 @@ type MotionStaggerInViewProps = {
   once?: boolean;
 };
 
-/** Scroll-triggered stagger parent (use with MotionItem). */
+/** Scroll-triggered stagger parent (use with MotionItem). Plays once by default. */
 export function MotionStaggerInView({
   children,
   className,
-  delayChildren = 0.04,
-  stagger = 0.07,
+  delayChildren = 0.05,
+  stagger = 0.08,
   once = true,
 }: MotionStaggerInViewProps) {
   const reduce = useReducedMotion();
@@ -102,7 +108,7 @@ export function MotionStaggerInView({
       className={className}
       initial="hidden"
       whileInView="show"
-      viewport={{ once, margin: "-48px 0px" }}
+      viewport={{ once, margin: "-10% 0px -8% 0px", amount: 0.15 }}
       variants={{
         hidden: {},
         show: {
@@ -124,7 +130,7 @@ type MotionItemProps = {
   y?: number;
 };
 
-export function MotionItem({ children, className, y = 8 }: MotionItemProps) {
+export function MotionItem({ children, className, y = ITEM_Y }: MotionItemProps) {
   const reduce = useReducedMotion();
 
   return (
@@ -135,7 +141,7 @@ export function MotionItem({ children, className, y = 8 }: MotionItemProps) {
         show: {
           opacity: 1,
           y: 0,
-          transition: { duration: reduce ? 0 : 0.48, ease: easeOut },
+          transition: { duration: reduce ? 0 : 0.5, ease: easeOut },
         },
       }}
     >

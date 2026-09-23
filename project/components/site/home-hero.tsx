@@ -32,16 +32,15 @@ export async function HomeHero({
               />
             </div>
           }
-          lockup={
-            <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:gap-6">
-              <p className="hero-name hero-name--a font-display text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl xl:text-7xl">
-                {copy.heroNameA}
-              </p>
-              <span className="hero-seam" aria-hidden />
-              <p className="hero-name hero-name--b font-display text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl xl:text-7xl">
-                {copy.heroNameB}
-              </p>
-            </div>
+          nameA={
+            <p className="hero-name hero-name--a font-display text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl xl:text-7xl">
+              {copy.heroNameA}
+            </p>
+          }
+          nameB={
+            <p className="hero-name hero-name--b font-display text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl xl:text-7xl">
+              {copy.heroNameB}
+            </p>
           }
           title={
             <h1 className="max-w-2xl text-start font-display text-xl font-semibold leading-snug text-pretty text-fg sm:text-2xl lg:text-[1.85rem]">

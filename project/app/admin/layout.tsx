@@ -5,6 +5,7 @@ import {
   HandHeart,
   History,
   Images,
+  KeyRound,
   LayoutDashboard,
   Mail,
   MessageSquareQuote,
@@ -46,6 +47,7 @@ const NAV = [
   { href: "/admin/sponsors", label: "Sponsors", icon: HandHeart },
   { href: "/admin/messages", label: "Messages", icon: Mail },
   { href: "/admin/settings", label: "Settings", icon: Settings },
+  { href: "/admin/account", label: "Account", icon: KeyRound },
 ] as const;
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {

@@ -116,7 +116,7 @@ export function GalleryLightbox({ items, openIndex, onOpenChange }: GalleryLight
               type="button"
               onClick={() => onOpenChange(null)}
               aria-label={t("close")}
-              className="absolute end-3 top-3 z-10 flex size-9 cursor-pointer items-center justify-center rounded-full border border-border bg-bg/85 text-fg backdrop-blur-sm transition-colors hover:border-accent hover:text-accent focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+              className="ctrl-hover-glow absolute end-3 top-3 z-10 flex size-9 cursor-pointer items-center justify-center rounded-full border border-border bg-bg/85 text-fg backdrop-blur-sm transition-colors hover:border-accent hover:text-accent focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
             >
               <X className="size-4" aria-hidden="true" />
             </button>
@@ -164,7 +164,7 @@ function NavButton({
       onClick={onClick}
       aria-label={label}
       className={cn(
-        "absolute top-1/2 z-10 flex size-9 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-border bg-bg/85 text-fg backdrop-blur-sm transition-colors hover:border-accent hover:text-accent focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none sm:size-10",
+        "ctrl-hover-glow absolute top-1/2 z-10 flex size-9 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-border bg-bg/85 text-fg backdrop-blur-sm transition-colors hover:border-accent hover:text-accent focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none sm:size-10",
         className,
       )}
     >

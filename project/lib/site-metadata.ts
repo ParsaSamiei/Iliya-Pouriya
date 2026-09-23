@@ -1,6 +1,8 @@
 import type { SiteMetadataData } from "@/lib/validation/site-metadata";
 import { siteMetadataSchema } from "@/lib/validation/site-metadata";
 
+export type { SiteMetadataData };
+
 export const SITE_METADATA_KEY = "site_metadata";
 
 export const DEFAULT_SITE_METADATA: SiteMetadataData = {

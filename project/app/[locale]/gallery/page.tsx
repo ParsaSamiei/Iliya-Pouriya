@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { GalleryGrid } from "@/components/site/gallery/gallery-grid";
+import { MotionReveal } from "@/components/site/motion";
 import { Link } from "@/i18n/navigation";
 import { db } from "@/lib/db";
 import { pickLocaleText, toGalleryLightboxItem } from "@/lib/gallery";
@@ -76,47 +77,51 @@ export default async function GalleryPage({
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-16">
-      <h1 className="font-display text-3xl font-semibold text-fg">{t("title")}</h1>
-      <p className="mt-2 max-w-2xl text-fg-muted">{t("subtitle")}</p>
+      <MotionReveal>
+        <h1 className="font-display text-3xl font-semibold text-fg">{t("title")}</h1>
+        <p className="mt-2 max-w-2xl text-fg-muted">{t("subtitle")}</p>
+      </MotionReveal>
 
       {tags.length > 0 ? (
-        <div
-          className="mt-8 flex flex-wrap gap-2"
-          role="group"
-          aria-label={t("filterLabel")}
-        >
-          <Link
-            href="/gallery"
-            className={cn(
-              "cursor-pointer rounded-[var(--radius-sm)] border px-3.5 py-1.5 text-sm font-medium transition-colors",
-              !activeSlug
-                ? "border-accent bg-accent text-accent-fg"
-                : "border-border text-fg-muted hover:border-accent hover:text-fg",
-            )}
+        <MotionReveal delay={0.08} className="mt-8">
+          <div
+            className="flex flex-wrap gap-2"
+            role="group"
+            aria-label={t("filterLabel")}
           >
-            {t("filterAll")}
-          </Link>
-          {tags.map((tag) => (
             <Link
-              key={tag.id}
-              href={{ pathname: "/gallery", query: { tag: tag.slug } }}
+              href="/gallery"
               className={cn(
                 "cursor-pointer rounded-[var(--radius-sm)] border px-3.5 py-1.5 text-sm font-medium transition-colors",
-                activeSlug === tag.slug
+                !activeSlug
                   ? "border-accent bg-accent text-accent-fg"
                   : "border-border text-fg-muted hover:border-accent hover:text-fg",
               )}
             >
-              {locale === "fa" ? tag.nameFa : tag.nameEn}
+              {t("filterAll")}
             </Link>
-          ))}
-        </div>
+            {tags.map((tag) => (
+              <Link
+                key={tag.id}
+                href={{ pathname: "/gallery", query: { tag: tag.slug } }}
+                className={cn(
+                  "cursor-pointer rounded-[var(--radius-sm)] border px-3.5 py-1.5 text-sm font-medium transition-colors",
+                  activeSlug === tag.slug
+                    ? "border-accent bg-accent text-accent-fg"
+                    : "border-border text-fg-muted hover:border-accent hover:text-fg",
+                )}
+              >
+                {locale === "fa" ? tag.nameFa : tag.nameEn}
+              </Link>
+            ))}
+          </div>
+        </MotionReveal>
       ) : null}
 
       {items.length === 0 ? (
-        <p className={cn("text-center text-fg-muted", tags.length > 0 ? "mt-10" : "mt-10")}>
-          {activeSlug ? t("emptyFiltered") : t("empty")}
-        </p>
+        <MotionReveal className={cn("text-center text-fg-muted", "mt-10")}>
+          <p>{activeSlug ? t("emptyFiltered") : t("empty")}</p>
+        </MotionReveal>
       ) : (
         <div className={cn(tags.length > 0 ? "mt-8" : "mt-10")}>
           <GalleryGrid items={items} openLabel={t("openItem")} />

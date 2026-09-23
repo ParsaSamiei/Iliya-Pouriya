@@ -10,30 +10,107 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { updateContactSettings } from "@/lib/actions/settings";
 import { SOCIAL_CHANNELS, type SocialChannelField } from "@/lib/social-channels";
-import type { ContactSettingsData } from "@/lib/validation/contact-settings";
+import type {
+  ContactPhone,
+  ContactSettingsData,
+} from "@/lib/validation/contact-settings";
 
 type ContactSettingsEditorProps = {
   initial: ContactSettingsData;
 };
 
-function ListField({
-  icon: Icon,
-  label,
-  addLabel,
+const emptyPhone: ContactPhone = { nameEn: "", nameFa: "", number: "" };
+
+function PhoneListField({
   items,
-  inputType,
-  placeholder,
   onChange,
   onAdd,
   onRemove,
   disabled,
 }: {
-  icon: typeof Phone;
-  label: string;
-  addLabel: string;
+  items: ContactPhone[];
+  onChange: (index: number, field: keyof ContactPhone, value: string) => void;
+  onAdd: () => void;
+  onRemove: (index: number) => void;
+  disabled: boolean;
+}) {
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center gap-2">
+        <Phone className="size-4 text-fg-muted" aria-hidden />
+        <Label>Phone numbers</Label>
+      </div>
+      <p className="text-xs text-fg-muted">
+        Each number has English and Persian owner names shown on the matching language site.
+      </p>
+      <div className="space-y-3">
+        {items.map((item, index) => (
+          <div
+            key={index}
+            className="flex flex-col gap-2 rounded-md border border-border/60 p-3 sm:flex-row sm:items-start"
+          >
+            <div className="grid flex-1 gap-2 sm:grid-cols-3">
+              <Input
+                value={item.nameEn}
+                placeholder="Name (English)"
+                disabled={disabled}
+                aria-label={`Phone owner name English ${index + 1}`}
+                onChange={(e) => onChange(index, "nameEn", e.target.value)}
+              />
+              <Input
+                dir="rtl"
+                value={item.nameFa}
+                placeholder="نام (فارسی)"
+                disabled={disabled}
+                aria-label={`Phone owner name Persian ${index + 1}`}
+                onChange={(e) => onChange(index, "nameFa", e.target.value)}
+              />
+              <Input
+                type="tel"
+                dir="ltr"
+                value={item.number}
+                placeholder="+98 21 1234 5678"
+                disabled={disabled}
+                aria-label={`Phone number ${index + 1}`}
+                onChange={(e) => onChange(index, "number", e.target.value)}
+              />
+            </div>
+            <Button
+              type="button"
+              size="icon"
+              variant="ghost"
+              disabled={disabled}
+              aria-label={`Remove phone ${index + 1}`}
+              onClick={() => onRemove(index)}
+              className="shrink-0 self-end sm:self-start"
+            >
+              <Trash2 className="size-4" />
+            </Button>
+          </div>
+        ))}
+      </div>
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        disabled={items.length >= 6 || disabled}
+        onClick={onAdd}
+      >
+        <Plus className="size-4" />
+        Add phone number
+      </Button>
+    </div>
+  );
+}
+
+function EmailListField({
+  items,
+  onChange,
+  onAdd,
+  onRemove,
+  disabled,
+}: {
   items: string[];
-  inputType?: string;
-  placeholder: string;
   onChange: (index: number, value: string) => void;
   onAdd: () => void;
   onRemove: (index: number) => void;
@@ -42,16 +119,16 @@ function ListField({
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2">
-        <Icon className="size-4 text-fg-muted" aria-hidden />
-        <Label>{label}</Label>
+        <Mail className="size-4 text-fg-muted" aria-hidden />
+        <Label>Email addresses</Label>
       </div>
       <div className="space-y-2">
         {items.map((item, index) => (
           <div key={index} className="flex items-center gap-2">
             <Input
-              type={inputType}
+              type="email"
               value={item}
-              placeholder={placeholder}
+              placeholder="hello@example.com"
               disabled={disabled}
               onChange={(e) => onChange(index, e.target.value)}
             />
@@ -60,7 +137,7 @@ function ListField({
               size="icon"
               variant="ghost"
               disabled={disabled}
-              aria-label={`Remove ${label.toLowerCase()} ${index + 1}`}
+              aria-label={`Remove email ${index + 1}`}
               onClick={() => onRemove(index)}
             >
               <Trash2 className="size-4" />
@@ -76,7 +153,7 @@ function ListField({
         onClick={onAdd}
       >
         <Plus className="size-4" />
-        {addLabel}
+        Add email address
       </Button>
     </div>
   );
@@ -86,22 +163,33 @@ export function ContactSettingsEditor({ initial }: ContactSettingsEditorProps) {
   const [data, setData] = useState(initial);
   const [pending, startTransition] = useTransition();
 
-  function updateListField(
-    field: "phones" | "emails",
-    index: number,
-    value: string,
-  ) {
+  function updatePhoneField(index: number, field: keyof ContactPhone, value: string) {
     setData((current) => {
-      const items = current[field].length > 0 ? [...current[field]] : [""];
-      items[index] = value;
-      return { ...current, [field]: items };
+      const phones = current.phones.length > 0 ? [...current.phones] : [{ ...emptyPhone }];
+      phones[index] = { ...phones[index], [field]: value };
+      return { ...current, phones };
     });
   }
 
-  function removeListField(field: "phones" | "emails", index: number) {
+  function removePhone(index: number) {
     setData((current) => ({
       ...current,
-      [field]: current[field].filter((_, i) => i !== index),
+      phones: current.phones.filter((_, i) => i !== index),
+    }));
+  }
+
+  function updateEmailField(index: number, value: string) {
+    setData((current) => {
+      const emails = current.emails.length > 0 ? [...current.emails] : [""];
+      emails[index] = value;
+      return { ...current, emails };
+    });
+  }
+
+  function removeEmail(index: number) {
+    setData((current) => ({
+      ...current,
+      emails: current.emails.filter((_, i) => i !== index),
     }));
   }
 
@@ -130,30 +218,20 @@ export function ContactSettingsEditor({ initial }: ContactSettingsEditorProps) {
         </p>
       </CardHeader>
       <CardContent className="space-y-6">
-        <ListField
-          icon={Phone}
-          label="Phone numbers"
-          addLabel="Add phone number"
-          items={data.phones.length > 0 ? data.phones : [""]}
-          inputType="tel"
-          placeholder="+98 21 1234 5678"
+        <PhoneListField
+          items={data.phones.length > 0 ? data.phones : [{ ...emptyPhone }]}
           disabled={pending}
-          onChange={(index, value) => updateListField("phones", index, value)}
-          onAdd={() => setData((c) => ({ ...c, phones: [...c.phones, ""] }))}
-          onRemove={(index) => removeListField("phones", index)}
+          onChange={updatePhoneField}
+          onAdd={() => setData((c) => ({ ...c, phones: [...c.phones, { ...emptyPhone }] }))}
+          onRemove={removePhone}
         />
 
-        <ListField
-          icon={Mail}
-          label="Email addresses"
-          addLabel="Add email address"
+        <EmailListField
           items={data.emails.length > 0 ? data.emails : [""]}
-          inputType="email"
-          placeholder="hello@example.com"
           disabled={pending}
-          onChange={(index, value) => updateListField("emails", index, value)}
+          onChange={updateEmailField}
           onAdd={() => setData((c) => ({ ...c, emails: [...c.emails, ""] }))}
-          onRemove={(index) => removeListField("emails", index)}
+          onRemove={removeEmail}
         />
 
         <div className="space-y-3">

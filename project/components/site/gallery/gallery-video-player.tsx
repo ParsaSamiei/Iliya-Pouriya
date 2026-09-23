@@ -118,7 +118,7 @@ export function GalleryVideoPlayer({ src, poster, title, active }: GalleryVideoP
           type="button"
           onClick={togglePlay}
           aria-label={t("play")}
-          className="absolute top-1/2 left-1/2 z-10 flex size-14 -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-accent text-accent-fg shadow-[0_0_32px_var(--glow-accent)] transition-transform hover:scale-105 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+          className="absolute top-1/2 left-1/2 z-10 flex size-14 -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-accent text-accent-fg shadow-[0_0_32px_var(--glow-accent)] transition-[transform,box-shadow] duration-200 hover:scale-105 hover:shadow-[0_0_40px_var(--glow-accent)] focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
         >
           <Play className="size-6 fill-current" />
         </button>
@@ -150,7 +150,7 @@ export function GalleryVideoPlayer({ src, poster, title, active }: GalleryVideoP
             type="button"
             onClick={togglePlay}
             aria-label={playing ? t("pause") : t("play")}
-            className="cursor-pointer rounded-[var(--radius-sm)] p-1.5 text-fg hover:bg-surface-raised focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+            className="ctrl-hover cursor-pointer rounded-[var(--radius-sm)] p-1.5 text-fg hover:bg-surface-raised focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
           >
             {playing ? <Pause className="size-4" /> : <Play className="size-4" />}
           </button>
@@ -158,7 +158,7 @@ export function GalleryVideoPlayer({ src, poster, title, active }: GalleryVideoP
             type="button"
             onClick={toggleMute}
             aria-label={muted ? t("unmute") : t("mute")}
-            className="cursor-pointer rounded-[var(--radius-sm)] p-1.5 text-fg hover:bg-surface-raised focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+            className="ctrl-hover cursor-pointer rounded-[var(--radius-sm)] p-1.5 text-fg hover:bg-surface-raised focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
           >
             {muted ? <VolumeX className="size-4" /> : <Volume2 className="size-4" />}
           </button>
@@ -170,7 +170,7 @@ export function GalleryVideoPlayer({ src, poster, title, active }: GalleryVideoP
             type="button"
             onClick={toggleFullscreen}
             aria-label={fullscreen ? t("exitFullscreen") : t("fullscreen")}
-            className="ml-auto cursor-pointer rounded-[var(--radius-sm)] p-1.5 text-fg hover:bg-surface-raised focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+            className="ctrl-hover ml-auto cursor-pointer rounded-[var(--radius-sm)] p-1.5 text-fg hover:bg-surface-raised focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
           >
             {fullscreen ? <Minimize className="size-4" /> : <Maximize className="size-4" />}
           </button>

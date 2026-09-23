@@ -21,6 +21,13 @@ enum SkillCategory {
   other
 }
 
+/// Public lab status for the homepage status board.
+enum ProjectStatus {
+  ACTIVE
+  FIELD
+  COMPLETE
+}
+
 /// Login for the two site owners. Auth.js credentials provider reads from
 /// this table — no other identity provider (see docs/07_ADMIN_PANEL.md).
 model Admin {
@@ -107,15 +114,19 @@ model Project {
   /// jsonb array of strings
   tags           Json?
   /// { github, demo, publication, ... }
-  externalLinks  Json?     @map("external_links")
-  isFeatured     Boolean   @default(false) @map("is_featured")
-  publishedAt    DateTime? @map("published_at") // null = draft
-  sortOrder      Int       @default(0) @map("sort_order")
+  externalLinks     Json?          @map("external_links")
+  isFeatured        Boolean        @default(false) @map("is_featured")
+  publishedAt       DateTime?      @map("published_at") // null = draft
+  status            ProjectStatus  @default(ACTIVE)
+  statusUpdatedAt   DateTime?      @map("status_updated_at")
+  showOnStatusBoard Boolean        @default(true) @map("show_on_status_board")
+  sortOrder         Int            @default(0) @map("sort_order")
 
   models         ProjectModel[]
   contributors   ProjectContributor[]
 
   @@index([publishedAt])
+  @@index([showOnStatusBoard, status])
   @@map("projects")
 }
 

@@ -41,6 +41,18 @@ export const landingCopySchema = z.object({
   viewAllProjectsEn: shortText,
   viewAllProjectsFa: shortText,
 
+  statusBoardEyebrowEn: shortText,
+  statusBoardEyebrowFa: shortText,
+  statusBoardTitleEn: shortText,
+  statusBoardTitleFa: shortText,
+  statusBoardSubtitleEn: mediumText,
+  statusBoardSubtitleFa: mediumText,
+  statusBoardEmptyEn: mediumText,
+  statusBoardEmptyFa: mediumText,
+  statusBoardActiveCount: z.number().int().min(0).max(9999),
+  statusBoardFieldCount: z.number().int().min(0).max(9999),
+  statusBoardCompleteCount: z.number().int().min(0).max(9999),
+
   capabilitiesEyebrowEn: shortText,
   capabilitiesEyebrowFa: shortText,
   capabilitiesTitleEn: shortText,

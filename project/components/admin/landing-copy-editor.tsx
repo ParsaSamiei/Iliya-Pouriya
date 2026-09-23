@@ -14,7 +14,14 @@ import type {
   LandingCopyData,
 } from "@/lib/validation/landing-copy";
 
-type LandingTextKey = Exclude<keyof LandingCopyData, "capabilities">;
+type LandingTextKey = Exclude<
+  keyof LandingCopyData,
+  | "capabilities"
+  | "statusBoardActiveCount"
+  | "statusBoardFieldCount"
+  | "statusBoardCompleteCount"
+>;
+
 
 type FieldDef = {
   key: LandingTextKey;
@@ -67,7 +74,8 @@ const SECTIONS: Array<{
   },
   {
     title: "Projects section",
-    description: "Header and “view all” link for featured projects.",
+    description:
+      "Header and “view all” link for featured projects, plus status board copy. Counts are edited in the card below.",
     fields: [
       { key: "projectsEyebrowEn", label: "Eyebrow (English)" },
       { key: "projectsEyebrowFa", label: "برچسب بخش (فارسی)" },
@@ -87,6 +95,34 @@ const SECTIONS: Array<{
       },
       { key: "viewAllProjectsEn", label: "View all link (English)" },
       { key: "viewAllProjectsFa", label: "لینک مشاهده همه (فارسی)" },
+      { key: "statusBoardEyebrowEn", label: "Status board eyebrow (English)" },
+      { key: "statusBoardEyebrowFa", label: "برچسب تابلو وضعیت (فارسی)" },
+      { key: "statusBoardTitleEn", label: "Status board title (English)" },
+      { key: "statusBoardTitleFa", label: "عنوان تابلو وضعیت (فارسی)" },
+      {
+        key: "statusBoardSubtitleEn",
+        label: "Status board subtitle (English)",
+        multiline: true,
+        rows: 2,
+      },
+      {
+        key: "statusBoardSubtitleFa",
+        label: "زیرعنوان تابلو وضعیت (فارسی)",
+        multiline: true,
+        rows: 2,
+      },
+      {
+        key: "statusBoardEmptyEn",
+        label: "Status board empty (English)",
+        multiline: true,
+        rows: 2,
+      },
+      {
+        key: "statusBoardEmptyFa",
+        label: "متن خالی تابلو وضعیت (فارسی)",
+        multiline: true,
+        rows: 2,
+      },
     ],
   },
   {
@@ -303,6 +339,83 @@ export function LandingCopyEditor({ initial }: { initial: LandingCopyData }) {
           </CardContent>
         </Card>
       ))}
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Status board counts</CardTitle>
+          <p className="text-sm text-fg-muted">
+            Numbers shown on the homepage lab status board. Set these manually — they are
+            not calculated from projects.
+          </p>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 sm:grid-cols-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="status-board-active">Active</Label>
+              <Input
+                id="status-board-active"
+                type="number"
+                min={0}
+                max={9999}
+                inputMode="numeric"
+                value={data.statusBoardActiveCount}
+                disabled={pending}
+                onChange={(e) =>
+                  setData((current) => ({
+                    ...current,
+                    statusBoardActiveCount: Math.max(
+                      0,
+                      Math.min(9999, Number.parseInt(e.target.value, 10) || 0),
+                    ),
+                  }))
+                }
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="status-board-field">Field</Label>
+              <Input
+                id="status-board-field"
+                type="number"
+                min={0}
+                max={9999}
+                inputMode="numeric"
+                value={data.statusBoardFieldCount}
+                disabled={pending}
+                onChange={(e) =>
+                  setData((current) => ({
+                    ...current,
+                    statusBoardFieldCount: Math.max(
+                      0,
+                      Math.min(9999, Number.parseInt(e.target.value, 10) || 0),
+                    ),
+                  }))
+                }
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="status-board-complete">Complete</Label>
+              <Input
+                id="status-board-complete"
+                type="number"
+                min={0}
+                max={9999}
+                inputMode="numeric"
+                value={data.statusBoardCompleteCount}
+                disabled={pending}
+                onChange={(e) =>
+                  setData((current) => ({
+                    ...current,
+                    statusBoardCompleteCount: Math.max(
+                      0,
+                      Math.min(9999, Number.parseInt(e.target.value, 10) || 0),
+                    ),
+                  }))
+                }
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>

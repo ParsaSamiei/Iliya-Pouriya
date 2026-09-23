@@ -20,7 +20,7 @@ import { getSocialLinks, socialLinkLabel } from "@/lib/social-channels";
 import { getFooterSponsors } from "@/lib/sponsors";
 
 const footerLinkClass =
-  "inline-flex items-center gap-2 text-sm text-fg-muted transition-colors hover:text-accent";
+  "group inline-flex items-center gap-2 text-sm text-fg-muted transition-colors hover:text-accent";
 
 function FooterSectionLabel({ children }: { children: ReactNode }) {
   return (
@@ -82,10 +82,32 @@ export async function SiteFooter() {
               <FooterSectionLabel>{t("contactTitle")}</FooterSectionLabel>
               <ul className="mt-4 space-y-2.5">
                 {contact.phones.map((phone) => (
-                  <li key={phone}>
-                    <a href={`tel:${normalizePhoneForTel(phone)}`} className={footerLinkClass}>
+                  <li key={phone.number}>
+                    <a
+                      href={`tel:${normalizePhoneForTel(phone.number)}`}
+                      className={footerLinkClass}
+                      aria-label={
+                        phone.name ? `${phone.name}: ${phone.number}` : phone.number
+                      }
+                    >
                       <Phone className="size-3.5 shrink-0" aria-hidden />
-                      <bdi dir="ltr">{phone}</bdi>
+                      <span className="inline-flex min-w-0 flex-col gap-0.5 sm:flex-row sm:items-baseline sm:gap-1.5">
+                        {phone.name ? (
+                          <span className="truncate text-fg transition-colors group-hover:text-accent">
+                            {phone.name}
+                          </span>
+                        ) : null}
+                        <bdi
+                          dir="ltr"
+                          className={
+                            phone.name
+                              ? "text-fg-muted transition-colors group-hover:text-accent"
+                              : undefined
+                          }
+                        >
+                          {phone.number}
+                        </bdi>
+                      </span>
                     </a>
                   </li>
                 ))}
@@ -123,7 +145,7 @@ export async function SiteFooter() {
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={`${label} (${t("opensInNewTab")})`}
-                        className="inline-flex size-10 items-center justify-center rounded-md text-fg-muted transition-colors hover:bg-surface hover:text-accent"
+                        className="ctrl-hover inline-flex size-10 items-center justify-center rounded-md text-fg-muted transition-colors hover:bg-surface hover:text-accent"
                       >
                         <SocialChannelIcon id={link.id} className="size-5" />
                       </a>

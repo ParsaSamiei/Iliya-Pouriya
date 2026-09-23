@@ -111,7 +111,13 @@
     "contributors": "Contributors",
     "viewModel": "View 3D model",
     "gallery": "Gallery",
-    "empty": "No projects yet — check back soon."
+    "empty": "No projects yet — check back soon.",
+    "statusBoard": {
+      "live": "Live",
+      "active": "Active",
+      "field": "Field",
+      "complete": "Complete"
+    }
   },
   "team": {
     "title": "Team",
@@ -139,6 +145,10 @@
     "address": "Address",
     "socialTitle": "Social networks",
     "opensInNewTab": "opens in a new tab",
+    "widgetOpen": "Open contact details",
+    "widgetTitle": "Get in touch",
+    "widgetDescription": "Reach us directly or send a message.",
+    "widgetCta": "Send a message",
     "name": "Name",
     "email": "Email",
     "message": "Message",

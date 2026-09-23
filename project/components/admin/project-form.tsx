@@ -180,6 +180,22 @@ export function ProjectForm({
             </div>
           </div>
 
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-1.5">
+              <Label htmlFor="status">Lab status</Label>
+              <select
+                id="status"
+                name="status"
+                defaultValue={project?.status ?? "ACTIVE"}
+                className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
+              >
+                <option value="ACTIVE">Active — build in progress</option>
+                <option value="FIELD">Field — testing / trial</option>
+                <option value="COMPLETE">Complete — shipped</option>
+              </select>
+            </div>
+          </div>
+
           <div className="flex gap-6">
             <label className="flex items-center gap-2 text-sm">
               <input type="checkbox" name="isFeatured" defaultChecked={project?.isFeatured} />

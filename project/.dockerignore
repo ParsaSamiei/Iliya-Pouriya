@@ -1,0 +1,13 @@
+node_modules
+.next
+.git
+.env
+.env.*
+!.env.example
+public/uploads
+generated
+.cursor
+.claude
+*.log
+npm-debug.log*
+.DS_Store

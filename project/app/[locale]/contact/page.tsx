@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ContactForm } from "@/components/site/contact-form";
 import { ContactInfo } from "@/components/site/contact-info";
+import { MotionItem, MotionReveal, MotionStaggerInView } from "@/components/site/motion";
 import {
   CONTACT_SETTINGS_KEY,
   DEFAULT_CONTACT_SETTINGS,
@@ -28,23 +29,29 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-16">
-      <div className={showInfo ? "max-w-xl" : "mx-auto max-w-xl"}>
+      <MotionReveal className={showInfo ? "max-w-xl" : "mx-auto max-w-xl"}>
         <h1 className="font-display text-3xl font-semibold text-fg">{t("title")}</h1>
         <p className="mt-2 text-fg-muted">{t("subtitle")}</p>
-      </div>
+      </MotionReveal>
 
-      <div
+      <MotionStaggerInView
         className={
           showInfo
             ? "mt-10 grid gap-12 lg:grid-cols-[minmax(0,16rem)_minmax(0,1fr)] lg:gap-16"
             : "mx-auto mt-10 max-w-xl"
         }
+        stagger={0.1}
+        delayChildren={0.08}
       >
-        {showInfo ? <ContactInfo contact={contact} socialUrls={contactData} /> : null}
-        <div className={showInfo ? "min-w-0" : undefined}>
+        {showInfo ? (
+          <MotionItem>
+            <ContactInfo contact={contact} socialUrls={contactData} />
+          </MotionItem>
+        ) : null}
+        <MotionItem className={showInfo ? "min-w-0" : undefined}>
           <ContactForm />
-        </div>
-      </div>
+        </MotionItem>
+      </MotionStaggerInView>
     </div>
   );
 }

@@ -2,6 +2,11 @@ import { Briefcase, Code2, Mail } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import {
+  MotionItem,
+  MotionReveal,
+  MotionStaggerInView,
+} from "@/components/site/motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -77,7 +82,8 @@ export default async function TeamMemberPage({
   return (
     <div className="mx-auto max-w-3xl px-4 py-16">
       <JsonLd data={personJsonLd(person)} />
-      <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:items-start sm:text-left">
+
+      <MotionReveal className="flex flex-col items-center gap-4 text-center sm:flex-row sm:items-start sm:text-left">
         <Avatar className="size-24">
           <AvatarImage src={person.photoUrl ?? undefined} alt={name} />
           <AvatarFallback className="text-2xl">{name.slice(0, 1)}</AvatarFallback>
@@ -109,47 +115,57 @@ export default async function TeamMemberPage({
             )}
           </div>
         </div>
-      </div>
+      </MotionReveal>
 
-      {bio && <p className="mt-8 text-fg-muted">{bio}</p>}
+      {bio && (
+        <MotionReveal delay={0.08} className="mt-8">
+          <p className="text-fg-muted">{bio}</p>
+        </MotionReveal>
+      )}
 
       {resumeUrl && (
-        <Button asChild className="mt-6" variant="outline">
-          <a href={resumeUrl} download>
-            {t("viewResume")}
-          </a>
-        </Button>
+        <MotionReveal delay={0.12}>
+          <Button asChild className="mt-6" variant="outline">
+            <a href={resumeUrl} download>
+              {t("viewResume")}
+            </a>
+          </Button>
+        </MotionReveal>
       )}
 
       {person.experience.length > 0 && (
         <section className="mt-12">
-          <h2 className="font-display text-xl font-semibold text-fg">{t("experience")}</h2>
-          <ol className="mt-4 space-y-6 border-l border-border pl-6">
+          <MotionReveal>
+            <h2 className="font-display text-xl font-semibold text-fg">{t("experience")}</h2>
+          </MotionReveal>
+          <MotionStaggerInView className="mt-4 space-y-6 border-l border-border pl-6">
             {person.experience.map((exp) => (
-              <li key={exp.id} className="relative">
-                <span className="absolute top-1.5 -left-[29px] size-2 rounded-full bg-accent" />
-                <p className="font-medium text-fg">
-                  {locale === "fa" ? exp.roleFa : exp.roleEn}{" "}
-                  <span className="text-fg-muted">— {exp.organization}</span>
-                </p>
-                <p className="font-mono text-xs text-fg-muted">
-                  {new Date(exp.startDate).getFullYear()}
-                  {" – "}
-                  {exp.endDate ? new Date(exp.endDate).getFullYear() : "present"}
-                </p>
-                {(locale === "fa" ? exp.descriptionFa : exp.descriptionEn) && (
-                  <p className="mt-1 text-sm text-fg-muted">
-                    {locale === "fa" ? exp.descriptionFa : exp.descriptionEn}
+              <MotionItem key={exp.id}>
+                <div className="relative">
+                  <span className="absolute top-1.5 -left-[29px] size-2 rounded-full bg-accent" />
+                  <p className="font-medium text-fg">
+                    {locale === "fa" ? exp.roleFa : exp.roleEn}{" "}
+                    <span className="text-fg-muted">— {exp.organization}</span>
                   </p>
-                )}
-              </li>
+                  <p className="font-mono text-xs text-fg-muted">
+                    {new Date(exp.startDate).getFullYear()}
+                    {" – "}
+                    {exp.endDate ? new Date(exp.endDate).getFullYear() : "present"}
+                  </p>
+                  {(locale === "fa" ? exp.descriptionFa : exp.descriptionEn) && (
+                    <p className="mt-1 text-sm text-fg-muted">
+                      {locale === "fa" ? exp.descriptionFa : exp.descriptionEn}
+                    </p>
+                  )}
+                </div>
+              </MotionItem>
             ))}
-          </ol>
+          </MotionStaggerInView>
         </section>
       )}
 
       {person.skills.length > 0 && (
-        <section className="mt-12">
+        <MotionReveal className="mt-12" delay={0.06}>
           <h2 className="font-display text-xl font-semibold text-fg">{t("skills")}</h2>
           <div className="mt-4 space-y-4">
             {Object.entries(skillsByCategory).map(
@@ -170,7 +186,7 @@ export default async function TeamMemberPage({
                 ),
             )}
           </div>
-        </section>
+        </MotionReveal>
       )}
     </div>
   );

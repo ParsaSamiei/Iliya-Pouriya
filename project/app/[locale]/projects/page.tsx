@@ -1,4 +1,10 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import {
+  MotionHover,
+  MotionItem,
+  MotionReveal,
+  MotionStaggerInView,
+} from "@/components/site/motion";
 import { PlaceholderNotice } from "@/components/site/placeholder-notice";
 import { ProjectCard } from "@/components/site/project-card";
 import { db } from "@/lib/db";
@@ -28,18 +34,26 @@ export default async function ProjectsPage({ params }: { params: Promise<{ local
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-16">
-      <h1 className="font-display text-3xl font-semibold text-fg">{t("title")}</h1>
-      <p className="mt-2 text-fg-muted">{t("subtitle")}</p>
+      <MotionReveal>
+        <h1 className="font-display text-3xl font-semibold text-fg">{t("title")}</h1>
+        <p className="mt-2 text-fg-muted">{t("subtitle")}</p>
+      </MotionReveal>
 
       <div className="mt-10">
         {projects.length > 0 ? (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <MotionStaggerInView className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {projects.map((project) => (
-              <ProjectCard key={project.slug} project={project} />
+              <MotionItem key={project.slug} className="h-full">
+                <MotionHover>
+                  <ProjectCard project={project} />
+                </MotionHover>
+              </MotionItem>
             ))}
-          </div>
+          </MotionStaggerInView>
         ) : (
-          <PlaceholderNotice />
+          <MotionReveal>
+            <PlaceholderNotice />
+          </MotionReveal>
         )}
       </div>
     </div>

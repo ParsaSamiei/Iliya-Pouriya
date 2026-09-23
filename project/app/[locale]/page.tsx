@@ -15,6 +15,7 @@ import {
 } from "@/components/site/motion";
 import { PlaceholderNotice } from "@/components/site/placeholder-notice";
 import { ProjectCard } from "@/components/site/project-card";
+import { ProjectsStatusBoard } from "@/components/site/projects-status-board";
 import { RecommendationsSection } from "@/components/site/recommendations-section";
 import { SectionHeader } from "@/components/site/section-header";
 import { TeamCard } from "@/components/site/team-card";
@@ -166,6 +167,18 @@ async function HomePageContent({ locale }: { locale: string }) {
               </MotionReveal>
             )}
           </div>
+
+          <ProjectsStatusBoard
+            copy={{
+              eyebrow: copy.statusBoardEyebrow,
+              title: copy.statusBoardTitle,
+              subtitle: copy.statusBoardSubtitle,
+              empty: copy.statusBoardEmpty,
+              activeCount: copy.statusBoardActiveCount,
+              fieldCount: copy.statusBoardFieldCount,
+              completeCount: copy.statusBoardCompleteCount,
+            }}
+          />
         </HomeSectionInner>
       </HomeSection>
 

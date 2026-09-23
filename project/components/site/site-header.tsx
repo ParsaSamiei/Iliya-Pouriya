@@ -75,7 +75,7 @@ export function SiteHeader({ siteName }: { siteName: string }) {
               key={item.href}
               href={item.href}
               onClick={() => setMobileOpen(false)}
-              className="rounded-[var(--radius-sm)] px-2 py-2 text-sm font-medium text-fg-muted hover:bg-surface-raised hover:text-fg"
+              className="ctrl-hover rounded-[var(--radius-sm)] px-2 py-2 text-sm font-medium text-fg-muted hover:bg-surface-raised hover:text-fg"
             >
               {t(item.key)}
             </Link>

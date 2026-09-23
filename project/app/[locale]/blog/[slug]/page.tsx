@@ -3,6 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { MarkdownContent } from "@/components/site/markdown-content";
+import { MotionReveal } from "@/components/site/motion";
 import { db } from "@/lib/db";
 import { formatPersonList } from "@/lib/person";
 import { absoluteUrl, blogPostingJsonLd, buildLocaleAlternates, JsonLd } from "@/lib/seo";
@@ -69,7 +70,7 @@ export default async function BlogPostPage({
     <article className="mx-auto max-w-3xl px-4 py-16">
       <JsonLd data={blogPostingJsonLd(post)} />
       {post.coverImageUrl && (
-        <div className="relative mb-8 aspect-video w-full overflow-hidden rounded-[var(--radius-lg)] bg-surface-raised">
+        <MotionReveal className="relative mb-8 aspect-video w-full overflow-hidden rounded-[var(--radius-lg)] bg-surface-raised">
           <Image
             src={post.coverImageUrl}
             alt={title}
@@ -77,20 +78,26 @@ export default async function BlogPostPage({
             sizes="(max-width: 768px) 100vw, 768px"
             className="object-cover"
           />
-        </div>
+        </MotionReveal>
       )}
-      <p className="font-mono text-xs text-fg-muted">
-        {post.publishedAt &&
-          t("publishedOn", { date: new Date(post.publishedAt).toLocaleDateString(locale) })}
-        {post.authors.length > 0 &&
-          ` · ${formatPersonList(
-            post.authors.map(({ person }) => person),
-            locale,
-          )}`}
-      </p>
-      <h1 className="mt-2 font-display text-3xl font-semibold text-fg sm:text-4xl">{title}</h1>
+      <MotionReveal delay={post.coverImageUrl ? 0.08 : 0}>
+        <p className="font-mono text-xs text-fg-muted">
+          {post.publishedAt &&
+            t("publishedOn", { date: new Date(post.publishedAt).toLocaleDateString(locale) })}
+          {post.authors.length > 0 &&
+            ` · ${formatPersonList(
+              post.authors.map(({ person }) => person),
+              locale,
+            )}`}
+        </p>
+        <h1 className="mt-2 font-display text-3xl font-semibold text-fg sm:text-4xl">{title}</h1>
+      </MotionReveal>
 
-      {content && <MarkdownContent content={content} dir={locale === "fa" ? "rtl" : "ltr"} />}
+      {content && (
+        <MotionReveal delay={0.1}>
+          <MarkdownContent content={content} dir={locale === "fa" ? "rtl" : "ltr"} />
+        </MotionReveal>
+      )}
     </article>
   );
 }
