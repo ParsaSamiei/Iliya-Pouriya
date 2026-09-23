@@ -1,0 +1,56 @@
+import { cn } from "@/lib/utils";
+import type { ReactNode } from "react";
+
+const VARIANT_CLASS = {
+  hero: "landing-section-hero",
+  projects: "landing-section-projects",
+  gallery: "landing-section-gallery",
+  team: "landing-section-team",
+  capabilities: "landing-section-capabilities",
+  clients: "landing-section-clients",
+  recommendations: "landing-section-recommendations",
+  blog: "landing-section-blog",
+  contact: "landing-section-contact",
+} as const;
+
+export type HomeSectionVariant = keyof typeof VARIANT_CLASS;
+
+type HomeSectionProps = {
+  variant: HomeSectionVariant;
+  children: ReactNode;
+  className?: string;
+  id?: string;
+};
+
+export function HomeSection({ variant, children, className, id }: HomeSectionProps) {
+  return (
+    <section id={id} className={cn("landing-section", VARIANT_CLASS[variant], className)}>
+      {children}
+    </section>
+  );
+}
+
+type HomeSectionInnerProps = {
+  children: ReactNode;
+  className?: string;
+  tight?: boolean;
+  hero?: boolean;
+};
+
+export function HomeSectionInner({ children, className, tight, hero }: HomeSectionInnerProps) {
+  return (
+    <div
+      className={cn(
+        "relative mx-auto w-full max-w-6xl px-4",
+        hero
+          ? "flex min-h-0 flex-1 flex-col justify-center py-10 sm:py-14"
+          : tight
+            ? "py-16 sm:py-20"
+            : "py-20 sm:py-24",
+        className,
+      )}
+    >
+      {children}
+    </div>
+  );
+}

@@ -1,0 +1,195 @@
+name: Deploy
+
+# Build on GitHub, ship the finished images to the server over SSH.
+#
+# The Next.js app lives in project/. Images are loaded on the server with
+# `docker load` — the server does not build and does not pull from a registry.
+# Compose on the box only needs docker-compose.yml, infra/nginx.conf, and a
+# hand-managed .env. See project/docker-compose.yml.
+#
+# GitHub repository secrets this job reads:
+#   SSH_HOST         94.184.36.51
+#   SSH_USER         deploy
+#   SSH_PRIVATE_KEY  private key whose public half is in deploy's authorized_keys
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# A cancelled migration is worse than a queued deploy.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+env:
+  # No domain yet. NEXT_PUBLIC_SITE_URL is frozen at build time — changing
+  # the public URL means editing this value and redeploying, not only .env.
+  SITE_URL: http://94.184.36.51
+  DEPLOY_DIR: /opt/iliya-pouriya
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: project
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # The migrator image changes only when the lockfile, Dockerfile, or
+      # Prisma inputs change. Skip rebuilding and re-transferring it otherwise.
+      - name: Compute image tags
+        id: tags
+        run: |
+          echo "web=${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+          migrator_hash=$(cat package-lock.json Dockerfile prisma.config.ts prisma/schema.prisma prisma/seed.ts $(find prisma/migrations -type f | sort) | sha256sum | cut -c1-16)
+          echo "migrator=${migrator_hash}" >> "$GITHUB_OUTPUT"
+          echo "Migrator inputs hash: ${migrator_hash}"
+
+      - name: Configure SSH
+        working-directory: .
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          ssh-keyscan -H "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
+          cat >> ~/.ssh/config <<EOF
+          Host target
+            HostName ${{ secrets.SSH_HOST }}
+            User ${{ secrets.SSH_USER }}
+            IdentityFile ~/.ssh/id_deploy
+            IdentitiesOnly yes
+            ServerAliveInterval 30
+            ServerAliveCountMax 10
+          EOF
+          ssh target 'echo "SSH OK on $(hostname)"'
+
+      - name: Build web image
+        uses: docker/build-push-action@v6
+        with:
+          context: project
+          file: project/Dockerfile
+          target: runner
+          load: true
+          tags: iliya-pouriya-web:${{ steps.tags.outputs.web }}
+          build-args: |
+            NEXT_PUBLIC_SITE_URL=${{ env.SITE_URL }}
+          cache-from: type=gha,scope=web
+          cache-to: type=gha,scope=web,mode=max
+
+      - name: Check whether migrator image is already on the server
+        id: migrator_check
+        run: |
+          if ssh target "docker image inspect iliya-pouriya-migrator:${{ steps.tags.outputs.migrator }} >/dev/null 2>&1"; then
+            echo "needed=false" >> "$GITHUB_OUTPUT"
+            echo "Migrator image already present on server, skipping build and transfer."
+          else
+            echo "needed=true" >> "$GITHUB_OUTPUT"
+            echo "Migrator image missing on server, will build and ship."
+          fi
+
+      - name: Build migrator image
+        if: steps.migrator_check.outputs.needed == 'true'
+        uses: docker/build-push-action@v6
+        with:
+          context: project
+          file: project/Dockerfile
+          target: migrator
+          load: true
+          tags: iliya-pouriya-migrator:${{ steps.tags.outputs.migrator }}
+          cache-from: type=gha,scope=migrator
+          cache-to: type=gha,scope=migrator,mode=max
+
+      # docker load accepts the gzip stream itself. Retry because a dropped
+      # transfer is cheap to repeat and load is idempotent.
+      - name: Ship images to server
+        run: |
+          ship() {
+            local image="$1"
+            local attempt
+            for attempt in 1 2 3; do
+              echo "::group::Transfer ${image} (attempt ${attempt})"
+              if docker save "$image" | gzip -1 | ssh target 'docker load'; then
+                echo "::endgroup::"
+                echo "Transferred ${image}"
+                return 0
+              fi
+              echo "::endgroup::"
+              echo "Attempt ${attempt} for ${image} failed."
+              sleep 15
+            done
+            echo "Giving up on ${image} after 3 attempts."
+            return 1
+          }
+
+          ship "iliya-pouriya-web:${{ steps.tags.outputs.web }}"
+          if [ "${{ steps.migrator_check.outputs.needed }}" = "true" ]; then
+            ship "iliya-pouriya-migrator:${{ steps.tags.outputs.migrator }}"
+          fi
+
+      - name: Sync compose and nginx config
+        run: |
+          ssh target "mkdir -p ${{ env.DEPLOY_DIR }}/infra"
+          scp docker-compose.yml target:${{ env.DEPLOY_DIR }}/docker-compose.yml
+          scp infra/nginx.conf target:${{ env.DEPLOY_DIR }}/infra/nginx.conf
+
+      - name: Release
+        run: |
+          ssh target bash -euo pipefail <<EOF
+            cd ${{ env.DEPLOY_DIR }}
+            docker tag iliya-pouriya-web:${{ steps.tags.outputs.web }} iliya-pouriya-web:current
+            docker tag iliya-pouriya-migrator:${{ steps.tags.outputs.migrator }} iliya-pouriya-migrator:current
+
+            # web waits until migrator exits 0, so a failed migration leaves
+            # the previous version serving.
+            docker compose up -d --remove-orphans
+
+            docker image prune -f
+          EOF
+
+      - name: Verify deployment
+        working-directory: .
+        run: |
+          ssh target bash -euo pipefail <<'EOF'
+            cd /opt/iliya-pouriya
+            echo "--- migrator output ---"
+            docker compose logs --no-color --tail=30 migrator || true
+
+            echo "--- migration status ---"
+            docker compose run --rm --no-deps migrator npx prisma migrate status
+
+            echo "--- waiting for the stack to answer on :8080 ---"
+            for attempt in $(seq 1 30); do
+              code=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 10 \
+                http://127.0.0.1:8080/robots.txt 2>/dev/null || echo 000)
+              if [ "$code" = "200" ]; then
+                echo "stack is serving (robots.txt 200 after ${attempt} attempt(s))"
+                exit 0
+              fi
+              sleep 4
+            done
+
+            echo "Stack never answered 200 on /robots.txt (last code: ${code})."
+            docker compose ps
+            echo "--- web logs ---"
+            docker compose logs --no-color --tail=60 web
+            echo "--- nginx logs ---"
+            docker compose logs --no-color --tail=20 nginx
+            exit 1
+          EOF
+
+      - name: Confirm public entry point
+        working-directory: .
+        run: |
+          echo "--- direct container port ---"
+          curl -sS -o /dev/null -w '  :8080/robots.txt -> %{http_code}\n' \
+            --max-time 25 "http://${{ secrets.SSH_HOST }}:8080/robots.txt"
+          echo "--- through host nginx ---"
+          curl -sS -o /dev/null -w '  :80/robots.txt   -> %{http_code}\n' \
+            --max-time 25 "http://${{ secrets.SSH_HOST }}/robots.txt"
