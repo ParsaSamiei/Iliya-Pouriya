@@ -27,6 +27,11 @@ env:
   # the public URL means editing this value and redeploying, not only .env.
   SITE_URL: http://94.184.36.51
   DEPLOY_DIR: /opt/iliya-pouriya
+  # Port 22 (and 443) are filtered upstream for this host on foreign networks,
+  # so GitHub-hosted runners cannot reach 94.184.36.51:22. Verified reachable:
+  # 80 and arbitrary high ports (e.g. 2022) are open, 22/443 are not. sshd on
+  # the server listens on both 22 (local/Iran access) and 2022 (used here).
+  SSH_PORT: "2022"
 
 jobs:
   deploy:
@@ -56,18 +61,36 @@ jobs:
         working-directory: .
         run: |
           mkdir -p ~/.ssh && chmod 700 ~/.ssh
-          printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_deploy
+          # Browser-pasted keys often carry CR and drop the trailing newline;
+          # ssh rejects both. Normalise before writing, then validate so a bad
+          # secret fails here with a clear message instead of a silent auth error.
+          printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_deploy
+          if [ -n "$(tail -c1 ~/.ssh/id_deploy)" ]; then
+            echo >> ~/.ssh/id_deploy
+          fi
           chmod 600 ~/.ssh/id_deploy
-          ssh-keyscan -H "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
+          if ! ssh-keygen -y -f ~/.ssh/id_deploy >/dev/null; then
+            echo "::error::SSH_PRIVATE_KEY is not a valid private key. Paste the whole file, including the BEGIN and END lines."
+            exit 1
+          fi
+          # Do not hide keyscan errors: a blocked/unreachable port used to fail
+          # here silently with exit 1 and no message.
+          if ! ssh-keyscan -T 20 -p "${SSH_PORT}" -H "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts; then
+            echo "::error::Could not read the SSH host key from ${{ secrets.SSH_HOST }}:${SSH_PORT}. That port must be reachable from GitHub Actions (port 22 is filtered upstream for this host)."
+            exit 1
+          fi
           cat >> ~/.ssh/config <<EOF
           Host target
             HostName ${{ secrets.SSH_HOST }}
+            Port ${SSH_PORT}
             User ${{ secrets.SSH_USER }}
             IdentityFile ~/.ssh/id_deploy
             IdentitiesOnly yes
+            BatchMode yes
             ServerAliveInterval 30
             ServerAliveCountMax 10
           EOF
+          chmod 600 ~/.ssh/config
           ssh target 'echo "SSH OK on $(hostname)"'
 
       - name: Build web image
@@ -187,9 +210,13 @@ jobs:
       - name: Confirm public entry point
         working-directory: .
         run: |
+          # Informational only: the authoritative health check is "Verify
+          # deployment" above, which curls the stack from the server itself.
+          # From foreign networks some ports (e.g. 443) are filtered upstream
+          # for this host, so a non-200/timeout here is not a deploy failure.
           echo "--- direct container port ---"
           curl -sS -o /dev/null -w '  :8080/robots.txt -> %{http_code}\n' \
-            --max-time 25 "http://${{ secrets.SSH_HOST }}:8080/robots.txt"
+            --max-time 25 "http://${{ secrets.SSH_HOST }}:8080/robots.txt" || echo "  :8080 unreachable from runner (upstream port filter) — see server-side verify above"
           echo "--- through host nginx ---"
           curl -sS -o /dev/null -w '  :80/robots.txt   -> %{http_code}\n' \
-            --max-time 25 "http://${{ secrets.SSH_HOST }}/robots.txt"
+            --max-time 25 "http://${{ secrets.SSH_HOST }}/robots.txt" || echo "  :80 unreachable from runner"
