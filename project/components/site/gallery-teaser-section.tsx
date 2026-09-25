@@ -35,7 +35,6 @@ export async function GalleryTeaserSection({ locale }: { locale: string }) {
       <HomeSectionInner>
         <MotionReveal className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <SectionHeader
-            eyebrow={tHome("galleryEyebrow")}
             title={tHome("galleryTitle")}
             subtitle={tHome("gallerySubtitle")}
             className="mb-0"

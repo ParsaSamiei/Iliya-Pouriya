@@ -1,7 +1,7 @@
 "use client";
 
 import { Upload } from "lucide-react";
-import Image from "next/image";
+import { MediaImage } from "@/components/media-image";
 import { useId, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -83,7 +83,7 @@ export function ImageUploadField({
           {/* unoptimized: avoids requiring the `sharp` package for Next's
               image optimizer in the self-hosted standalone build — this is
               just an admin-panel preview thumbnail, not public-facing. */}
-          <Image src={value} alt="" fill sizes="128px" className="object-cover" unoptimized />
+          <MediaImage src={value} alt="" fill sizes="128px" className="object-cover" unoptimized />
         </div>
       )}
     </div>

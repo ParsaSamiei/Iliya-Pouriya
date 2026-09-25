@@ -12,7 +12,6 @@ import { useLocale, useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
 type StatusBoardCopy = {
-  eyebrow: string;
   title: string;
   subtitle: string;
   empty: string;
@@ -125,7 +124,6 @@ export function ProjectsStatusBoard({ copy }: { copy: StatusBoardCopy }) {
             }
             transition={{ duration: reduce ? 0 : 0.55, delay: reduce ? 0 : 0.08, ease: easeOut }}
           >
-            <p className="status-board-eyebrow">{copy.eyebrow}</p>
             <h3 className="status-board-title">{copy.title}</h3>
             <p className="status-board-subtitle">{copy.subtitle}</p>
           </motion.div>

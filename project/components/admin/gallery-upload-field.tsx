@@ -1,7 +1,7 @@
 "use client";
 
 import { ImagePlus, Loader2, Play, X } from "lucide-react";
-import Image from "next/image";
+import { MediaImage } from "@/components/media-image";
 import { useId, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
@@ -111,7 +111,7 @@ export function GalleryUploadField({
             >
               {item.imageUrl ? (
                 <>
-                  <Image
+                  <MediaImage
                     src={item.imageUrl}
                     alt=""
                     fill

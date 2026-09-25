@@ -26,7 +26,6 @@ export function ClientsSection({
       <HomeSectionInner>
         <MotionReveal>
           <SectionHeader
-            eyebrow={copy.clientsEyebrow}
             title={copy.clientsTitle}
             subtitle={copy.clientsSubtitle}
           />

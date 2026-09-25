@@ -41,7 +41,6 @@ export function RecommendationsSection({
       <HomeSectionInner>
         <MotionReveal>
           <SectionHeader
-            eyebrow={copy.recommendationsEyebrow}
             title={copy.recommendationsTitle}
             subtitle={copy.recommendationsSubtitle}
           />

@@ -1,5 +1,5 @@
 import { Mail, MapPin, Phone } from "lucide-react";
-import Image from "next/image";
+import { MediaImage } from "@/components/media-image";
 import { getLocale, getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 import { SiteLogo } from "@/components/site/site-logo";
@@ -45,13 +45,16 @@ export async function SiteFooter() {
   const contact = resolveContactSettings(contactData, locale);
   const socialLinks = getSocialLinks(contactData);
   const showContact = hasContactInfo(contact);
+  const contactItemCount =
+    contact.phones.length + contact.emails.length + (contact.location ? 1 : 0);
+  const contactRowCount = Math.max(1, Math.ceil(contactItemCount / 2));
 
   return (
     <footer className="border-t border-border bg-surface/40">
       <div className="mx-auto max-w-6xl px-4 py-12">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
           {/* Brand */}
-          <div className="lg:col-span-3">
+          <div className="min-w-0 lg:col-span-3">
             <Link
               href="/"
               className="inline-flex items-center gap-2.5 font-display text-lg font-semibold tracking-tight text-fg transition-colors hover:text-accent"
@@ -63,9 +66,9 @@ export async function SiteFooter() {
           </div>
 
           {/* Navigation */}
-          <nav aria-label={t("navLabel")} className="lg:col-span-3">
+          <nav aria-label={t("navLabel")} className="min-w-0 lg:col-span-2">
             <FooterSectionLabel>{t("navTitle")}</FooterSectionLabel>
-            <ul className="mt-4 space-y-2.5">
+            <ul className="mt-4 grid w-max grid-flow-col grid-rows-3 auto-cols-max gap-x-8 gap-y-2.5">
               {SITE_NAV_ITEMS.map((item) => (
                 <li key={item.href}>
                   <Link href={item.href} className={footerLinkClass}>
@@ -78,11 +81,14 @@ export async function SiteFooter() {
 
           {/* Contact */}
           {showContact ? (
-            <div className="lg:col-span-3">
+            <div className="min-w-0 sm:col-span-2 lg:col-span-5">
               <FooterSectionLabel>{t("contactTitle")}</FooterSectionLabel>
-              <ul className="mt-4 space-y-2.5">
+              <ul
+                className="mt-4 grid w-max max-w-full grid-flow-col auto-cols-max gap-x-8 gap-y-2.5"
+                style={{ gridTemplateRows: `repeat(${contactRowCount}, auto)` }}
+              >
                 {contact.phones.map((phone) => (
-                  <li key={phone.number}>
+                  <li key={phone.number} className="min-w-0">
                     <a
                       href={`tel:${normalizePhoneForTel(phone.number)}`}
                       className={footerLinkClass}
@@ -112,15 +118,15 @@ export async function SiteFooter() {
                   </li>
                 ))}
                 {contact.emails.map((email) => (
-                  <li key={email}>
-                    <a href={`mailto:${email}`} dir="ltr" className={footerLinkClass}>
+                  <li key={email} className="min-w-0">
+                    <a href={`mailto:${email}`} className={footerLinkClass}>
                       <Mail className="size-3.5 shrink-0" aria-hidden />
-                      {email}
+                      <bdi dir="ltr">{email}</bdi>
                     </a>
                   </li>
                 ))}
                 {contact.location ? (
-                  <li>
+                  <li className="min-w-0">
                     <span className={footerLinkClass}>
                       <MapPin className="size-3.5 shrink-0" aria-hidden />
                       <span className="whitespace-pre-line">{contact.location}</span>
@@ -133,7 +139,7 @@ export async function SiteFooter() {
 
           {/* Follow us */}
           {socialLinks.length > 0 ? (
-            <div className="lg:col-span-3">
+            <div className="min-w-0 lg:col-span-2">
               <FooterSectionLabel>{t("follow")}</FooterSectionLabel>
               <ul className="mt-4 flex flex-wrap items-center gap-1">
                 {socialLinks.map((link) => {
@@ -163,7 +169,7 @@ export async function SiteFooter() {
             <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
               {sponsors.map((sponsor) => {
                 const content = sponsor.logoUrl ? (
-                  <Image
+                  <MediaImage
                     src={sponsor.logoUrl}
                     alt={sponsor.name}
                     width={200}

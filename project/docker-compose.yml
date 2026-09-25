@@ -63,6 +63,9 @@ services:
       AUTH_TRUST_HOST: "true"
     volumes:
       - uploads:/app/uploads
+      # Same files under public/ so Next's image optimizer can find them
+      # if a request still goes through `/_next/image`.
+      - uploads:/app/public/uploads
     depends_on:
       migrator:
         condition: service_completed_successfully

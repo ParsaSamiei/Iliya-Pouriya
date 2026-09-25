@@ -1304,18 +1304,7 @@ a.client-tile {
   }
 }
 
-.status-board-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.2em;
-  line-height: 1.2;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-
 .status-board-title {
-  margin-top: 0.55rem;
   max-width: 18ch;
   font-family: var(--font-display);
   font-size: clamp(1.25rem, 2.4vw, 1.625rem);
@@ -1349,6 +1338,13 @@ a.client-tile {
   line-height: 1;
   text-transform: uppercase;
   color: var(--accent);
+}
+
+[dir="rtl"] .status-board-live {
+  font-family: var(--font-fa);
+  font-size: 0.75rem;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 .status-board-empty {
@@ -1414,6 +1410,14 @@ a.client-tile {
   letter-spacing: 0.16em;
   line-height: 1.2;
   text-transform: uppercase;
+}
+
+[dir="rtl"] .status-board-metric-label {
+  font-family: var(--font-fa);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 .status-board-metric--accent .status-board-metric-label {

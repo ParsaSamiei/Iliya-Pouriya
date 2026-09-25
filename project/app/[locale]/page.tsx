@@ -137,7 +137,6 @@ async function HomePageContent({ locale }: { locale: string }) {
         <HomeSectionInner>
           <MotionReveal className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <SectionHeader
-              eyebrow={copy.projectsEyebrow}
               title={copy.featuredProjects}
               subtitle={copy.featuredProjectsSubtitle}
               className="mb-0"
@@ -170,7 +169,6 @@ async function HomePageContent({ locale }: { locale: string }) {
 
           <ProjectsStatusBoard
             copy={{
-              eyebrow: copy.statusBoardEyebrow,
               title: copy.statusBoardTitle,
               subtitle: copy.statusBoardSubtitle,
               empty: copy.statusBoardEmpty,
@@ -189,7 +187,6 @@ async function HomePageContent({ locale }: { locale: string }) {
           <HomeSectionInner>
             <MotionReveal>
               <SectionHeader
-                eyebrow={copy.teamEyebrow}
                 title={copy.meetTheTeam}
                 subtitle={copy.meetTheTeamSubtitle}
               />
@@ -217,7 +214,6 @@ async function HomePageContent({ locale }: { locale: string }) {
         <HomeSectionInner>
           <MotionReveal className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <SectionHeader
-              eyebrow={copy.blogEyebrow}
               title={copy.latestPosts}
               subtitle={copy.latestPostsSubtitle}
               className="mb-0"
@@ -251,7 +247,6 @@ async function HomePageContent({ locale }: { locale: string }) {
       </HomeSection>
 
       <HomeContactCta
-        eyebrow={copy.contactEyebrow}
         title={copy.contactTitle}
         subtitle={copy.contactSubtitle}
         cta={copy.ctaContact}

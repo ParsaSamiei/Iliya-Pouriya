@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { MediaImage } from "@/components/media-image";
 import { useLocale, useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "@/i18n/navigation";
@@ -28,7 +28,7 @@ export function ProjectCard({ project }: { project: ProjectCardData }) {
     >
       <div className="relative aspect-video w-full overflow-hidden border-b border-border bg-surface-raised">
         {project.coverImageUrl ? (
-          <Image
+          <MediaImage
             src={project.coverImageUrl}
             alt={title}
             fill

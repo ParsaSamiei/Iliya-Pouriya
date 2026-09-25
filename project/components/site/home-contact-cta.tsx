@@ -7,13 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 
 type HomeContactCtaProps = {
-  eyebrow: string;
   title: string;
   subtitle: string;
   cta: string;
 };
 
-export function HomeContactCta({ eyebrow, title, subtitle, cta }: HomeContactCtaProps) {
+export function HomeContactCta({ title, subtitle, cta }: HomeContactCtaProps) {
   return (
     <HomeSection variant="contact" id="contact">
       <HomeSectionInner tight>
@@ -23,10 +22,7 @@ export function HomeContactCta({ eyebrow, title, subtitle, cta }: HomeContactCta
           delayChildren={0.06}
         >
           <MotionItem className="max-w-xl">
-            <p className="text-xs font-medium tracking-[0.14em] text-accent uppercase">
-              {eyebrow}
-            </p>
-            <h2 className="mt-3 font-display text-2xl font-semibold tracking-tight text-fg sm:text-3xl lg:text-[2rem]">
+            <h2 className="font-display text-2xl font-semibold tracking-tight text-fg sm:text-3xl lg:text-[2rem]">
               {title}
             </h2>
             <p className="mt-3 text-base leading-relaxed text-fg-muted">{subtitle}</p>

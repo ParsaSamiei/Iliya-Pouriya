@@ -4,7 +4,7 @@ import type { EmblaOptionsType } from "embla-carousel";
 import AutoScroll from "embla-carousel-auto-scroll";
 import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight, type LucideIcon } from "lucide-react";
-import Image from "next/image";
+import { MediaImage } from "@/components/media-image";
 import { useLocale, useTranslations } from "next-intl";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -108,7 +108,7 @@ function ClientTile({
     <>
       <div className="client-tile__media">
         {item.logoUrl ? (
-          <Image
+          <MediaImage
             src={item.logoUrl}
             alt=""
             width={160}

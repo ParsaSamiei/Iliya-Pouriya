@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { mkdir, unlink, writeFile } from "node:fs/promises";
+import { mkdir, stat, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 /**
@@ -118,4 +118,52 @@ export async function deleteUpload(url: string): Promise<void> {
     // rather than building this into the critical path" — a missing file
     // on delete is not an error worth surfacing.
   });
+}
+
+const MIME_BY_EXT: Record<string, string> = {
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".png": "image/png",
+  ".webp": "image/webp",
+  ".mp4": "video/mp4",
+  ".webm": "video/webm",
+  ".pdf": "application/pdf",
+  ".stl": "model/stl",
+};
+
+export type StoredUpload = {
+  absolutePath: string;
+  mime: string;
+  size: number;
+};
+
+/**
+ * Resolve a public `/uploads/...` path (or path segments) onto the disk
+ * directory used by saveUpload. Returns null for missing files and for
+ * anything that tries to escape UPLOADS_ROOT.
+ */
+export async function resolveStoredUpload(
+  relativeOrSegments: string | string[],
+): Promise<StoredUpload | null> {
+  const relative = Array.isArray(relativeOrSegments)
+    ? relativeOrSegments.join("/")
+    : relativeOrSegments.replace(/^\/uploads\//, "");
+
+  if (!relative || relative.includes("\0")) return null;
+
+  const root = path.resolve(UPLOADS_ROOT);
+  const destPath = path.resolve(path.join(root, relative));
+  if (destPath !== root && !destPath.startsWith(root + path.sep)) return null;
+
+  try {
+    const fileStat = await stat(destPath);
+    if (!fileStat.isFile()) return null;
+    return {
+      absolutePath: destPath,
+      mime: MIME_BY_EXT[path.extname(destPath).toLowerCase()] ?? "application/octet-stream",
+      size: fileStat.size,
+    };
+  } catch {
+    return null;
+  }
 }

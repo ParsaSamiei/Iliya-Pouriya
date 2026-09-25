@@ -1,7 +1,7 @@
 "use client";
 
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
-import Image from "next/image";
+import { MediaImage } from "@/components/media-image";
 import { useLocale, useTranslations } from "next-intl";
 import { useCallback, useEffect } from "react";
 import { GalleryVideoPlayer } from "@/components/site/gallery/gallery-video-player";
@@ -101,7 +101,7 @@ export function GalleryLightbox({ items, openIndex, onOpenChange }: GalleryLight
                 active={open}
               />
             ) : current.imageUrl ? (
-              <Image
+              <MediaImage
                 src={current.imageUrl}
                 alt={current.alt}
                 fill
