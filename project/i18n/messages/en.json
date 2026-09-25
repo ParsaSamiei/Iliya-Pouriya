@@ -11,6 +11,7 @@
     "blog": "Blog",
     "about": "About",
     "contact": "Contact",
+    "report": "Delivery report",
     "resume": "Resume",
     "toggleTheme": "Toggle theme",
     "toggleLanguage": "فارسی",
@@ -172,7 +173,11 @@
     "months": "mo",
     "noChart": "No data for this range",
     "noSamples": "No sample projects published yet",
-    "loading": "Loading report…"
+    "loading": "Loading report…",
+    "teaserEyebrow": "Track record",
+    "teaserTitle": "How work ships",
+    "teaserBody": "Success rate, on-time delivery, and client voice.",
+    "teaserCta": "Open delivery report"
   },
   "footer": {
     "rights": "All rights reserved.",
@@ -208,6 +213,15 @@
       "title": "Dashboard",
       "welcome": "Welcome back."
     }
+  },
+  "notFound": {
+    "title": "No signal on this path",
+    "description": "This URL is not a page we publish.",
+    "status": "ERR.NOT_FOUND",
+    "body": "This address is not on the board. Go home, or open projects or contact.",
+    "home": "Back home",
+    "projects": "View projects",
+    "contact": "Get in touch"
   },
   "common": {
     "loading": "Loading…",

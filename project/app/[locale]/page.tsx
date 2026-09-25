@@ -17,6 +17,7 @@ import { PlaceholderNotice } from "@/components/site/placeholder-notice";
 import { ProjectCard } from "@/components/site/project-card";
 import { ProjectsStatusBoard } from "@/components/site/projects-status-board";
 import { RecommendationsSection } from "@/components/site/recommendations-section";
+import { ReportTeaserSection } from "@/components/site/report-teaser-section";
 import { SectionHeader } from "@/components/site/section-header";
 import { TeamCard } from "@/components/site/team-card";
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,7 @@ import { getHomepageClients } from "@/lib/clients";
 import { db } from "@/lib/db";
 import { getLandingCopy } from "@/lib/get-landing-copy";
 import { getSiteMetadata } from "@/lib/get-site-metadata";
+import { getPublicReportVisibility } from "@/lib/crm/public";
 import { JsonLd, websiteJsonLd } from "@/lib/seo";
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
@@ -42,7 +44,7 @@ async function HomePageContent({ locale }: { locale: string }) {
 
   const isFa = locale === "fa";
 
-  const [featuredProjects, people, latestPosts, recommendations, clients] =
+  const [featuredProjects, people, latestPosts, recommendations, clients, publicReport] =
     await Promise.all([
     db.project
       .findMany({
@@ -108,6 +110,7 @@ async function HomePageContent({ locale }: { locale: string }) {
       })
       .catch(() => []),
     getHomepageClients(),
+    getPublicReportVisibility(),
   ]);
 
   const recommendationViews = recommendations.map((rec) => ({
@@ -180,7 +183,7 @@ async function HomePageContent({ locale }: { locale: string }) {
         </HomeSectionInner>
       </HomeSection>
 
-      <GalleryTeaserSection locale={locale} />
+      <CapabilityGrid copy={copy} />
 
       {people.length > 0 && (
         <HomeSection variant="team" id="team">
@@ -204,11 +207,15 @@ async function HomePageContent({ locale }: { locale: string }) {
         </HomeSection>
       )}
 
-      <CapabilityGrid copy={copy} />
+      <GalleryTeaserSection locale={locale} />
 
       <ClientsSection copy={copy} clients={clientViews} />
 
       <RecommendationsSection copy={copy} recommendations={recommendationViews} />
+
+      {publicReport.show && publicReport.teaser ? (
+        <ReportTeaserSection teaser={publicReport.teaser} />
+      ) : null}
 
       <HomeSection variant="blog" id="blog">
         <HomeSectionInner>

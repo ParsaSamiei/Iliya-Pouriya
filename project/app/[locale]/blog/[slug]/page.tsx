@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { MediaImage } from "@/components/media-image";
-import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { MediaImage } from "@/components/media-image";
 import { MarkdownContent } from "@/components/site/markdown-content";
 import { MotionReveal } from "@/components/site/motion";
+import { notFoundMetadata, SiteNotFound } from "@/components/site/not-found-view";
 import { db } from "@/lib/db";
 import { formatPersonList } from "@/lib/person";
 import { absoluteUrl, blogPostingJsonLd, buildLocaleAlternates, JsonLd } from "@/lib/seo";
@@ -31,7 +31,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale, slug } = await params;
   const post = await getPost(slug).catch(() => null);
-  if (!post) return {};
+  if (!post) return notFoundMetadata();
   const title = locale === "fa" ? post.titleFa : post.titleEn;
   const description = (locale === "fa" ? post.excerptFa : post.excerptEn) ?? undefined;
   const ogImage = post.coverImageUrl ? [absoluteUrl(post.coverImageUrl)] : undefined;
@@ -61,7 +61,7 @@ export default async function BlogPostPage({
   const t = await getTranslations("blog");
 
   const post = await getPost(slug).catch(() => null);
-  if (!post) notFound();
+  if (!post) return <SiteNotFound />;
 
   const title = locale === "fa" ? post.titleFa : post.titleEn;
   const content = locale === "fa" ? post.contentFa : post.contentEn;

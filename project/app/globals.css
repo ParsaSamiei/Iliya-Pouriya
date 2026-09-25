@@ -507,14 +507,21 @@
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
 }
 
+.nf-mark {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 0 28px color-mix(in srgb, var(--accent) 28%, transparent));
+}
+
 .brand-diagonal {
   border-image: linear-gradient(to bottom, var(--color-accent), var(--color-signal)) 1;
 }
 
 /*
  * Landing sections — ordered circuit bands.
- * Sequence: Hero → Projects → Team → Capabilities → Recommendations → Blog → Contact
- * Full-bleed 2px rule on top of every section after hero (sits between rec ↔ blog).
+ * Sequence: Hero → Projects → Practice → People → Gallery → Clients → Voices → Blog → Contact
+ * Full-bleed 2px rule on top of every section after hero.
  */
 .landing-section {
   position: relative;
@@ -555,8 +562,8 @@
   );
 }
 
-/* 1b — gallery · surface plate after projects */
-.landing-section-gallery {
+/* 2 — practice · surface plate after projects, glow opposite the work band */
+.landing-section-capabilities {
   background-color: var(--surface);
   background-image: radial-gradient(
     ellipse 50% 55% at 100% 30%,
@@ -565,27 +572,27 @@
   );
 }
 
-/* 2 — surface plate · violet end */
+/* 3 — people · violet-tinted band after the practice plate */
 .landing-section-team {
-  background-color: var(--surface);
+  background-color: color-mix(in srgb, var(--signal) 7%, var(--bg));
   background-image: radial-gradient(
-    ellipse 55% 60% at 100% 40%,
+    ellipse 55% 60% at 0% 40%,
     var(--glow-signal),
     transparent 65%
   );
 }
 
-/* 3 — teal-tinted · teal bottom-start */
-.landing-section-capabilities {
+/* 4 — gallery · teal-tinted field after people */
+.landing-section-gallery {
   background-color: color-mix(in srgb, var(--accent) 7%, var(--bg));
   background-image: radial-gradient(
-    ellipse 50% 55% at 0% 90%,
+    ellipse 50% 55% at 100% 90%,
     var(--glow-accent),
     transparent 62%
   );
 }
 
-/* 3b — roster tape · quiet plate between practice and voices */
+/* 5 — roster tape · quiet plate between gallery and voices */
 .landing-section-clients {
   background-color: var(--bg);
   background-image: radial-gradient(
@@ -942,7 +949,7 @@ a.client-tile {
   }
 }
 
-/* 4 — raised plate · violet end */
+/* 6 — raised plate · violet end */
 .landing-section-recommendations {
   background-color: var(--surface-raised);
   background-image: radial-gradient(
@@ -952,7 +959,7 @@ a.client-tile {
   );
 }
 
-/* 5 — deep ambient · teal start (clearly darker than recommendations) */
+/* 7 — deep ambient · teal start (clearly darker than recommendations) */
 .landing-section-blog {
   background-color: var(--bg);
   background-image: radial-gradient(
@@ -962,7 +969,7 @@ a.client-tile {
   );
 }
 
-/* 6 — surface seal · logo diagonal */
+/* 8 — surface seal · logo diagonal */
 .landing-section-contact {
   background-color: var(--surface);
   background-image: linear-gradient(
@@ -1122,6 +1129,45 @@ a.client-tile {
   box-shadow:
     0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent),
     0 6px 18px var(--glow-accent);
+}
+
+/* Contact FAB ping — hold at 0 opacity so the loop never snaps back visible. */
+.contact-widget-ping {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--accent) 32%, transparent);
+  animation: contact-widget-ping 2.8s ease-out infinite;
+}
+
+.contact-widget-ping--delayed {
+  animation-delay: 1.4s;
+}
+
+@keyframes contact-widget-ping {
+  0% {
+    transform: scale(1);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.42;
+  }
+  65% {
+    transform: scale(1.55);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.55);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-widget-ping {
+    animation: none;
+    opacity: 0;
+  }
 }
 
 .landing-arrow {
@@ -1499,5 +1545,14 @@ a.client-tile {
   .status-board-live-dot {
     animation: none;
   }
+}
+
+/* Halo around axis labels so grid / series strokes do not cut through numbers. */
+.crm-chart .crm-chart-tick,
+.crm-chart .recharts-cartesian-axis-tick-value {
+  paint-order: stroke fill;
+  stroke: var(--surface);
+  stroke-width: 5px;
+  stroke-linejoin: round;
 }
 

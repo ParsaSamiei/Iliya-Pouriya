@@ -70,18 +70,6 @@ export function HomeLoadingSkeleton() {
         </div>
       </section>
 
-      <section className="landing-section landing-section-team">
-        <div className="mx-auto w-full max-w-6xl px-4 py-20 sm:py-24">
-          <Skeleton className="h-3 w-16" />
-          <Skeleton className="mt-3 h-8 w-48" />
-          <Skeleton className="mt-3 h-4 w-72 max-w-full" />
-          <div className="mt-10 grid gap-6 sm:grid-cols-2">
-            <TeamCardSkeleton />
-            <TeamCardSkeleton />
-          </div>
-        </div>
-      </section>
-
       <section className="landing-section landing-section-capabilities">
         <div className="mx-auto w-full max-w-6xl px-4 py-20 sm:py-24">
           <Skeleton className="h-3 w-20" />
@@ -94,6 +82,39 @@ export function HomeLoadingSkeleton() {
                 <Skeleton className="mt-3 h-4 w-full" />
                 <Skeleton className="mt-2 h-4 w-5/6" />
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="landing-section landing-section-team">
+        <div className="mx-auto w-full max-w-6xl px-4 py-20 sm:py-24">
+          <Skeleton className="h-3 w-16" />
+          <Skeleton className="mt-3 h-8 w-48" />
+          <Skeleton className="mt-3 h-4 w-72 max-w-full" />
+          <div className="mt-10 grid gap-6 sm:grid-cols-2">
+            <TeamCardSkeleton />
+            <TeamCardSkeleton />
+          </div>
+        </div>
+      </section>
+
+      <section className="landing-section landing-section-gallery">
+        <div className="mx-auto w-full max-w-6xl px-4 py-20 sm:py-24">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <Skeleton className="h-3 w-12" />
+              <Skeleton className="mt-3 h-8 w-48" />
+              <Skeleton className="mt-3 h-4 w-64 max-w-full" />
+            </div>
+            <Skeleton className="h-9 w-32 shrink-0" />
+          </div>
+          <div className="mt-10 flex gap-3 overflow-hidden">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton
+                key={i}
+                className="aspect-[3/2] min-w-[52%] rounded-[var(--radius-md)] sm:min-w-[32%] lg:min-w-[26%]"
+              />
             ))}
           </div>
         </div>

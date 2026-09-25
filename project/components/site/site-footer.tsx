@@ -13,6 +13,7 @@ import {
   resolveContactSettings,
 } from "@/lib/contact-settings";
 import { db } from "@/lib/db";
+import { getPublicReportVisibility } from "@/lib/crm/public";
 import { getSiteMetadata } from "@/lib/get-site-metadata";
 import { normalizePhoneForTel } from "@/lib/phone-display";
 import { SITE_NAV_ITEMS } from "@/lib/site-nav";
@@ -29,12 +30,13 @@ function FooterSectionLabel({ children }: { children: ReactNode }) {
 }
 
 export async function SiteFooter() {
-  const [locale, t, tNav, setting, sponsors] = await Promise.all([
+  const [locale, t, tNav, setting, sponsors, publicReport] = await Promise.all([
     getLocale(),
     getTranslations("footer"),
     getTranslations("nav"),
     db.siteSetting.findUnique({ where: { key: CONTACT_SETTINGS_KEY } }).catch(() => null),
     getFooterSponsors(),
+    getPublicReportVisibility(),
   ]);
   const site = await getSiteMetadata(locale);
 
@@ -68,7 +70,7 @@ export async function SiteFooter() {
           {/* Navigation */}
           <nav aria-label={t("navLabel")} className="min-w-0 lg:col-span-2">
             <FooterSectionLabel>{t("navTitle")}</FooterSectionLabel>
-            <ul className="mt-4 grid w-max grid-flow-col grid-rows-3 auto-cols-max gap-x-8 gap-y-2.5">
+            <ul className="mt-4 grid w-max grid-flow-col grid-rows-4 auto-cols-max gap-x-8 gap-y-2.5">
               {SITE_NAV_ITEMS.map((item) => (
                 <li key={item.href}>
                   <Link href={item.href} className={footerLinkClass}>
@@ -76,6 +78,13 @@ export async function SiteFooter() {
                   </Link>
                 </li>
               ))}
+              {publicReport.show ? (
+                <li>
+                  <Link href="/report" className={footerLinkClass}>
+                    {tNav("report")}
+                  </Link>
+                </li>
+              ) : null}
             </ul>
           </nav>
 

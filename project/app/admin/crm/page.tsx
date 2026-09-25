@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CrmDataManager, type CrmTrackedProjectInput } from "@/components/admin/crm-data-manager";
 import { Button } from "@/components/ui/button";
+import { countsFromKinds } from "@/lib/crm/customers";
 import { db } from "@/lib/db";
 
 export const metadata: Metadata = {
@@ -32,7 +33,7 @@ function serializeProject(
 }
 
 export default async function AdminCrmDataPage() {
-  const [types, projects, funnelEntries, settings] = await Promise.all([
+  const [types, projects, funnelEntries, settings, customers] = await Promise.all([
     db.crmProjectType.findMany({ orderBy: { sortOrder: "asc" } }),
     db.crmTrackedProject.findMany({ orderBy: { updatedAt: "desc" } }),
     db.crmFunnelEntry.findMany({ orderBy: { month: "desc" } }),
@@ -40,6 +41,10 @@ export default async function AdminCrmDataPage() {
       where: { id: "default" },
       create: { id: "default", publicReportEnabled: false },
       update: {},
+    }),
+    db.crmCustomer.findMany({
+      orderBy: { updatedAt: "desc" },
+      include: { notes: { select: { kind: true } } },
     }),
   ]);
 
@@ -49,7 +54,7 @@ export default async function AdminCrmDataPage() {
         <div>
           <h1 className="font-display text-2xl font-semibold">داده CRM</h1>
           <p className="mt-1 text-sm text-fg-muted">
-            پروژه‌ها را یک‌بار وارد کنید — نمودارهای داشبورد خودش حساب می‌کند.
+            مشتریان، تعامل‌ها و پروژه‌ها را اینجا نگه دارید — نمودارهای داشبورد خودش حساب می‌کند.
           </p>
         </div>
         <Button variant="outline" size="sm" asChild>
@@ -70,6 +75,17 @@ export default async function AdminCrmDataPage() {
           publicReportEnabled: settings.publicReportEnabled,
           customerSatisfaction: settings.customerSatisfaction,
         }}
+        customers={customers.map((c) => ({
+          id: c.id,
+          name: c.name,
+          phone: c.phone,
+          email: c.email,
+          company: c.company,
+          status: c.status,
+          createdAt: c.createdAt.toISOString(),
+          updatedAt: c.updatedAt.toISOString(),
+          ...countsFromKinds(c.notes.map((n) => n.kind)),
+        }))}
       />
     </div>
   );

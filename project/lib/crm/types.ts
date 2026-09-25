@@ -51,6 +51,36 @@ export const CRM_STATUS_LABELS_FA: Record<CrmDeliveryStatus, string> = {
   FAILED: "ناموفق",
 };
 
+export const CRM_CUSTOMER_STATUSES = ["LEAD", "ACTIVE", "PAST", "INACTIVE"] as const;
+export type CrmCustomerStatus = (typeof CRM_CUSTOMER_STATUSES)[number];
+
+export const CRM_CUSTOMER_STATUS_LABELS_FA: Record<CrmCustomerStatus, string> = {
+  LEAD: "سرنخ",
+  ACTIVE: "فعال",
+  PAST: "قدیمی",
+  INACTIVE: "غیرفعال",
+};
+
+export const CRM_NOTE_KINDS = ["INTERACTION", "WORK", "INTERNAL"] as const;
+export type CrmNoteKind = (typeof CRM_NOTE_KINDS)[number];
+
+export const CRM_INTERACTION_TYPES = [
+  "CALL",
+  "EMAIL",
+  "MEETING",
+  "MESSAGE",
+  "OTHER",
+] as const;
+export type CrmInteractionType = (typeof CRM_INTERACTION_TYPES)[number];
+
+export const CRM_INTERACTION_TYPE_LABELS_FA: Record<CrmInteractionType, string> = {
+  CALL: "تماس",
+  EMAIL: "ایمیل",
+  MEETING: "جلسه",
+  MESSAGE: "پیام",
+  OTHER: "سایر",
+};
+
 export type PeriodDelta = {
   value: number;
   previous: number;

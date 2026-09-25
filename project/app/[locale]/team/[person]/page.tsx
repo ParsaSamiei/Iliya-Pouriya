@@ -1,12 +1,8 @@
 import { Briefcase, Code2, Mail } from "lucide-react";
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import {
-  MotionItem,
-  MotionReveal,
-  MotionStaggerInView,
-} from "@/components/site/motion";
+import { MotionItem, MotionReveal, MotionStaggerInView } from "@/components/site/motion";
+import { notFoundMetadata, SiteNotFound } from "@/components/site/not-found-view";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -38,7 +34,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale, person: slug } = await params;
   const person = await getPerson(slug).catch(() => null);
-  if (!person) return {};
+  if (!person) return notFoundMetadata();
   const name = getPersonName(person, locale);
   return {
     title: name,
@@ -62,7 +58,7 @@ export default async function TeamMemberPage({
   const t = await getTranslations("team");
 
   const person = await getPerson(slug).catch(() => null);
-  if (!person) notFound();
+  if (!person) return <SiteNotFound />;
 
   const bio = locale === "fa" ? person.bioFa : person.bioEn;
   const name = getPersonName(person, locale);
