@@ -318,3 +318,99 @@ model Client {
   @@index([isPublished, sortOrder])
   @@map("clients")
 }
+
+// ─── CRM / delivery report ───────────────────────────────────────────────────
+// Internal ops dashboard + optional public success report. Financial figures,
+// delays, and failures stay admin-only; the public serializer strips them.
+
+enum CrmDeliveryStatus {
+  ON_TRACK
+  AT_RISK
+  DELAYED
+  DELIVERED
+  FAILED
+
+  @@map("crm_delivery_status")
+}
+
+enum CrmFunnelStage {
+  FIRST_CONTACT
+  QUALIFIED
+  PROPOSAL
+  IN_PROGRESS
+  DELIVERED
+
+  @@map("crm_funnel_stage")
+}
+
+/// Singleton row (id = "default") for public-report visibility + display stats.
+model CrmSettings {
+  id                   String   @id @default("default")
+  /// When false, /report shows an empty placeholder — never leaks CRM data.
+  publicReportEnabled  Boolean  @default(false) @map("public_report_enabled")
+  /// 0–100; shown on the public report only. Null = omit that stat.
+  customerSatisfaction Float?   @map("customer_satisfaction")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  @@map("crm_settings")
+}
+
+/// Admin-defined project categories for success-by-type charts.
+model CrmProjectType {
+  id        String   @id @default(uuid())
+  nameEn    String   @map("name_en")
+  nameFa    String   @map("name_fa")
+  sortOrder Int      @default(0) @map("sort_order")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  projects CrmTrackedProject[]
+
+  @@index([sortOrder])
+  @@map("crm_project_types")
+}
+
+/// Tracked delivery engagements — source of KPIs, charts, and the active table.
+model CrmTrackedProject {
+  id             String            @id @default(uuid())
+  nameEn         String            @map("name_en")
+  nameFa         String            @map("name_fa")
+  clientNameEn   String            @map("client_name_en")
+  clientNameFa   String            @map("client_name_fa")
+  typeId         String            @map("type_id")
+  type           CrmProjectType    @relation(fields: [typeId], references: [id], onDelete: Restrict)
+  progress       Int               @default(0)
+  status         CrmDeliveryStatus @default(ON_TRACK)
+  /// Target or actual delivery date.
+  deliveryDate   DateTime?         @map("delivery_date")
+  /// When the project reached DELIVERED or FAILED — drives monthly rollups.
+  completedAt    DateTime?         @map("completed_at")
+  /// Internal only — never included in public serializers.
+  revenue        Decimal?          @map("revenue") @db.Decimal(14, 2)
+  isNewCustomer  Boolean           @default(false) @map("is_new_customer")
+  /// Sample card on the public report (still gated by CrmSettings.publicReportEnabled).
+  showOnPublic   Boolean           @default(false) @map("show_on_public")
+  coverImageUrl  String?           @map("cover_image_url")
+  quoteEn        String?           @map("quote_en")
+  quoteFa        String?           @map("quote_fa")
+  createdAt      DateTime          @default(now()) @map("created_at")
+  updatedAt      DateTime          @updatedAt @map("updated_at")
+
+  @@index([status, completedAt])
+  @@index([typeId])
+  @@index([showOnPublic])
+  @@map("crm_tracked_projects")
+}
+
+/// Monthly funnel stage counts entered by admin (filtered by time range).
+model CrmFunnelEntry {
+  id        String         @id @default(uuid())
+  /// First day of the month (UTC).
+  month     DateTime
+  stage     CrmFunnelStage
+  count     Int            @default(0)
+  createdAt DateTime       @default(now()) @map("created_at")
+
+  @@unique([month, stage])
+  @@index([month])
+  @@map("crm_funnel_entries")
+}

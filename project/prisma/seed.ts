@@ -195,6 +195,14 @@ async function main() {
     });
   }
 
+  const { seedCrmSampleData } = await import("../lib/crm/sample-data");
+  const crmSeed = await seedCrmSampleData(db);
+  if (crmSeed.seeded) {
+    console.log("  CRM: sample delivery data loaded (public report on).");
+  } else {
+    console.log("  CRM: skipped sample data (projects already exist).");
+  }
+
   console.log("Seed complete:");
   console.log("  People:", iliya.nameEn, "/", pouriya.nameEn);
   console.log("  Project:", project.slug);
