@@ -156,6 +156,24 @@
     "success": "Message sent — we'll get back to you soon.",
     "error": "Something went wrong. Please try again."
   },
+  "report": {
+    "title": "Delivery report",
+    "subtitle": "How our projects ship — success rate, cadence, and client voice.",
+    "disabledTitle": "Report not published",
+    "disabledBody": "This public report is turned off. Check back later, or contact us for a walkthrough.",
+    "emptyTitle": "Nothing to show yet",
+    "emptyBody": "When delivery data is published, success metrics and sample work will appear here.",
+    "successRate": "Project success rate",
+    "satisfaction": "Customer satisfaction",
+    "onTime": "On-time delivery",
+    "monthlyTitle": "Monthly deliveries",
+    "shareTitle": "Share by category",
+    "samplesTitle": "Sample deliveries",
+    "months": "mo",
+    "noChart": "No data for this range",
+    "noSamples": "No sample projects published yet",
+    "loading": "Loading report…"
+  },
   "footer": {
     "rights": "All rights reserved.",
     "builtWith": "Robotics & embedded systems engineering.",

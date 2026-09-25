@@ -1,6 +1,7 @@
 import {
   Boxes,
   BriefcaseBusiness,
+  Database,
   ExternalLink,
   HandHeart,
   History,
@@ -34,7 +35,8 @@ export const metadata: Metadata = {
 };
 
 const NAV = [
-  { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin/dashboard", label: "داشبورد", icon: LayoutDashboard },
+  { href: "/admin/crm", label: "داده CRM", icon: Database },
   { href: "/admin/people", label: "People", icon: Users },
   { href: "/admin/projects", label: "Projects", icon: Boxes },
   { href: "/admin/gallery", label: "Gallery", icon: Images },
@@ -110,7 +112,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
         </aside>
 
         <div className="flex-1 overflow-x-hidden">
-          <main className="mx-auto max-w-4xl px-6 py-8">{children}</main>
+          <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">{children}</main>
         </div>
         <Toaster theme="dark" />
       </body>
