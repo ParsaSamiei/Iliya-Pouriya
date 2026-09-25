@@ -12,6 +12,8 @@ import {
   Tooltip,
   XAxis,
   YAxis,
+  type XAxisTickContentProps,
+  type YAxisTickContentProps,
 } from "recharts";
 import { CrmEmptyState } from "@/components/crm/empty-state";
 import type { AdminCrmAnalytics } from "@/lib/crm/types";
@@ -26,25 +28,30 @@ const tooltipStyle = {
 };
 
 type AxisTickProps = {
-  x?: number;
-  y?: number;
+  x?: string | number;
+  y?: string | number;
   payload?: { value?: string | number };
   textAnchor?: "start" | "middle" | "end";
   suffix?: string;
 };
 
+function tickCoord(value: string | number | undefined): number {
+  const n = typeof value === "number" ? value : Number(value);
+  return Number.isFinite(n) ? n : 0;
+}
+
 /** Haloed tick so the number never sits on a grid / series stroke. */
 function ChartAxisTick({
-  x = 0,
-  y = 0,
+  x,
+  y,
   payload,
   textAnchor = "end",
   suffix = "",
 }: AxisTickProps) {
   return (
     <text
-      x={x}
-      y={y}
+      x={tickCoord(x)}
+      y={tickCoord(y)}
       textAnchor={textAnchor}
       dominantBaseline="central"
       className="crm-chart-tick"
@@ -61,10 +68,18 @@ function ChartAxisTick({
   );
 }
 
-const xTick = (props: AxisTickProps) => <ChartAxisTick {...props} textAnchor="middle" />;
-const yTick = (props: AxisTickProps) => <ChartAxisTick {...props} textAnchor="end" />;
-const yTickRight = (props: AxisTickProps) => <ChartAxisTick {...props} textAnchor="start" suffix="%" />;
-const xTickPercent = (props: AxisTickProps) => <ChartAxisTick {...props} textAnchor="middle" suffix="%" />;
+const xTick = (props: XAxisTickContentProps) => (
+  <ChartAxisTick {...props} textAnchor="middle" />
+);
+const yTick = (props: YAxisTickContentProps) => (
+  <ChartAxisTick {...props} textAnchor="end" />
+);
+const yTickRight = (props: YAxisTickContentProps) => (
+  <ChartAxisTick {...props} textAnchor="start" suffix="%" />
+);
+const xTickPercent = (props: XAxisTickContentProps) => (
+  <ChartAxisTick {...props} textAnchor="middle" suffix="%" />
+);
 
 /** Keep SVG charts in LTR so RTL parents do not mirror ticks onto the plot. */
 function ChartFrame({
