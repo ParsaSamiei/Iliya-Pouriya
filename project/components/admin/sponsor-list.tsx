@@ -1,7 +1,7 @@
 "use client";
 
 import { Pencil, Trash2 } from "lucide-react";
-import Image from "next/image";
+import { MediaImage } from "@/components/media-image";
 import { useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { DragHandle } from "@/components/admin/drag-handle";
@@ -140,7 +140,7 @@ export function SponsorList({ entries }: { entries: Sponsor[] }) {
                   disableDown={index === items.length - 1}
                 />
                 {sponsor.logoUrl ? (
-                  <Image
+                  <MediaImage
                     src={sponsor.logoUrl}
                     alt=""
                     width={72}

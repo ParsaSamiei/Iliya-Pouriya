@@ -1,7 +1,6 @@
 import { cn } from "@/lib/utils";
 
 type SectionHeaderProps = {
-  eyebrow: string;
   title: string;
   subtitle?: string;
   className?: string;
@@ -9,7 +8,6 @@ type SectionHeaderProps = {
 };
 
 export function SectionHeader({
-  eyebrow,
   title,
   subtitle,
   className,
@@ -23,15 +21,7 @@ export function SectionHeader({
         className,
       )}
     >
-      <p
-        className={cn(
-          "text-xs font-medium tracking-[0.14em] text-accent uppercase",
-          align === "center" && "mx-auto",
-        )}
-      >
-        {eyebrow}
-      </p>
-      <h2 className="mt-3 font-display text-2xl font-semibold tracking-tight text-fg sm:text-3xl">
+      <h2 className="font-display text-2xl font-semibold tracking-tight text-fg sm:text-3xl">
         {title}
       </h2>
       {subtitle && (

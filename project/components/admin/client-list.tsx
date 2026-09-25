@@ -1,7 +1,7 @@
 "use client";
 
 import { Pencil, Trash2 } from "lucide-react";
-import Image from "next/image";
+import { MediaImage } from "@/components/media-image";
 import { useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { DragHandle } from "@/components/admin/drag-handle";
@@ -177,7 +177,7 @@ export function ClientList({ entries }: { entries: Client[] }) {
                   disableDown={index === items.length - 1}
                 />
                 {client.logoUrl ? (
-                  <Image
+                  <MediaImage
                     src={client.logoUrl}
                     alt=""
                     width={72}

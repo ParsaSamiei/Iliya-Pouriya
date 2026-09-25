@@ -1,7 +1,7 @@
 "use client";
 
 import { Pencil, Trash2 } from "lucide-react";
-import Image from "next/image";
+import { MediaImage } from "@/components/media-image";
 import { useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { DragHandle } from "@/components/admin/drag-handle";
@@ -246,7 +246,7 @@ export function GalleryItemList({
                 />
                 <div className="relative size-14 shrink-0 overflow-hidden rounded-[var(--radius-sm)] border border-border bg-surface-raised">
                   {item.imageUrl ? (
-                    <Image
+                    <MediaImage
                       src={item.imageUrl}
                       alt=""
                       fill

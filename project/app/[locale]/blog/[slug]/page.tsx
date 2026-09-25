@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import { MediaImage } from "@/components/media-image";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { MarkdownContent } from "@/components/site/markdown-content";
@@ -71,7 +71,7 @@ export default async function BlogPostPage({
       <JsonLd data={blogPostingJsonLd(post)} />
       {post.coverImageUrl && (
         <MotionReveal className="relative mb-8 aspect-video w-full overflow-hidden rounded-[var(--radius-lg)] bg-surface-raised">
-          <Image
+          <MediaImage
             src={post.coverImageUrl}
             alt={title}
             fill

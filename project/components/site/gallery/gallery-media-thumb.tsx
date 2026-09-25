@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { MediaImage } from "@/components/media-image";
 import { Play } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
@@ -27,7 +27,7 @@ export function GalleryMediaThumb({
   return (
     <div className={cn("relative overflow-hidden bg-surface-raised", className)}>
       {item.imageUrl ? (
-        <Image
+        <MediaImage
           src={item.imageUrl}
           alt=""
           fill

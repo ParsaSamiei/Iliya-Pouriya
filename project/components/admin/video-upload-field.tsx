@@ -1,7 +1,7 @@
 "use client";
 
 import { Upload } from "lucide-react";
-import Image from "next/image";
+import { MediaImage } from "@/components/media-image";
 import { useId, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -151,7 +151,7 @@ export function VideoUploadField({
         </div>
         {posterUrl && (
           <div className="relative h-24 w-40 overflow-hidden rounded-[var(--radius-sm)] border border-border">
-            <Image
+            <MediaImage
               src={posterUrl}
               alt=""
               fill

@@ -13,7 +13,6 @@ export function CapabilityGrid({ copy }: { copy: LandingCopyView }) {
       <HomeSectionInner>
         <MotionReveal>
           <SectionHeader
-            eyebrow={copy.capabilitiesEyebrow}
             title={copy.capabilitiesTitle}
             subtitle={copy.capabilitiesSubtitle}
           />
