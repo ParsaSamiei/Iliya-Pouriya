@@ -401,6 +401,68 @@ model CrmTrackedProject {
   @@map("crm_tracked_projects")
 }
 
+enum CrmCustomerStatus {
+  LEAD
+  ACTIVE
+  PAST
+  INACTIVE
+
+  @@map("crm_customer_status")
+}
+
+enum CrmNoteKind {
+  INTERACTION
+  WORK
+  INTERNAL
+
+  @@map("crm_note_kind")
+}
+
+enum CrmInteractionType {
+  CALL
+  EMAIL
+  MEETING
+  MESSAGE
+  OTHER
+
+  @@map("crm_interaction_type")
+}
+
+/// People/orgs the team is working with — admin CRM only, not the public Clients carousel.
+model CrmCustomer {
+  id        String            @id @default(uuid())
+  name      String
+  phone     String?
+  email     String?
+  company   String?
+  status    CrmCustomerStatus @default(ACTIVE)
+  createdAt DateTime          @default(now()) @map("created_at")
+  updatedAt DateTime          @updatedAt @map("updated_at")
+
+  notes CrmCustomerNote[]
+
+  @@index([status, updatedAt])
+  @@map("crm_customers")
+}
+
+/// Interactions, work items, and internal team notes on a customer.
+model CrmCustomerNote {
+  id              String               @id @default(uuid())
+  customerId      String               @map("customer_id")
+  customer        CrmCustomer          @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  kind            CrmNoteKind
+  title           String?
+  body            String
+  interactionType CrmInteractionType?  @map("interaction_type")
+  occurredAt      DateTime?            @map("occurred_at")
+  authorEmail     String?              @map("author_email")
+  createdAt       DateTime             @default(now()) @map("created_at")
+  updatedAt       DateTime             @updatedAt @map("updated_at")
+
+  @@index([customerId, kind, createdAt])
+  @@map("crm_customer_notes")
+}
+
 /// Monthly funnel stage counts entered by admin (filtered by time range).
 model CrmFunnelEntry {
   id        String         @id @default(uuid())

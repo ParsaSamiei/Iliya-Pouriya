@@ -3,6 +3,7 @@
 import { ChevronDown, Pencil, Sparkles, Trash2 } from "lucide-react";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
+import { CrmCustomerManager } from "@/components/admin/crm-customer-manager";
 import { ImageUploadField } from "@/components/admin/image-upload-field";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import type { CrmProjectType, CrmDeliveryStatus, CrmFunnelStage } from "@/generated/prisma/client";
+import type { CrmDeliveryStatus, CrmFunnelStage, CrmProjectType } from "@/generated/prisma/client";
 import {
   createCrmProjectType,
   createCrmTrackedProject,
@@ -29,6 +30,7 @@ import {
   updateCrmTrackedProject,
   upsertCrmFunnelMonth,
 } from "@/lib/actions/crm";
+import type { CrmCustomerListItem } from "@/lib/crm/customers";
 import {
   CRM_DELIVERY_STATUSES,
   CRM_FUNNEL_STAGE_LABELS_FA,
@@ -318,11 +320,13 @@ export function CrmDataManager({
   projects,
   funnelEntries,
   settings,
+  customers,
 }: {
   types: CrmProjectType[];
   projects: CrmTrackedProjectInput[];
   funnelEntries: CrmFunnelEntryInput[];
   settings: { publicReportEnabled: boolean; customerSatisfaction: number | null };
+  customers: CrmCustomerListItem[];
 }) {
   const [pending, startTransition] = useTransition();
   const [editType, setEditType] = useState<CrmProjectType | null>(null);
@@ -373,19 +377,24 @@ export function CrmDataManager({
         <h2 className="font-display text-sm font-semibold text-fg">چطور پر کنم؟</h2>
         <ol className="mt-3 space-y-2 text-sm text-fg-muted">
           <li>
-            <span className="font-mono text-accent">۱.</span> چند{" "}
-            <strong className="text-fg">دسته</strong> بسازید (یا روی پیشنهادها کلیک کنید).
+            <span className="font-mono text-accent">۱.</span>{" "}
+            <strong className="text-fg">مشتری</strong> بسازید، دسته را مشخص کنید و تعامل‌ها را ثبت
+            کنید.
           </li>
           <li>
-            <span className="font-mono text-accent">۲.</span> هر{" "}
+            <span className="font-mono text-accent">۲.</span> چند{" "}
+            <strong className="text-fg">دسته پروژه</strong> بسازید (یا روی پیشنهادها کلیک کنید).
+          </li>
+          <li>
+            <span className="font-mono text-accent">۳.</span> هر{" "}
             <strong className="text-fg">پروژه</strong> واقعی را اضافه کنید و وضعیتش را بزنید.
           </li>
           <li>
-            <span className="font-mono text-accent">۳.</span> اختیاری:{" "}
+            <span className="font-mono text-accent">۴.</span> اختیاری:{" "}
             <strong className="text-fg">قیف فروش</strong> ماهانه را پر کنید.
           </li>
           <li>
-            <span className="font-mono text-accent">۴.</span> وقتی آمادهٔ اشتراک‌گذاری بودید،{" "}
+            <span className="font-mono text-accent">۵.</span> وقتی آمادهٔ اشتراک‌گذاری بودید،{" "}
             <strong className="text-fg">گزارش عمومی</strong> را روشن کنید (
             <code className="text-accent">/report</code>).
           </li>
@@ -418,21 +427,28 @@ export function CrmDataManager({
         </div>
       </div>
 
-      <Tabs defaultValue={isEmpty ? "types" : "projects"} className="space-y-6">
+        <Tabs defaultValue="customers" className="space-y-6">
         <TabsList className="flex h-auto w-full flex-wrap justify-start gap-1">
+          <TabsTrigger value="customers" className="cursor-pointer">
+            مشتریان
+          </TabsTrigger>
           <TabsTrigger value="types" className="cursor-pointer">
-            ۱. دسته‌ها
+            دسته‌ها
           </TabsTrigger>
           <TabsTrigger value="projects" className="cursor-pointer">
-            ۲. پروژه‌ها
+            پروژه‌ها
           </TabsTrigger>
           <TabsTrigger value="funnel" className="cursor-pointer">
-            ۳. قیف فروش
+            قیف فروش
           </TabsTrigger>
           <TabsTrigger value="visibility" className="cursor-pointer">
-            ۴. گزارش عمومی
+            گزارش عمومی
           </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="customers" className="space-y-4">
+          <CrmCustomerManager customers={customers} />
+        </TabsContent>
 
         <TabsContent value="types" className="space-y-4">
           <p className="text-sm text-fg-muted">

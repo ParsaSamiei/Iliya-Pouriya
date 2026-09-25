@@ -47,23 +47,8 @@ export function ContactWidgetClient({ contact, socialUrls }: ContactWidgetClient
         >
           {!reduce ? (
             <>
-              <motion.span
-                aria-hidden
-                className="pointer-events-none absolute inset-0 rounded-full bg-accent/35"
-                animate={{ scale: [1, 1.55], opacity: [0.5, 0] }}
-                transition={{ duration: 2.4, repeat: Infinity, ease: "easeOut" }}
-              />
-              <motion.span
-                aria-hidden
-                className="pointer-events-none absolute inset-0 rounded-full bg-accent/25"
-                animate={{ scale: [1, 1.55], opacity: [0.45, 0] }}
-                transition={{
-                  duration: 2.4,
-                  repeat: Infinity,
-                  ease: "easeOut",
-                  delay: 1.2,
-                }}
-              />
+              <span aria-hidden className="contact-widget-ping" />
+              <span aria-hidden className="contact-widget-ping contact-widget-ping--delayed" />
             </>
           ) : null}
 
@@ -72,7 +57,7 @@ export function ContactWidgetClient({ contact, socialUrls }: ContactWidgetClient
               type="button"
               className={cn(
                 buttonVariants({ size: "icon" }),
-                "btn-motion relative size-14 rounded-full shadow-lg",
+                "btn-motion relative size-14 rounded-full shadow-[0_8px_28px_var(--glow-accent)]",
               )}
               aria-label={t("widgetOpen")}
               whileHover={

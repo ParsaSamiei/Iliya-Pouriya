@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactElement } from "react";
 import {
   Bar,
   BarChart,
@@ -14,6 +15,7 @@ import {
 } from "recharts";
 import { CrmEmptyState } from "@/components/crm/empty-state";
 import type { AdminCrmAnalytics } from "@/lib/crm/types";
+import { cn } from "@/lib/utils";
 
 const tooltipStyle = {
   background: "var(--surface-raised)",
@@ -22,6 +24,64 @@ const tooltipStyle = {
   fontSize: "12px",
   color: "var(--fg)",
 };
+
+type AxisTickProps = {
+  x?: number;
+  y?: number;
+  payload?: { value?: string | number };
+  textAnchor?: "start" | "middle" | "end";
+  suffix?: string;
+};
+
+/** Haloed tick so the number never sits on a grid / series stroke. */
+function ChartAxisTick({
+  x = 0,
+  y = 0,
+  payload,
+  textAnchor = "end",
+  suffix = "",
+}: AxisTickProps) {
+  return (
+    <text
+      x={x}
+      y={y}
+      textAnchor={textAnchor}
+      dominantBaseline="central"
+      className="crm-chart-tick"
+      fill="var(--fg-muted)"
+      fontSize={11}
+      stroke="var(--surface)"
+      strokeWidth={5}
+      paintOrder="stroke"
+      strokeLinejoin="round"
+    >
+      {payload?.value}
+      {suffix}
+    </text>
+  );
+}
+
+const xTick = (props: AxisTickProps) => <ChartAxisTick {...props} textAnchor="middle" />;
+const yTick = (props: AxisTickProps) => <ChartAxisTick {...props} textAnchor="end" />;
+const yTickRight = (props: AxisTickProps) => <ChartAxisTick {...props} textAnchor="start" suffix="%" />;
+const xTickPercent = (props: AxisTickProps) => <ChartAxisTick {...props} textAnchor="middle" suffix="%" />;
+
+/** Keep SVG charts in LTR so RTL parents do not mirror ticks onto the plot. */
+function ChartFrame({
+  children,
+  className,
+}: {
+  children: ReactElement;
+  className?: string;
+}) {
+  return (
+    <div className={cn("crm-chart w-full", className)} dir="ltr">
+      <ResponsiveContainer width="100%" height="100%">
+        {children}
+      </ResponsiveContainer>
+    </div>
+  );
+}
 
 export function MonthlyTrendChart({
   data,
@@ -40,43 +100,44 @@ export function MonthlyTrendChart({
   const success = labels?.success ?? "Success %";
 
   return (
-    <div className="h-64 w-full">
-      <ResponsiveContainer width="100%" height="100%">
-        <ComposedChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
-          <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" vertical={false} />
-          <XAxis dataKey="label" tick={{ fill: "var(--fg-muted)", fontSize: 11 }} axisLine={false} />
-          <YAxis
-            yAxisId="count"
-            allowDecimals={false}
-            tick={{ fill: "var(--fg-muted)", fontSize: 11 }}
-            axisLine={false}
-            width={32}
-          />
-          <YAxis
-            yAxisId="rate"
-            orientation="right"
-            domain={[0, 100]}
-            tick={{ fill: "var(--fg-muted)", fontSize: 11 }}
-            axisLine={false}
-            width={36}
-            unit="%"
-          />
-          <Tooltip contentStyle={tooltipStyle} />
-          <Bar yAxisId="count" dataKey="delivered" name={delivered} fill="var(--accent)" radius={[2, 2, 0, 0]} />
-          <Bar yAxisId="count" dataKey="failed" name={failed} fill="var(--error)" radius={[2, 2, 0, 0]} />
-          <Line
-            yAxisId="rate"
-            type="monotone"
-            dataKey="successRate"
-            name={success}
-            stroke="var(--signal)"
-            strokeWidth={2}
-            dot={{ r: 3, fill: "var(--signal)" }}
-            connectNulls
-          />
-        </ComposedChart>
-      </ResponsiveContainer>
-    </div>
+    <ChartFrame className="h-64">
+      <ComposedChart data={data} margin={{ top: 16, right: 12, left: 8, bottom: 8 }}>
+        <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" vertical={false} />
+        <XAxis dataKey="label" tick={xTick} axisLine={false} tickLine={false} tickMargin={12} />
+        <YAxis
+          yAxisId="count"
+          allowDecimals={false}
+          tick={yTick}
+          axisLine={false}
+          tickLine={false}
+          tickMargin={12}
+          width={44}
+        />
+        <YAxis
+          yAxisId="rate"
+          orientation="right"
+          domain={[0, 100]}
+          tick={yTickRight}
+          axisLine={false}
+          tickLine={false}
+          tickMargin={12}
+          width={48}
+        />
+        <Tooltip contentStyle={tooltipStyle} />
+        <Bar yAxisId="count" dataKey="delivered" name={delivered} fill="var(--accent)" radius={[2, 2, 0, 0]} />
+        <Bar yAxisId="count" dataKey="failed" name={failed} fill="var(--error)" radius={[2, 2, 0, 0]} />
+        <Line
+          yAxisId="rate"
+          type="monotone"
+          dataKey="successRate"
+          name={success}
+          stroke="var(--signal)"
+          strokeWidth={2}
+          dot={{ r: 3, fill: "var(--signal)" }}
+          connectNulls
+        />
+      </ComposedChart>
+    </ChartFrame>
   );
 }
 
@@ -93,27 +154,25 @@ export function MonthlyRevenueChart({
   if (!has) return <CrmEmptyState title={emptyTitle} />;
 
   return (
-    <div className="h-56 w-full">
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
-          <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" vertical={false} />
-          <XAxis dataKey="label" tick={{ fill: "var(--fg-muted)", fontSize: 11 }} axisLine={false} />
-          <YAxis tick={{ fill: "var(--fg-muted)", fontSize: 11 }} axisLine={false} width={48} />
-          <Tooltip
-            contentStyle={tooltipStyle}
-            formatter={(value) =>
-              typeof value === "number"
-                ? [
-                    new Intl.NumberFormat("en", { style: "currency", currency: "USD" }).format(value),
-                    revenueLabel,
-                  ]
-                : [value, revenueLabel]
-            }
-          />
-          <Bar dataKey="revenue" name={revenueLabel} fill="var(--signal)" radius={[2, 2, 0, 0]} />
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
+    <ChartFrame className="h-56">
+      <BarChart data={data} margin={{ top: 16, right: 12, left: 8, bottom: 8 }}>
+        <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" vertical={false} />
+        <XAxis dataKey="label" tick={xTick} axisLine={false} tickLine={false} tickMargin={12} />
+        <YAxis tick={yTick} axisLine={false} tickLine={false} tickMargin={12} width={56} />
+        <Tooltip
+          contentStyle={tooltipStyle}
+          formatter={(value) =>
+            typeof value === "number"
+              ? [
+                  new Intl.NumberFormat("en", { style: "currency", currency: "USD" }).format(value),
+                  revenueLabel,
+                ]
+              : [value, revenueLabel]
+          }
+        />
+        <Bar dataKey="revenue" name={revenueLabel} fill="var(--signal)" radius={[2, 2, 0, 0]} />
+      </BarChart>
+    </ChartFrame>
   );
 }
 
@@ -164,30 +223,37 @@ export function SuccessByTypeChart({
   }
 
   return (
-    <div className="h-56 w-full" dir="ltr">
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={rows} layout="vertical" margin={{ top: 8, right: 16, left: 8, bottom: 0 }}>
-          <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" horizontal={false} />
-          <XAxis type="number" domain={[0, 100]} tick={{ fill: "var(--fg-muted)", fontSize: 11 }} unit="%" />
-          <YAxis
-            type="category"
-            dataKey="name"
-            width={110}
-            tick={{ fill: "var(--fg-muted)", fontSize: 11 }}
-            axisLine={false}
-          />
-          <Tooltip
-            contentStyle={tooltipStyle}
-            formatter={(v) => [`${Number(v).toFixed(0)}%`, successLabel]}
-          />
-          <Bar dataKey="rate" name={successLabel} radius={[0, 2, 2, 0]}>
-            {rows.map((_, i) => (
-              <Cell key={i} fill={i % 2 === 0 ? "var(--accent)" : "var(--signal)"} />
-            ))}
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
+    <ChartFrame className="h-56">
+      <BarChart data={rows} layout="vertical" margin={{ top: 12, right: 24, left: 8, bottom: 8 }}>
+        <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" horizontal={false} />
+        <XAxis
+          type="number"
+          domain={[0, 100]}
+          tick={xTickPercent}
+          axisLine={false}
+          tickLine={false}
+          tickMargin={12}
+        />
+        <YAxis
+          type="category"
+          dataKey="name"
+          width={118}
+          tick={yTick}
+          axisLine={false}
+          tickLine={false}
+          tickMargin={12}
+        />
+        <Tooltip
+          contentStyle={tooltipStyle}
+          formatter={(v) => [`${Number(v).toFixed(0)}%`, successLabel]}
+        />
+        <Bar dataKey="rate" name={successLabel} radius={[0, 2, 2, 0]}>
+          {rows.map((_, i) => (
+            <Cell key={i} fill={i % 2 === 0 ? "var(--accent)" : "var(--signal)"} />
+          ))}
+        </Bar>
+      </BarChart>
+    </ChartFrame>
   );
 }
 
@@ -204,17 +270,22 @@ export function PublicDeliveryChart({
   if (!has) return <CrmEmptyState title={emptyTitle} />;
 
   return (
-    <div className="h-56 w-full">
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
-          <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" vertical={false} />
-          <XAxis dataKey="label" tick={{ fill: "var(--fg-muted)", fontSize: 11 }} axisLine={false} />
-          <YAxis allowDecimals={false} tick={{ fill: "var(--fg-muted)", fontSize: 11 }} axisLine={false} width={28} />
-          <Tooltip contentStyle={tooltipStyle} />
-          <Bar dataKey="delivered" name={deliveredLabel} fill="var(--accent)" radius={[2, 2, 0, 0]} />
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
+    <ChartFrame className="h-56">
+      <BarChart data={data} margin={{ top: 16, right: 12, left: 8, bottom: 8 }}>
+        <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" vertical={false} />
+        <XAxis dataKey="label" tick={xTick} axisLine={false} tickLine={false} tickMargin={12} />
+        <YAxis
+          allowDecimals={false}
+          tick={yTick}
+          axisLine={false}
+          tickLine={false}
+          tickMargin={12}
+          width={44}
+        />
+        <Tooltip contentStyle={tooltipStyle} />
+        <Bar dataKey="delivered" name={deliveredLabel} fill="var(--accent)" radius={[2, 2, 0, 0]} />
+      </BarChart>
+    </ChartFrame>
   );
 }
 
@@ -268,28 +339,35 @@ export function CategoryShareChart({
   }
 
   return (
-    <div className="h-56 w-full" dir="ltr">
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} layout="vertical" margin={{ top: 8, right: 16, left: 8, bottom: 0 }}>
-          <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" horizontal={false} />
-          <XAxis type="number" allowDecimals={false} tick={{ fill: "var(--fg-muted)", fontSize: 11 }} />
-          <YAxis
-            type="category"
-            dataKey="name"
-            width={110}
-            tick={{ fill: "var(--fg-muted)", fontSize: 11 }}
-            axisLine={false}
-          />
-          <Tooltip
-            contentStyle={tooltipStyle}
-            formatter={(value, _n, item) => {
-              const pct = (item?.payload as { sharePercent?: number } | undefined)?.sharePercent;
-              return [`${value}${pct != null ? ` (${pct.toFixed(0)}%)` : ""}`, projectsLabel];
-            }}
-          />
-          <Bar dataKey="count" name={projectsLabel} fill="var(--signal)" radius={[0, 2, 2, 0]} />
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
+    <ChartFrame className="h-56">
+      <BarChart data={data} layout="vertical" margin={{ top: 12, right: 24, left: 8, bottom: 8 }}>
+        <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" horizontal={false} />
+        <XAxis
+          type="number"
+          allowDecimals={false}
+          tick={xTick}
+          axisLine={false}
+          tickLine={false}
+          tickMargin={12}
+        />
+        <YAxis
+          type="category"
+          dataKey="name"
+          width={118}
+          tick={yTick}
+          axisLine={false}
+          tickLine={false}
+          tickMargin={12}
+        />
+        <Tooltip
+          contentStyle={tooltipStyle}
+          formatter={(value, _n, item) => {
+            const pct = (item?.payload as { sharePercent?: number } | undefined)?.sharePercent;
+            return [`${value}${pct != null ? ` (${pct.toFixed(0)}%)` : ""}`, projectsLabel];
+          }}
+        />
+        <Bar dataKey="count" name={projectsLabel} fill="var(--signal)" radius={[0, 2, 2, 0]} />
+      </BarChart>
+    </ChartFrame>
   );
 }

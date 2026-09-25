@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { MediaImage } from "@/components/media-image";
-import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { MediaImage } from "@/components/media-image";
 import { MarkdownContent } from "@/components/site/markdown-content";
 import { MotionReveal } from "@/components/site/motion";
+import { notFoundMetadata, SiteNotFound } from "@/components/site/not-found-view";
 import { ProjectGallery } from "@/components/site/project-gallery";
 import { StlViewerLazy } from "@/components/site/stl-viewer-lazy";
 import { Badge } from "@/components/ui/badge";
@@ -37,7 +37,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale, slug } = await params;
   const project = await getProject(slug).catch(() => null);
-  if (!project) return {};
+  if (!project) return notFoundMetadata();
   const title = locale === "fa" ? project.titleFa : project.titleEn;
   const description = (locale === "fa" ? project.summaryFa : project.summaryEn) ?? undefined;
   const ogImage = project.coverImageUrl ? [absoluteUrl(project.coverImageUrl)] : undefined;
@@ -61,7 +61,7 @@ export default async function ProjectDetailPage({
   const t = await getTranslations("projects");
 
   const project = await getProject(slug).catch(() => null);
-  if (!project) notFound();
+  if (!project) return <SiteNotFound />;
 
   const title = locale === "fa" ? project.titleFa : project.titleEn;
   const content = locale === "fa" ? project.contentFa : project.contentEn;
