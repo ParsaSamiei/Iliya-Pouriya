@@ -7,6 +7,8 @@ export const metadata: Metadata = {
   title: "People",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminPeoplePage() {
   const people = await db.person.findMany({ orderBy: { sortOrder: "asc" } });
 
@@ -31,7 +33,7 @@ export default async function AdminPeoplePage() {
       )}
 
       {people.map((person) => (
-        <PersonEditForm key={person.id} person={person} />
+        <PersonEditForm key={`${person.id}-${JSON.stringify(person)}`} person={person} />
       ))}
     </div>
   );

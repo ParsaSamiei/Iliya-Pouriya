@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { ImageUploadField } from "@/components/admin/image-upload-field";
@@ -13,6 +14,7 @@ import type { Person } from "@/generated/prisma/client";
 import { updatePerson } from "@/lib/actions/people";
 
 export function PersonEditForm({ person }: { person: Person }) {
+  const router = useRouter();
   const [tab, setTab] = useState<"en" | "fa">("en");
   const [pending, startTransition] = useTransition();
   const social =
@@ -23,6 +25,7 @@ export function PersonEditForm({ person }: { person: Person }) {
       const result = await updatePerson(person.id, formData);
       if (result.ok) {
         toast.success(`${person.nameEn} saved.`);
+        router.refresh();
       } else {
         toast.error(result.error);
       }
