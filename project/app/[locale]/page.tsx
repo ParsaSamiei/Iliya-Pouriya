@@ -29,6 +29,8 @@ import { getSiteMetadata } from "@/lib/get-site-metadata";
 import { getPublicReportVisibility } from "@/lib/crm/public";
 import { JsonLd, websiteJsonLd } from "@/lib/seo";
 
+export const revalidate = 300;
+
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);

@@ -6,6 +6,16 @@ import createNextIntlPlugin from "next-intl/plugin";
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
+function siteActionOrigins(): string[] {
+  const raw = process.env.NEXT_PUBLIC_SITE_URL;
+  if (!raw) return [];
+  try {
+    return [new URL(raw).host];
+  } catch {
+    return [];
+  }
+}
+
 const nextConfig: NextConfig = {
   // Self-hosted on a Docker VPS, never targeting Vercel-only features.
   output: "standalone",
@@ -14,6 +24,12 @@ const nextConfig: NextConfig = {
   experimental: {
     serverActions: {
       bodySizeLimit: "100mb",
+      // Host nginx terminates TLS and proxies to this app. Without the
+      // public host here, Next can reject the people-save Server Action
+      // as a CSRF mismatch (works locally, flakes in production).
+      ...(siteActionOrigins().length > 0
+        ? { allowedOrigins: siteActionOrigins() }
+        : {}),
     },
   },
   // This app lives in `project/` under a parent git repo. Without this,
